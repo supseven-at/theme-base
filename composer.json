@@ -28,7 +28,7 @@
         "christophlehmann/pagetreefilter": "^2",
         "spooner/deployer-information": "^1.4",
         "sudhaus7/logformatter": ">=1.5",
-        "ayacoo/redirect-tab": "^3",
+        "ayacoo/redirect-tab": "dev-main",
         "o-ba/custom_dashboard_widgets": "^1.3"
     },
     "autoload-dev": {
