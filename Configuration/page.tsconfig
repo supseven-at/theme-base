@@ -1,0 +1,5 @@
+@import 'EXT:theme_base/Configuration/TsConfig/Page/Extensions/*'
+@import 'EXT:theme_base/Configuration/TsConfig/Page/Mod/*'
+@import 'EXT:theme_base/Configuration/TsConfig/Page/Tcemain/*'
+@import 'EXT:theme_base/Configuration/TsConfig/Page/Tceform/*'
+@import 'EXT:theme_base/Configuration/TsConfig/Page/*'

@@ -1,0 +1,3 @@
+TCEFORM.tx_news_domain_model_news {
+    keywords.disabled = 1
+}

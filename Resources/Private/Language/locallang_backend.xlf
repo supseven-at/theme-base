@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" original="" datatype="plaintext" date="2024-06-17T15:42:17+02:00">
+		<body>
+			<trans-unit id="field.sys_file_reference.caption.label" resname="field.sys_file_reference.caption.label">
+				<source>Caption</source>
+			</trans-unit>
+			<trans-unit id="field.sys_file_reference.copyright.label" resname="field.sys_file_reference.copyright.label">
+				<source>Copyright</source>
+			</trans-unit>
+			<trans-unit id="field.tt_content.tx_theme_link.label" resname="field.tt_content.tx_theme_link.label">
+				<source>Link</source>
+			</trans-unit>
+			<trans-unit id="field.tt_content.tx_theme_link_label.label" resname="field.tt_content.tx_theme_link_label.label">
+				<source>Link Label</source>
+			</trans-unit>
+			<trans-unit id="tt_content.header_layout.1" resname="tt_content.header_layout.1">
+				<source>Header H1</source>
+			</trans-unit>
+			<trans-unit id="tt_content.header_layout.100" resname="tt_content.header_layout.100">
+				<source>Hidden Header</source>
+			</trans-unit>
+			<trans-unit id="tt_content.header_layout.2" resname="tt_content.header_layout.2">
+				<source>Header H2</source>
+			</trans-unit>
+			<trans-unit id="tt_content.header_layout.3" resname="tt_content.header_layout.3">
+				<source>Header H3</source>
+			</trans-unit>
+			<trans-unit id="tt_content.header_layout.4" resname="tt_content.header_layout.4">
+				<source>Header H4</source>
+			</trans-unit>
+			<trans-unit id="tt_content.header_layout.5" resname="tt_content.header_layout.5">
+				<source>Header H5</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

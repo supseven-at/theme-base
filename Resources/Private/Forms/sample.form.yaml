@@ -1,0 +1,415 @@
+
+renderingOptions:
+  submitButtonLabel: 'Nachricht senden'
+type: Form
+identifier: example
+label: 'Sample form'
+prototypeName: standard
+finishers:
+  -
+    identifier: MailIntrotextFinisher
+    options:
+      # add translation to locallang
+      headerSender: ''
+      textSender: ''
+      headerReceiver: ''
+      textReceiver: ''
+  -
+    options:
+      subject: 'Vielen Dank für Ihre Anfrage!'
+      recipients:
+        '{email}': '{firstname}{lastame}'
+      senderAddress: noreply@supseven.at
+      senderName: Supseven
+      addHtmlPart: true
+      attachUploads: true
+      title: 'Vielen Dank für Ihre Anfrage!'
+      templateName: Contact
+      templateRootPaths:
+        100: 'EXT:theme_base/Resources/Private/Templates/Finishers/Email/Sender'
+    identifier: EmailToSender
+  -
+    options:
+      subject: 'Anfrage Kontaktformular'
+      recipients:
+        m.grunert@supseven.at: Supseven
+      senderAddress: noreply@supseven.at
+      senderName: '{firstname} {lastname}'
+      addHtmlPart: true
+      attachUploads: true
+      translation:
+        language: Default
+      title: 'Anfrage Kontaktformular'
+      templateName: Contact
+      templateRootPaths:
+        100: 'EXT:theme_base/Resources/Private/Templates/Finishers/Email/Receiver'
+    identifier: EmailToReceiver
+  -
+    options:
+      pageUid: '1'
+      additionalParameters: ''
+      fragment: ''
+    identifier: Redirect
+renderables:
+  -
+    renderingOptions:
+      previousButtonLabel: 'Previous step'
+      nextButtonLabel: 'Next step'
+    type: Page
+    identifier: page-1
+    label: null
+    renderables:
+      -
+        type: GridRow
+        identifier: gridrow-3
+        label: 'Grid: Row'
+        renderables:
+          -
+            properties:
+              text: "Use this form as a sample form.\n\nThere are already translations for the labels, placeholders and error messages for all fields in this form.\nIt is important that the identifier of the field remains the same in order to use the translations.\n\n
+              For testing, the fields are filled with testdata from ts setting\n plugin.tx_form.settings.testdata.<fieldidentifier>\n
+              The Fields are only filled if the setting\n plugin.tx_form.settings.prefillWithTestdata\n is set to 1, an admin is logged in and defaultValue is not set.\n\n\n"
+            type: StaticText
+            identifier: info
+            label: 'Info'
+      -
+        type: GridRow
+        identifier: gridrow-1
+        label: 'Grid: Row'
+        renderables:
+          -
+            properties:
+              options:
+                Herr: Herr
+                Frau: Frau
+                Divers: Divers
+              prependOptionLabel: ' '
+              fluidAdditionalAttributes:
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '6'
+                  lg:
+                    numbersOfColumnsToUse: '6'
+                  xl:
+                    numbersOfColumnsToUse: '6'
+                  xxl:
+                    numbersOfColumnsToUse: '6'
+            type: SingleSelect
+            identifier: salutation
+            label: Anrede
+            validators:
+              -
+                identifier: NotEmpty
+      -
+        type: GridRow
+        identifier: gridrow-2
+        label: 'Grid: Row'
+        renderables:
+          -
+            type: Text
+            identifier: firstname
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                placeholder: ''
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '6'
+                  lg:
+                    numbersOfColumnsToUse: '6'
+                  xl:
+                    numbersOfColumnsToUse: '6'
+                  xxl:
+                    numbersOfColumnsToUse: '6'
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            type: Text
+            identifier: lastname
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                placeholder: ''
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '6'
+                  lg:
+                    numbersOfColumnsToUse: '6'
+                  xl:
+                    numbersOfColumnsToUse: '6'
+                  xxl:
+                    numbersOfColumnsToUse: '6'
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            type: Text
+            identifier: company
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                placeholder: ''
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '12'
+                  lg:
+                    numbersOfColumnsToUse: '12'
+                  xl:
+                    numbersOfColumnsToUse: '12'
+                  xxl:
+                    numbersOfColumnsToUse: '12'
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            type: Text
+            identifier: street
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                placeholder: ''
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '6'
+                  lg:
+                    numbersOfColumnsToUse: '6'
+                  xl:
+                    numbersOfColumnsToUse: '6'
+                  xxl:
+                    numbersOfColumnsToUse: '6'
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            type: Text
+            identifier: streetnumber
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                placeholder: ''
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '6'
+                  lg:
+                    numbersOfColumnsToUse: '6'
+                  xl:
+                    numbersOfColumnsToUse: '6'
+                  xxl:
+                    numbersOfColumnsToUse: '6'
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            type: Text
+            identifier: zip
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                placeholder: ''
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '6'
+                  lg:
+                    numbersOfColumnsToUse: '6'
+                  xl:
+                    numbersOfColumnsToUse: '6'
+                  xxl:
+                    numbersOfColumnsToUse: '6'
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            type: Text
+            identifier: city
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                placeholder: ''
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '6'
+                  lg:
+                    numbersOfColumnsToUse: '6'
+                  xl:
+                    numbersOfColumnsToUse: '6'
+                  xxl:
+                    numbersOfColumnsToUse: '6'
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            properties:
+              options:
+                Austria: Austria
+                Germany: Germany
+              prependOptionLabel: ' '
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '12'
+                  lg:
+                    numbersOfColumnsToUse: '12'
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  xl:
+                    numbersOfColumnsToUse: '12'
+                  xxl:
+                    numbersOfColumnsToUse: '12'
+              fluidAdditionalAttributes:
+                required: required
+            type: SingleSelect
+            identifier: country
+            label: Country
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            type: Email
+            identifier: email
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                placeholder: ''
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '6'
+                  lg:
+                    numbersOfColumnsToUse: '6'
+                  xl:
+                    numbersOfColumnsToUse: '6'
+                  xxl:
+                    numbersOfColumnsToUse: '6'
+            validators:
+              -
+                identifier: EmailAddress
+              -
+                identifier: NotEmpty
+          -
+            type: Text
+            identifier: phone
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                placeholder: ''
+                required: required
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '6'
+                  lg:
+                    numbersOfColumnsToUse: '6'
+                  xl:
+                    numbersOfColumnsToUse: '6'
+                  xxl:
+                    numbersOfColumnsToUse: '6'
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            type: Textarea
+            identifier: message
+            label: ''
+            properties:
+              fluidAdditionalAttributes:
+                required: required
+                placeholder: ''
+              gridColumnClassAutoConfiguration:
+                viewPorts:
+                  xs:
+                    numbersOfColumnsToUse: '12'
+                  sm:
+                    numbersOfColumnsToUse: '12'
+                  md:
+                    numbersOfColumnsToUse: '12'
+                  lg:
+                    numbersOfColumnsToUse: '12'
+                  xl:
+                    numbersOfColumnsToUse: '12'
+                  xxl:
+                    numbersOfColumnsToUse: '12'
+            validators:
+              -
+                identifier: NotEmpty
+          -
+            type: LinkedCheckbox
+            identifier: legalNotice
+            label: 'Ich bin damit einverstanden,...'
+            properties:
+              pageUid: '23'
+              company: 'supseven GmbH'
+              linkText: Datenschutzerklärung
+              fluidAdditionalAttributes:
+                required: required
+#            # Variant for translations example
+#            variants:
+#              -
+#                identifier: variant-at
+#                condition: 'siteLanguage("locale") == "de_AT.utf8"'
+#                properties:
+#                  linkText: 'Datenschutzerklärung'
+#                  pageUid: '23'
+#                  company: 'supseven GmbH'
+            validators:
+              -
+                identifier: NotEmpty

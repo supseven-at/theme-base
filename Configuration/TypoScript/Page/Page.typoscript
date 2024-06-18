@@ -1,0 +1,121 @@
+page = PAGE
+page {
+    ###########################
+    ### FLUID TEMPLATE BODY ###
+    ###########################
+    10 = FLUIDTEMPLATE
+    10 {
+        layoutRootPaths {
+            10 = EXT:theme_base/Resources/Private/Layouts/Page/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Layouts/Page/
+        }
+        partialRootPaths {
+            10 = EXT:theme_base/Resources/Private/Partials/Page/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Partials/Page/
+        }
+        templateRootPaths {
+            10 = EXT:theme_base/Resources/Private/Templates/Page/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Templates/Page/
+        }
+
+        #################
+        ### VARIABLES ###
+        #################
+        variables {
+            Level1Title = TEXT
+            Level1Title {
+                data = leveltitle: 1
+                if.value.data = level
+                if.isLessThan = 1
+            }
+        }
+
+        // default templateName selection based on active beLayout
+        templateName = TEXT
+        templateName {
+            data = pagelayout
+            split {
+                token = pagets__
+                1.current = 1
+            }
+            ifEmpty = Default
+        }
+
+        #######################
+        ### DATA PROCESSING ###
+        #######################
+        dataProcessing {
+            // Site information
+            10 = TYPO3\CMS\Frontend\DataProcessing\SiteProcessor
+            10.as = site
+            20 = TYPO3\CMS\Frontend\DataProcessing\SiteLanguageProcessor
+            20.as = siteLanguage
+
+            // Legal Notice Informations in HeaderComment and as console.log
+            30 = Supseven\ThemeBase\DataProcessing\LegalNoticeDataProcessor
+
+            // Menus
+            100 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            100 {
+                as = MainNavigation
+                levels = {$themeBase.page.dataProcessing.mainNavigation.levels}
+                titleField = nav_title // title
+                includeSpacer = {$themeBase.page.dataProcessing.mainNavigation.includeSpacer}
+                dataProcessing {
+                    10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
+                    10 {
+                        references.fieldName = {$themeBase.page.dataProcessing.mainNavigation.file.fieldName}
+                        if {
+                            isTrue = {$themeBase.page.dataProcessing.mainNavigation.file.enabled}
+                        }
+                    }
+
+                }
+            }
+
+            120 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            120 {
+                as = MetaNavigation
+                special = directory
+                special.value = {$themeBase.page.dataProcessing.metaNavigation.uid}
+                levels = {$themeBase.page.dataProcessing.metaNavigation.levels}
+                if {
+                    isPositive = {$themeBase.page.dataProcessing.metaNavigation.uid}
+                }
+            }
+
+            130 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            130 {
+                as = FooterNavigation
+                special = directory
+                special.value = {$themeBase.page.dataProcessing.footerNavigation.uid}
+                levels = {$themeBase.page.dataProcessing.footerNavigation.levels}
+                if {
+                    isPositive = {$themeBase.page.dataProcessing.footerNavigation.uid}
+                }
+            }
+
+            150 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            150 {
+                as = SocialNavigation
+                special = directory
+                special.value ={$themeBase.page.dataProcessing.socialNavigation.uid}
+                levels = 1
+                if {
+                    isPositive = {$themeBase.page.dataProcessing.socialNavigation.uid}
+                }
+            }
+
+            160 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            160 {
+                as = BreadcrumbNavigation
+                special = rootline
+                special.range = 0|-1
+                includeNotInMenu = {$themeBase.page.dataProcessing.breadcrumbNavigation.includeNotInMenu}
+                if {
+                    isTrue = {$themeBase.page.dataProcessing.breadcrumbNavigation.enabled}
+                }
+            }
+        }
+    }
+}

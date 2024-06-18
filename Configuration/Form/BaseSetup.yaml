@@ -1,0 +1,31 @@
+persistenceManager:
+  allowedFileMounts:
+    10: 1:/user_upload/
+  allowedExtensionPaths:
+    400: EXT:theme_base/Resources/Private/Forms/
+  allowSaveToExtensionPaths: false
+  allowDeleteFromExtensionPaths: false
+
+prototypes:
+  standard:
+    formElementsDefinition:
+      Form:
+        renderingOptions:
+          templateRootPaths:
+            100: 'EXT:theme_base/Resources/Private/Templates/Forms/'
+          partialRootPaths:
+            100: 'EXT:theme_base/Resources/Private/Partials/Forms/'
+          translation:
+            translationFiles:
+              10: 'EXT:form/Resources/Private/Language/locallang.xlf'
+              20: 'EXT:theme_base/Resources/Private/Language/locallang_formFields.xlf'
+
+      LinkedCheckbox:
+        __inheritances:
+          10: 'prototypes.standard.formElementsDefinition.Checkbox'
+        renderingOptions:
+          templateName: 'LinkedCheckbox'
+
+    finishersDefinition:
+      MailIntrotextFinisher:
+        implementationClassName: 'Supseven\ThemeBase\Domain\Finishers\MailIntrotextFinisher'

@@ -1,0 +1,4 @@
+# TypoScript that is always loaded, even if no page
+# is selected in BE
+
+@import './Extensions/Form/setup.typoscript'

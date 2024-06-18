@@ -1,0 +1,9 @@
+# use this, to fetch a single content element with the given uid.
+# e.g.: {f:cObject(typoscriptObjectPath: 'lib.contentByUid', data: '{ uid: \'{uid}\'}')}
+lib.contentByUid = CONTENT
+lib.contentByUid {
+    table = tt_content
+    select {
+        uidInList.field = uid
+    }
+}

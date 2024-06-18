@@ -1,0 +1,38 @@
+// Add "copy defaults" for tables
+
+TCEMAIN {
+    table {
+        be_users {
+            // add suffix to copied element
+            disablePrependAtCopy = 0
+            // set copied element visible by default
+            disableHideAtCopy = 1
+        }
+        be_groups {
+            // add suffix to copied element
+            disablePrependAtCopy = 0
+            // set copied element visible by default
+            disableHideAtCopy = 1
+        }
+        pages {
+            // add suffix to copied element
+            disablePrependAtCopy = 0
+            // set copied element visible by default
+            disableHideAtCopy = 0
+        }
+
+        tt_content {
+            // add suffix to copied element
+            disablePrependAtCopy = 1
+            // set copied element visible by default
+            disableHideAtCopy = 0
+        }
+
+        sys_category {
+            // add suffix to copied element
+            disablePrependAtCopy = 0
+            // set copied element visible by default
+            disableHideAtCopy = 1
+        }
+    }
+}

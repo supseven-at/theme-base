@@ -1,0 +1,36 @@
+
+page {
+    meta.viewport = width=device-width, initial-scale=1
+
+    # CSS includes (preferably configured via TYPO3 site setting)
+    includeCSS.10 = {$themeBase.page.includeCSS.10}
+
+
+    # JS includes (preferably configured via TYPO3 site setting)
+    includeJSFooter.10 = {$themeBase.page.includeJSFooter.10}
+    includeJSFooter.10.async = 1
+    includeJSFooter.10.defer = 1
+
+    ###########################
+    ### FLUID TEMPLATE HEAD ###
+    ###########################
+    headerData.10 = FLUIDTEMPLATE
+    headerData.10 {
+        layoutRootPaths {
+            10 = EXT:theme_base/Resources/Private/Layouts/Page/HeaderData/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Layouts/Page/HeaderData/
+        }
+
+        partialRootPaths {
+            10 = EXT:theme_base/Resources/Private/Partials/Page/HeaderData/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Partials/Page/HeaderData/
+        }
+
+        templateRootPaths {
+            10 = EXT:theme_base/Resources/Private/Templates/Page/HeaderData
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Templates/Page/HeaderData
+        }
+
+        templateName = Head
+    }
+}

@@ -1,0 +1,34 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:formvh="http://typo3.org/ns/TYPO3/CMS/Form/ViewHelpers" data-namespace-typo3-fluid="true">
+<formvh:renderRenderable renderable="{element}">
+    <f:render partial="Field/Field" arguments="{element: element, doNotShowLabel: 1}" contentAs="elementContent">
+        <div class="form-check">
+            <label class="{element.properties.elementClassAttribute} form-check-label" for="{element.uniqueIdentifier}">
+                <f:form.checkbox
+                    property="{element.identifier}"
+                    id="{element.uniqueIdentifier}"
+                    class="{element.properties.elementClassAttribute}"
+                    value="{element.properties.value}"
+                    errorClass="{element.properties.elementErrorClassAttribute}"
+                    additionalAttributes="{formvh:translateElementProperty(element: element, property: 'fluidAdditionalAttributes')}"
+                />
+                <span>
+                    <f:if condition="{element.properties.pageUid} != ''">
+                        <f:then>
+                            <f:variable name="uri"><a href="{f:uri.typolink(parameter: '{element.properties.pageUid}')}" target="_blank">{element.properties.linkText}</a></f:variable>
+                            <f:format.raw><f:format.printf arguments="{0: '{uri}', 1: '{element.properties.company}'}">
+                                {formvh:translateElementProperty(element: element, property: 'label')}</f:format.printf>
+                            </f:format.raw>
+                        </f:then>
+                        <f:else>
+                            {formvh:translateElementProperty(element: element, property: 'label')}
+                        </f:else>
+                    </f:if>
+                    <f:if condition="{element.required}">
+                        <f:render partial="Field/Required" />
+                    </f:if>
+                </span>
+            </label>
+        </div>
+    </f:render>
+</formvh:renderRenderable>
+</html>

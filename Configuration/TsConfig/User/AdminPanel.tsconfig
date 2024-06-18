@@ -1,0 +1,20 @@
+// typo3/cms-adminpanel configuration
+admPanel {
+    enable {
+        cache = 1
+        info = 1
+        preview = 1
+        publish = 1
+        debug = 0
+        info = 0
+        tsdebug = 0
+        edit = 1
+        opinion = 1
+    }
+}
+
+[backend.user.isAdmin]
+    admPanel {
+        enable.all = 1
+    }
+[global]

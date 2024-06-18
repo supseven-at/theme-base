@@ -1,0 +1,37 @@
+# This file represents all site settings which are used/processed in ext:theme
+themeBase:
+  typo3:
+    linkvalidator:
+      fromemail: '%env(MAIL_SENDEREMAIL_DEFAULT)%'
+      externalhttpAgentEmail: '%env(MAIL_SENDEREMAIL_DEFAULT)%'
+      externalhttpAgentName: '%env(TYPO3_LINKVALIDATOR_EXTERNAL_AGENT_NAME)%'
+  tcemain:
+    permissions:
+      groupid: 1
+  page:
+    fluidtemplate:
+      rootPaths:
+        sitepackage: theme_project
+    includeCSS:
+      10: 'EXT:theme_project/Resources/Public/Css/Styles.min.css'
+    includeJSFooter:
+      10: 'EXT:theme_project/Resources/Public/JavaScript/Main.js'
+
+    dataProcessing:
+      mainNavigation:
+        levels: 4
+        includeSpacer: 1
+        file:
+          fieldName: media
+          enabled: 0
+      metaNavigation:
+        uid:
+        levels: 1
+      footerNavigation:
+        uid:
+        levels: 1
+      socialNavigation:
+        uid:
+      breadcrumbNavigation:
+        enabled: 1
+        includeNotInMenu: 0

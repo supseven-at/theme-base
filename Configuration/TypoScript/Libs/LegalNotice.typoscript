@@ -1,0 +1,25 @@
+lib.legalNotice = FLUIDTEMPLATE
+lib.legalNotice {
+    templateRootPaths {
+        10 = EXT:theme_base/Resources/Private/Templates/Misc/
+        20 = EXT:theme_project/Resources/Private/Templates/Misc/
+    }
+
+    templateName = LegalNotice
+
+    dataProcessing {
+        5 = TYPO3\CMS\Frontend\DataProcessing\SiteProcessor
+    }
+
+    variables {
+        pageUid = TEXT
+        pageUid {
+            data = page:uid
+        }
+
+        title = TEXT
+        title {
+            data = page:title
+        }
+    }
+}

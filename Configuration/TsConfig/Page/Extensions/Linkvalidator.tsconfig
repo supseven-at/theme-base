@@ -1,0 +1,12 @@
+mod.linkvalidator {
+    checkhidden = 0
+    showCheckLinkTab = 0
+    mod.linkvalidator.linktypesConfig.external {
+        httpAgentEmail = {$themeBase.typo3.linkhandler.externalhttpAgentEmail}
+        httpAgentName = {$themeBase.typo3.linkhandler.externalhttpAgentName}
+    }
+
+    mail {
+        fromemail = {$themeBase.typo3.linkhandler.fromemail}
+    }
+}

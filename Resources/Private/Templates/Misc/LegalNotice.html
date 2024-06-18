@@ -1,0 +1,66 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:theme="http://typo3.org/ns/Supseven/ThemeBase/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+
+    <f:asset.css identifier="legalNotice" useNonce="true" priority="1">
+        :root {
+            --legalNotice-gutter: 32px;
+            --legalNotice-bg: hsla(0,0%,98%, 1);
+            --legalNotice-font-size: 16px;
+            --legalNotice-width: 75vw;
+        }
+        .supseven-legal-notice {
+            font-size: var(--legalNotice-font-size);
+            display: grid;
+            place-content: center;
+        }
+
+        .supseven-legal-notice__inner {
+            background: var(--legalNotice-bg);
+            padding: calc(var(--legalNotice-gutter) * 0.75);
+        }
+
+        .supseven-legal-notice__header {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--legalNotice-gutter) * 0.5);
+            margin-bottom: calc(var(--legalNotice-gutter) * 0.5);
+        }
+
+        .supseven-legal-notice__header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .supseven-legal-notice__address {
+            margin: 0;
+        }
+
+        .supseven-legal-notice__address p {
+            margin-bottom: 8px;
+            line-height: 1.2;
+            font-size: 0.875em;
+        }
+    </f:asset.css>
+
+    <f:if condition="{theme:isLegalNoticePage(pageUid: '{pageUid}', title: '{title}')}">
+        <div class="supseven-legal-notice">
+            <div class="supseven-legal-notice__inner">
+                <div class="supseven-legal-notice__header">
+                    <svg viewBox="0 0 26.597 32" width="32px" height="32px" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 25.511 7.345 C 25.564 7.238 25.635 7.132 25.688 7.025 L 25.741 6.919 C 25.795 6.812 25.83 6.706 25.883 6.582 C 25.901 6.546 25.919 6.493 25.937 6.457 C 25.974 6.347 26.004 6.235 26.025 6.12 C 26.043 6.067 26.043 6.031 26.061 5.978 C 26.079 5.854 26.096 5.747 26.114 5.623 C 26.114 5.588 26.132 5.552 26.132 5.499 L 26.132 5.463 C 26.147 5.364 26.152 5.263 26.15 5.162 C 26.15 5.091 26.167 5.02 26.167 4.949 L 26.167 4.913 C 26.171 4.848 26.165 4.782 26.15 4.718 C 26.153 4.635 26.147 4.551 26.132 4.469 C 26.129 4.386 26.117 4.302 26.096 4.221 C 26.079 4.15 26.079 4.061 26.061 3.99 L 26.008 3.724 C 25.99 3.653 25.972 3.582 25.954 3.529 C 25.919 3.44 25.901 3.351 25.866 3.245 L 25.812 3.085 C 25.777 2.996 25.724 2.89 25.688 2.801 C 25.668 2.752 25.644 2.705 25.617 2.659 L 25.457 2.393 C 25.422 2.34 25.404 2.304 25.369 2.251 C 25.315 2.164 25.256 2.081 25.191 2.002 C 25.156 1.949 25.12 1.914 25.085 1.86 C 25.049 1.807 24.96 1.718 24.907 1.647 C 24.87 1.596 24.829 1.549 24.783 1.505 C 24.726 1.437 24.661 1.377 24.588 1.328 C 24.539 1.276 24.485 1.228 24.428 1.186 C 24.357 1.133 24.304 1.079 24.233 1.026 C 24.162 0.973 24.108 0.937 24.055 0.884 C 24.002 0.831 23.913 0.795 23.842 0.742 C 23.771 0.689 23.718 0.653 23.647 0.618 C 23.576 0.582 23.487 0.529 23.416 0.494 C 23.355 0.457 23.289 0.427 23.221 0.405 L 22.955 0.298 C 22.894 0.279 22.834 0.256 22.777 0.227 C 22.671 0.192 22.564 0.174 22.458 0.139 C 22.407 0.118 22.353 0.106 22.298 0.103 C 22.191 0.085 22.085 0.068 21.961 0.05 C 21.907 0.05 21.872 0.032 21.819 0.032 L 21.783 0.032 C 21.741 0.035 21.699 0.029 21.659 0.014 C 21.541 0 21.423 -0.006 21.304 -0.003 L 5.72 -0.003 C 1.949 -0.003 -0.408 4.079 1.477 7.345 C 2.352 8.861 3.97 9.794 5.72 9.794 L 12.731 9.794 L 4.087 24.722 C 2.261 28.024 4.695 32.065 8.469 31.995 C 10.163 31.963 11.721 31.059 12.589 29.603 L 25.493 7.38 C 25.493 7.363 25.493 7.363 25.511 7.345 Z"/>
+                    </svg>
+                    <h2>{f:translate(key:'LLL:EXT:theme_base/Resources/Private/Language/locallang.xlf:legalNotice.heading')}</h2>
+                </div>
+                <address class="supseven-legal-notice__address">
+                    <p>Fockygasse 29-31, 1120 Vienna, Austria</p>
+                    <p><a href="tel:+4319971052">+43 1 997 1052</a> | <a href="mailto:office@supseven.at">office@supseven.at</a>
+                    </p>
+                    <p><a href="https://www.supseven.at">www.supseven.at</a></p>
+                </address>
+            </div>
+        </div>
+    </f:if>
+
+</html>

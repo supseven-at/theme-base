@@ -1,0 +1,30 @@
+config {
+    cache_clearAtMidnight = 0
+    sendCacheHeaders = 0
+    // Cache period = 7 days
+    cache_period = 604800
+
+    concatenateCss = 0
+    concatenateJs = 0
+    compressJs = 0
+    compressCss = 0
+
+    removeDefaultJS = 1
+    removeDefaultCss = 1
+    index_enable = 0
+    noPageTitle = 0
+    pageTitleFirst = 1
+    pageTitleSeparator = -
+    pageTitleSeparator.noTrimWrap = | | |
+    showWebsiteTitle = 1
+
+    headerComment = Created by supseven :: https://www.supseven.at/
+
+    absRefPrefix = auto
+
+    intTarget = _self
+    extTarget = _blank
+    fileTarget = _self
+
+    admPanel = 1
+}

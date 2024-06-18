@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns:t3="http://typo3.org/schemas/xliff" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" target-language="de" original="" datatype="plaintext" date="2024-04-18T11:40:47+02:00">
+		<body>
+			<trans-unit id="legalNotice.heading" resname="legalNotice.heading">
+				<source>Website maintained with ❤️</source>
+				<target>Website erstellt mit ❤️</target>
+			</trans-unit>
+			<trans-unit id="page.headerComment" resname="page.headerComment">
+				<source>Website maintained with ❤️ by supseven (www.supseven.at)</source>
+				<target>Website erstellt mit ❤️ von supseven (www.supseven.at)</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

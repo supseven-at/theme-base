@@ -1,0 +1,44 @@
+{
+    "name": "supseven/theme-base",
+    "license": "GPL-2.0-or-later",
+    "description": "Sitepackage Library of supseven.at",
+    "type": "typo3-cms-extension",
+    "autoload": {
+        "psr-4": {
+            "Supseven\\ThemeBase\\": "Classes"
+        }
+    },
+    "require": {
+        "typo3/cms-core": "^12.4",
+        "typo3/cms-seo": "^12.4",
+        "typo3/cms-lowlevel": "^12.4",
+        "typo3/cms-linkvalidator": "^12.4",
+        "typo3/cms-adminpanel":  "^12.4",
+        "b13/bolt": "^2.3",
+        "b13/doktypemapper": "^1.1.1",
+        "eliashaeussler/typo3-warming": ">=1.1.0",
+        "helhum/dotenv-connector": "^3",
+        "ichhabrecht/content-defender": "^3.4",
+        "josefglatz/hide-sys-template": "^4",
+        "josefglatz/beuser-fastswitch": ">=5.0.2",
+        "josefglatz/cropvariantsbuilder": ">=2.0.0",
+        "studiomitte/live-search-extended": "*",
+        "lolli/dbdoctor": "^0.5.0",
+        "plan2net/webp": "^5.0.1",
+        "christophlehmann/pagetreefilter": "^2",
+        "spooner/deployer-information": "^1.4",
+        "sudhaus7/logformatter": ">=1.5",
+        "ayacoo/redirect-tab": "^3",
+        "o-ba/custom_dashboard_widgets": "^1.3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Supseven\\ThemeBase\\Tests\\": "Tests"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "theme_base"
+        }
+    }
+}

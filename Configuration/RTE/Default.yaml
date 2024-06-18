@@ -1,0 +1,76 @@
+# Load default processing options
+imports:
+  - { resource: 'EXT:rte_ckeditor/Configuration/RTE/Processing.yaml' }
+  - { resource: 'EXT:rte_ckeditor/Configuration/RTE/Editor/Base.yaml' }
+  - { resource: 'EXT:rte_ckeditor/Configuration/RTE/Editor/Plugins.yaml' }
+
+# Add configuration for the editor
+# For complete documentation see https://ckeditor.com/docs/ckeditor5/latest/features/index.html
+editor:
+  config:
+    importModules:
+      - { module: '@ckeditor/ckeditor5-table', exports: [ 'TableCaption' ] }
+      - { module: '@ckeditor/ckeditor5-word-count', exports: [ 'WordCount' ] }
+
+    # @todo: should we reference EXT:theme_project?
+    contentsCss:
+      - 'EXT:theme_project/Resources/Public/Css/Backend/RteDefault.css'
+
+    # the table and table cell properties feature enables support for setting properties of table and table cells (size, border, background, etc.).
+    # remove plugins TableCellProperties + TableProperties to disable styles
+    removePlugins:
+          - TableCellProperties
+          - TableProperties
+
+    # headings are set via a separate import file. use this in your custom files, where default is imported.
+    # this is, because it is not possible to override single options.
+    #
+    # e.g.
+    # imports:
+    #  - { resource: 'EXT:theme_base/Configuration/RTE/Default.yaml' }
+    #  - { resource: 'EXT:theme_base/Configuration/RTE/Imports/Headings.yaml' }
+
+    toolbar:
+      items:
+        - clipboard
+        - removeFormat
+        - undo
+        - redo
+        # grouping separator
+        - '|'
+        - find
+        - selectAll
+        - '|'
+        - link
+        - '|'
+        - insertTable
+        - toggleTableCaption
+        - tableColumn
+        - tableRow
+#        - TableCellProperties
+#        - tableProperties
+#        - mergeTableCells
+        - '|'
+        - sourceEditing
+#        - horizontalLine
+#        - '-'
+        - bold
+        - italic
+        - underline
+        - strikethrough
+        - subscript
+        - superscript
+        - softhyphen
+        - '|'
+        - bulletedList
+        - numberedList
+#        - blockQuote
+#        - indent
+#        - outdent
+        - alignment
+        - '|'
+        - specialCharacters
+        - '-'
+        - style
+        - heading
+        - timestamp

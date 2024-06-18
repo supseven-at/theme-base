@@ -1,0 +1,1 @@
+mod.web_list.deniedNewTables := addToList(backend_layout)

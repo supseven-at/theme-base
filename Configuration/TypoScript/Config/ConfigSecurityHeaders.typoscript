@@ -1,0 +1,28 @@
+// Security Headers (Tests https://securityheaders.com/)
+config.additionalHeaders {
+    // HTTP Strict-Transport-Security (HSTS): Header informs the browser that the website can only be accessed via HTTPS (Man-in-the-Middle-Attacks, Session-HiJacking)
+    10.header = strict-transport-security: max-age=31536000; includeSubDomains
+
+    // X-Frame-Options: Header prevents the page from loading into a frame on another page.
+    // "deny" or "sameorigin"
+    // the better and more up-to-date alternative is the content security policy (frame-ancestors directive)
+
+    // X-XSS-Protection: prevents "Cross Site Scripting"
+    // superfluous due to Content Security Policy (CSP)
+
+    // X-Content-Type-Options: Content type sniffing is prevented
+    20.header = X-Content-Type-Options: nosniff
+
+    // X-Powered-By: Overwrite information about the server configuration
+    30.header = X-Powered-By: nothing
+
+    // Referrer-Policy (privacy)
+    // controls whether the referrer value is transferred for outgoing links.
+    // "no-referrer" or "strict-origin"
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
+    40.header = Referrer-Policy: strict-origin
+
+    // Permissions-Policy (earlier Feature-Policy): User data security
+    // Permissions-Policy: geolocation=(), midi=(), camera=(), usb=(), magnetometer=(), accelerometer=(), vr=(), speaker=(), ambient-light-sensor=(), gyroscope=(), microphone=()
+    // 50.header = Permissions-Policy: geolocation=()
+}

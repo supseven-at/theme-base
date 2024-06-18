@@ -1,0 +1,82 @@
+page {
+    ################
+    ### BODY TAG ###
+    ################
+    bodyTagCObject = COA
+    bodyTagCObject {
+        stdWrap.wrap = <body id="top"|>
+
+        # attribute class
+        10 = COA
+        10 {
+            stdWrap {
+                noTrimWrap = | class="|"|
+                required = 1
+            }
+
+            # Add current language
+            20 = TEXT
+            20 {
+                value = language-{siteLanguage:languageId} languagecontent-{siteLanguage:languageId}
+                insertData = 1
+                noTrimWrap = || |
+            }
+
+            # Add level
+            25 = TEXT
+            25 {
+                value = level-{level:0}
+                insertData = 1
+                noTrimWrap = || |
+            }
+
+            # Add backend-layout
+            30 = TEXT
+            30 {
+                wrap = tmpl-|
+                data = pagelayout
+                split {
+                    token = pagets__
+                    1.current = 1
+                }
+            }
+
+            # Add uid of optional FE-layout
+            40 = TEXT
+            40 {
+                fieldRequired = layout
+                value = layout-{field:layout}
+                insertData = 1
+                noTrimWrap = | ||
+            }
+
+            # Add uid of rootpage
+            50 = TEXT
+            50 {
+                value = root-{site:rootPageId}
+                insertData = 1
+                noTrimWrap = | ||
+            }
+
+            # Add class if it's the rootpage
+            60 = TEXT
+            60 {
+                fieldRequired = is_siteroot
+                value = rootpage
+                noTrimWrap = | ||
+            }
+
+            # Add "develop" helper CSS class in non-live context
+            1337 = TEXT
+            1337 {
+                value = develop
+                noTrimWrap = | ||
+                if {
+                    value.data = getenv : TYPO3_CONTEXT
+                    equals = Production/Live
+                    negate = 1
+                }
+            }
+        }
+    }
+}

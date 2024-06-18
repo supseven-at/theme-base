@@ -1,0 +1,20 @@
+TCEFORM.pages {
+
+    # hide backend layout "None"
+	backend_layout.removeItems = -1
+	backend_layout_next_level.removeItems = -1
+
+    # Disable common unused fields
+	abstract.disabled = 1
+	author.disabled = 1
+	author_email.disabled = 1
+	categories.disabled = 1
+    fe_group.disabled = 1
+    fe_login_mode.disabled = 1
+	keywords.disabled = 1
+	lastUpdated.disabled = 1
+	layout.disabled = 1
+    newUntil.disabled = 1
+	target.disabled = 1
+	media.disabled = 1
+}

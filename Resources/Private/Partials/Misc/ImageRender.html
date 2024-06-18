@@ -1,0 +1,109 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+	  xmlns:theme="http://typo3.org/ns/Supseven/ThemeBase/ViewHelpers"
+	  data-namespace-typo3-fluid="true">
+
+<f:comment>
+    <!--
+    we might rebuild this later into a viewhelper or similar. at least a more readable code would be nice.
+    even in the rendered frontend it would be nice if it is more readable
+    -->
+</f:comment>
+
+<f:spaceless>
+	<f:if condition="{file}">
+
+
+		<f:if condition="!{breakpoints}">
+			{f:variable(name: 'breakpoints', value: '{settings.breakpoints.default}')}
+		</f:if>
+
+
+		<f:if condition="!{pixelDensities}">
+			<f:if condition="{settings.pixelDensities.type -> f:count()} > 0">
+				<f:then>
+					{f:variable(name: 'pixelDensities', value: settings.pixelDensities.type)}
+				</f:then>
+				<f:else>
+					{f:variable(name: 'pixelDensities', value: settings.pixelDensities.default)}
+				</f:else>
+			</f:if>
+		</f:if>
+
+		<f:if condition="!{defaultImageMaxWidth}">
+			{f:variable(name: 'defaultImageMaxWidth', value: '{settings.defaultImageMaxWidth -> f:or(alternative: \'800\')}')}
+		</f:if>
+
+        <f:if condition="{file.originalResource.caption}">
+            <f:then>
+                {f:variable(name: 'description', value: file.originalResource.caption)}
+            </f:then>
+            <f:else>
+                {f:variable(name: 'description', value: file.caption)}
+            </f:else>
+        </f:if>
+
+        <f:variable name="description" value="{f:if(condition: description, then: description, else: file.title)}" />
+
+        <f:link.typolink
+            parameter="{f:if(condition: '{imageZoom}', then: '{f:uri.image(image: file, maxWidth: \'1280\', maxHeight: \'1024\')}', else: '{file.link}')}"
+            class="{linkClass} {f:if(condition: '{imageZoom}', then: '{lightboxClassName -> f:or(alternative: \'lightbox\')}')}"
+            additionalAttributes="{
+                data-description: '{description}',
+                data-gallery: '{galleryName -> f:or(alternative: \'lightbox\')}',
+                data-glightbox: '{f:if(condition: galleryDescription, then: \'description: {galleryDescription}\')}'
+            }">
+
+            <f:render section="ImageZoom" arguments="{_all}" />
+
+			<picture class="{pictureClass}">
+				<f:for each="{breakpoints}" as="breakpoint" iteration="i_breakpoints" reverse="true">
+					<f:if condition="{breakpoint.media}">
+                        <f:if condition="!{pixelDensities.disabled}">
+                            <f:alias map="{pds: pixelDensities}">
+                                <f:for each="{pds}" as="pd">
+                                    <f:variable name="AttributeMediaValue">
+                                        <theme:format.cleanupString tabs="true" lineBreaks="true" unixBreaks="true" windowsBreaks="true" whitespace="true">
+                                            only screen and ({breakpoint.media -> f:or(alternative: 'min-width')}: {breakpoint.size}px) and (-webkit-min-device-pixel-ratio: {pd.min-ratio}),
+                                            only screen and ({breakpoint.media -> f:or(alternative: 'min-width')}: {breakpoint.size}px) and (min-resolution: {pd.min-resolution}dpi)
+                                        </theme:format.cleanupString>
+                                    </f:variable>
+
+                                    {theme:math.simpleMultiply(a: breakpoint.maxWidth, b: pd.min-ratio) -> f:variable(name: 'resultingMaxWidth')}
+
+                                    <source srcset="{f:uri.image(image: file, maxWidth: '{resultingMaxWidth}', cropVariant: breakpoint.cropVariant)}" media="{AttributeMediaValue}">
+                                </f:for>
+                            </f:alias>
+                        </f:if>
+                        <f:variable name="mediaAttribute">only screen and ({breakpoint.media -> f:or(alternative: 'min-width')}: {breakpoint.size}px)</f:variable>
+
+                        <f:if condition="{respectAspectRatio}">
+                            <f:then>
+                                <f:variable name="height" value="{breakpoint.maxWidth * breakpoint.aspectRatio.h / breakpoint.aspectRatio.w}c" />
+                                <f:variable name="srcset" value="{f:uri.image(image: file, width: '{breakpoint.maxWidth}c', height: height)}" />
+                                <source srcset="{srcset}" media="{mediaAttribute}">
+                            </f:then>
+                            <f:else>
+                                <source srcset="{f:uri.image(image: file, maxWidth: breakpoint.maxWidth, cropVariant: breakpoint.cropVariant)}" media="{mediaAttribute}">
+                            </f:else>
+                        </f:if>
+                    </f:if>
+				</f:for>
+
+				<img class="{class -> f:or(alternative: 'img-fluid')}"
+					 src="{f:uri.image(image: file, maxWidth: defaultImageMaxWidth, cropVariant: '{defaultCropVariant -> f:or(alternative: \'default\')}')}"
+					 alt="{file.alternative}" title="{file.title}" width="{file.originalResource.properties.width -> f:or(alternative: file.properties.width)}" height="{file.originalResource.properties.height -> f:or(alternative: file.properties.height)}" {f:if(condition: '{disableLazyLoading}', else: 'loading="lazy"')}>
+			</picture>
+		</f:link.typolink>
+	</f:if>
+</f:spaceless>
+
+<f:section name="ImageZoom">
+    <f:if condition="{imageZoom}">
+        <span class="lightbox__open | d-flex align-items-center justify-content-center m-hg bg-action-1 color-copytext">
+            <f:render partial="Atoms/Icons" section="Plus" arguments="{ class: 'icon-32x32' }" />
+            <span class="visually-hidden">{f:translate(key: 'lightbox.open', extensionName: 'theme')}</span>
+        </span>
+    </f:if>
+</f:section>
+
+</html>

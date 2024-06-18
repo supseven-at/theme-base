@@ -1,0 +1,2 @@
+@import './Seo/setup.typoscript'
+@import './FluidStyledContent/setup.typoscript'

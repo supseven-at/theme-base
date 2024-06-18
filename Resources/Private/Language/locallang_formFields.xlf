@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns:t3="http://typo3.org/schemas/xliff" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" original="" datatype="plaintext" date="2024-04-15T08:54:21+02:00">
+		<body>
+			<trans-unit id="element.city.properties.label" resname="element.city.properties.label">
+				<source>Place / Location / City</source>
+			</trans-unit>
+			<trans-unit id="element.city.properties.placeholder" resname="element.city.properties.placeholder">
+				<source>e.g. Vienna, Berlin, ...</source>
+			</trans-unit>
+			<trans-unit id="element.company.properties.label" resname="element.company.properties.label">
+				<source>Company</source>
+			</trans-unit>
+			<trans-unit id="element.company.properties.placeholder" resname="element.company.properties.placeholder">
+				<source>e.g. John Doe Ltd.</source>
+			</trans-unit>
+			<trans-unit id="element.country.properties.label" resname="element.country.properties.label">
+				<source>Country</source>
+			</trans-unit>
+			<trans-unit id="element.country.properties.placeholder" resname="element.country.properties.placeholder">
+				<source>e.g. Austria, Germany, ...</source>
+			</trans-unit>
+			<trans-unit id="element.country.properties.prependOptionLabel" resname="element.country.properties.prependOptionLabel">
+				<source>Please choose ...</source>
+			</trans-unit>
+			<trans-unit id="element.email.properties.label" resname="element.email.properties.label">
+				<source>E-mail address</source>
+			</trans-unit>
+			<trans-unit id="element.email.properties.placeholder" resname="element.email.properties.placeholder">
+				<source>e.g. john.doe@domain.com</source>
+			</trans-unit>
+			<trans-unit id="element.firstname.properties.label" resname="element.firstname.properties.label">
+				<source>First name</source>
+			</trans-unit>
+			<trans-unit id="element.firstname.properties.placeholder" resname="element.firstname.properties.placeholder">
+				<source>e.g. John</source>
+			</trans-unit>
+			<trans-unit id="element.lastname.properties.label" resname="element.lastname.properties.label">
+				<source>Last name</source>
+			</trans-unit>
+			<trans-unit id="element.lastname.properties.placeholder" resname="element.lastname.properties.placeholder">
+				<source>e.g. Doe</source>
+			</trans-unit>
+			<trans-unit id="element.legalNotice.properties.label" resname="element.legalNotice.properties.label">
+				<source>I agree that my personal data will be stored and processed by %2$s. I have the right to withdraw my consent to personal data processing anytime by e-mail or letter to %2$s. I have read the %1$s for further information about data processing and my rights.</source>
+			</trans-unit>
+			<trans-unit id="element.message.properties.label" resname="element.message.properties.label">
+				<source>Message</source>
+			</trans-unit>
+			<trans-unit id="element.message.properties.placeholder" resname="element.message.properties.placeholder">
+				<source>Hello, I have a request regarding ...</source>
+			</trans-unit>
+			<trans-unit id="element.phone.properties.label" resname="element.phone.properties.label">
+				<source>Phone number</source>
+			</trans-unit>
+			<trans-unit id="element.phone.properties.placeholder" resname="element.phone.properties.placeholder">
+				<source>e.g. 0043 660 1234567</source>
+			</trans-unit>
+			<trans-unit id="element.salutation.properties.label" resname="element.salutation.properties.label">
+				<source>Salutation</source>
+			</trans-unit>
+			<trans-unit id="element.salutation.properties.placeholder" resname="element.salutation.properties.placeholder">
+				<source>e.g. Mr., Ms., ...</source>
+			</trans-unit>
+			<trans-unit id="element.salutation.properties.prependOptionLabel" resname="element.salutation.properties.prependOptionLabel">
+				<source>Please choose ...</source>
+			</trans-unit>
+			<trans-unit id="element.street.properties.label" resname="element.street.properties.label">
+				<source>Address</source>
+			</trans-unit>
+			<trans-unit id="element.street.properties.placeholder" resname="element.street.properties.placeholder">
+				<source>e.g. Main street</source>
+			</trans-unit>
+			<trans-unit id="element.streetnumber.properties.label" resname="element.streetnumber.properties.label">
+				<source>House number</source>
+			</trans-unit>
+			<trans-unit id="element.streetnumber.properties.placeholder" resname="element.streetnumber.properties.placeholder">
+				<source>e.g. 123</source>
+			</trans-unit>
+			<trans-unit id="element.title.properties.label" resname="element.title.properties.label">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="element.title.properties.placeholder" resname="element.title.properties.placeholder">
+				<source>e.g. Dr., Prof., ...</source>
+			</trans-unit>
+			<trans-unit id="element.zip.properties.label" resname="element.zip.properties.label">
+				<source>Zip code</source>
+			</trans-unit>
+			<trans-unit id="element.zip.properties.placeholder" resname="element.zip.properties.placeholder">
+				<source>e.g. 1010</source>
+			</trans-unit>
+			<trans-unit id="finisher.MailIntrotext.headerReceiver" resname="finisher.MailIntrotext.headerReceiver">
+				<source>New message</source>
+			</trans-unit>
+			<trans-unit id="finisher.MailIntrotext.headerSender" resname="finisher.MailIntrotext.headerSender">
+				<source>Thank you for your message.</source>
+			</trans-unit>
+			<trans-unit id="finisher.MailIntrotext.textReceiver" resname="finisher.MailIntrotext.textReceiver">
+				<source>Enclosed you will find the transmitted data.&lt;hr&gt;</source>
+			</trans-unit>
+			<trans-unit id="finisher.MailIntrotext.textSender" resname="finisher.MailIntrotext.textSender">
+				<source>We will process your request as quickly as possible and get back to you shortly.&lt;hr&gt;</source>
+			</trans-unit>
+			<trans-unit id="mail.legal_notice_accepted" resname="mail.legal_notice_accepted">
+				<source>Privacy policy accepted.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.city.1221560718" resname="validation.error.city.1221560718">
+				<source>Please enter a city.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.company.1221560718" resname="validation.error.company.1221560718">
+				<source>Please enter a company.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.country.1221560718" resname="validation.error.country.1221560718">
+				<source>Please enter a country.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.email.1221560718" resname="validation.error.email.1221560718">
+				<source>Please enter an e-mail address.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.firstname.1221560718" resname="validation.error.firstname.1221560718">
+				<source>Please enter a first name.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.lastname.1221560718" resname="validation.error.lastname.1221560718">
+				<source>Please enter a last name.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.legalNotice.1221560718" resname="validation.error.legalNotice.1221560718">
+				<source>Please accept the privacy policy.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.message.1221560718" resname="validation.error.message.1221560718">
+				<source>Please enter a message.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.phone.1221560718" resname="validation.error.phone.1221560718">
+				<source>Please enter a phone.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.salutation.1221560718" resname="validation.error.salutation.1221560718">
+				<source>Please enter a salutation.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.street.1221560718" resname="validation.error.street.1221560718">
+				<source>Please enter an address.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.streetnumber.1221560718" resname="validation.error.streetnumber.1221560718">
+				<source>Please enter a house number.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.title.1221560718" resname="validation.error.title.1221560718">
+				<source>Please enter a title.</source>
+			</trans-unit>
+			<trans-unit id="validation.error.zip.1221560718" resname="validation.error.zip.1221560718">
+				<source>Please enter a zip code.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
