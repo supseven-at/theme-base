@@ -35,3 +35,6 @@ themeBase:
       breadcrumbNavigation:
         enabled: 1
         includeNotInMenu: 0
+
+      legalNotice:
+        uid: 0
