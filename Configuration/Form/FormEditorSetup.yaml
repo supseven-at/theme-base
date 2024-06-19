@@ -6,6 +6,8 @@ prototypes:
           10: '@supseven/theme-base/backend/form-editor/linked-checkbox-model.js'
       formEditorPartials:
         FormElement-LinkedCheckbox: 'Stage/SelectTemplate'
+      translationFiles:
+        20: 'EXT:theme_base/Resources/Private/Language/locallang_formFields.xlf'
     formElementsDefinition:
       LinkedCheckbox:
         properties:
@@ -13,7 +15,7 @@ prototypes:
           linkText: ''
         formEditor:
           iconIdentifier: form-checkbox
-          label: 'Linked Checkbox'
+          label: 'element.linkedCheckbox.backendlabel'
           group: select
           groupSorting: 9000
           editors:

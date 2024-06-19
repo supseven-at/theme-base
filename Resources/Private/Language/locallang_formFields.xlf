@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xliff version="1.2" xmlns:t3="http://typo3.org/schemas/xliff" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-	<file source-language="en" original="" datatype="plaintext" date="2024-04-15T08:54:21+02:00">
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" original="" datatype="plaintext" date="2024-06-19T13:33:24+02:00">
 		<body>
 			<trans-unit id="element.city.properties.label" resname="element.city.properties.label">
 				<source>Place / Location / City</source>
@@ -43,6 +43,9 @@
 			</trans-unit>
 			<trans-unit id="element.legalNotice.properties.label" resname="element.legalNotice.properties.label">
 				<source>I agree that my personal data will be stored and processed by %2$s. I have the right to withdraw my consent to personal data processing anytime by e-mail or letter to %2$s. I have read the %1$s for further information about data processing and my rights.</source>
+			</trans-unit>
+			<trans-unit id="element.linkedCheckbox.backendlabel" resname="element.linkedCheckbox.backendlabel">
+				<source>Linked Checkbox</source>
 			</trans-unit>
 			<trans-unit id="element.message.properties.label" resname="element.message.properties.label">
 				<source>Message</source>
