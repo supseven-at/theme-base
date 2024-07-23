@@ -1,7 +1,7 @@
 {
     "name": "supseven/theme-base",
     "license": "GPL-2.0-or-later",
-    "description": "Sitepackage Library of supseven.at",
+    "description": "Sitepackage Library of supseven. A swiss army knife for TYPO3 projects",
     "type": "typo3-cms-extension",
     "autoload": {
         "psr-4": {
