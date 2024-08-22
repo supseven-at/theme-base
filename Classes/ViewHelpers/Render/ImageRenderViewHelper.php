@@ -32,9 +32,6 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     /** @var bool $escapeOutput */
     protected $escapeOutput = false;
 
-    /** @var ImageService $imageService */
-    private ImageService $imageService;
-
     /** @var FileReference|null $image */
     private ?FileReference $image;
 
@@ -47,10 +44,9 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     /** @var array $contentObjectData */
     private array $contentObjectData;
 
-    public function __construct()
+    public function __construct(protected ImageService $imageService)
     {
         parent::__construct();
-        $this->imageService = GeneralUtility::makeInstance(ImageService::class);
     }
 
     public function initialize(): void
