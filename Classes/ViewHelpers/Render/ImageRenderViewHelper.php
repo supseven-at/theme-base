@@ -122,19 +122,6 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     }
 
     /**
-     * Get the cropping area for the specified crop variant.
-     *
-     * @param string $cropVariant The name of the crop variant.
-     * @return Area The cropping area for the specified crop variant.
-     */
-    private function getCropping(string $cropVariant): Area
-    {
-        $cropVariantCollection = CropVariantCollection::create((string)$this->cropString);
-
-        return $cropVariantCollection->getCropArea($cropVariant);
-    }
-
-    /**
      * Process the image with the given width and crop area.
      *
      * @param int $width The desired width of the image.
@@ -165,6 +152,19 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
             'src'            => $this->imageService->getImageUri($processedImage),
             'processedImage' => $processedImage,
         ];
+    }
+
+    /**
+     * Get the cropping area for the specified crop variant.
+     *
+     * @param string $cropVariant The name of the crop variant.
+     * @return Area The cropping area for the specified crop variant.
+     */
+    private function getCropping(string $cropVariant): Area
+    {
+        $cropVariantCollection = CropVariantCollection::create((string)$this->cropString);
+
+        return $cropVariantCollection->getCropArea($cropVariant);
     }
 
     /**

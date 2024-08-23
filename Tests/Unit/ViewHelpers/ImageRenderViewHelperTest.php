@@ -22,14 +22,14 @@ use PHPUnit\Framework\TestCase;
 use Supseven\ThemeBase\ViewHelpers\Render\ImageRenderViewHelper;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
-use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Core\Resource\FileReference;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3\CMS\Core\Resource\ProcessedFile;
+use TYPO3\CMS\Extbase\Service\ImageService;
+use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 /**
  * Test for Supseven\ThemeBase\ViewHelpers\Render\ImageRenderViewHelper
@@ -49,7 +49,6 @@ final class ImageRenderViewHelperTest extends TestCase
     private FileReference|null $fileReferenceMock = null;
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function setUp(): void
@@ -66,7 +65,7 @@ final class ImageRenderViewHelperTest extends TestCase
 
         $this->subject = new ImageRenderViewHelper($imageServiceMock);
 
-        $contentObjectRendererMock       = self::createMock(ContentObjectRenderer::class);
+        $contentObjectRendererMock = self::createMock(ContentObjectRenderer::class);
         $contentObjectRendererMock->data = [
             'image_zoom' => '0',
         ];
@@ -89,9 +88,9 @@ final class ImageRenderViewHelperTest extends TestCase
                              ->willReturn($serverRequestMock);
 
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['fluid']['expressionNodeTypes'] = [
-            'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode',
-            'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode',
-            'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode',
+            'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
+            'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\MathExpressionNode',
+            'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\TernaryExpressionNode',
         ];
         $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'] = $this->fileExtension . ',jpeg,png,gif,svg';
 
@@ -103,9 +102,6 @@ final class ImageRenderViewHelperTest extends TestCase
                           ->willReturn('');
     }
 
-    /**
-     * @return void
-     */
     public function tearDown(): void
     {
         unset($this->subject);
@@ -114,27 +110,26 @@ final class ImageRenderViewHelperTest extends TestCase
     /**
      * Test the whole render method
      *
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     #[Test]
     public function render(): void
     {
-        $maxWidth      = 1000;
-        $size          = '576';
-        $imgClass      = 'img-fluid';
-        $minRatio      = 2;
-        $loading       = 'lazy';
+        $maxWidth = 1000;
+        $size = '576';
+        $imgClass = 'img-fluid';
+        $minRatio = 2;
+        $loading = 'lazy';
 
         $this->subject->setArguments([
-            'image'             => $this->fileReferenceMock,
-            'breakpoints'       => 'default',
-            'fileExtension'     => $this->fileExtension,
-            'imgClass'          => $imgClass,
-            'loading'           => $loading,
-            'settings'          => [
+            'image'         => $this->fileReferenceMock,
+            'breakpoints'   => 'default',
+            'fileExtension' => $this->fileExtension,
+            'imgClass'      => $imgClass,
+            'loading'       => $loading,
+            'settings'      => [
                 'breakpoints' => [
-                    'default'        => [
+                    'default' => [
                         0 => [
                             'media'       => 'min-width',
                             'size'        => $size,
@@ -176,17 +171,16 @@ final class ImageRenderViewHelperTest extends TestCase
     /**
      * Test processImage method to throw exception if image extension is not allowed
      *
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     #[Test]
     public function processImageThrowsException(): void
     {
-        $maxWidth      = 1000;
-        $size          = '576';
-        $imgClass      = 'img-fluid';
-        $minRatio      = 2;
-        $loading       = 'lazy';
+        $maxWidth = 1000;
+        $size = '576';
+        $imgClass = 'img-fluid';
+        $minRatio = 2;
+        $loading = 'lazy';
 
         $this->fileExtension = 'webp';
 
@@ -196,14 +190,14 @@ final class ImageRenderViewHelperTest extends TestCase
         $this->expectExceptionCode(1618989190);
 
         $this->subject->setArguments([
-            'image'             => $this->fileReferenceMock,
-            'breakpoints'       => 'default',
-            'fileExtension'     => $this->fileExtension,
-            'imgClass'          => $imgClass,
-            'loading'           => $loading,
-            'settings'          => [
+            'image'         => $this->fileReferenceMock,
+            'breakpoints'   => 'default',
+            'fileExtension' => $this->fileExtension,
+            'imgClass'      => $imgClass,
+            'loading'       => $loading,
+            'settings'      => [
                 'breakpoints' => [
-                    'default'        => [
+                    'default' => [
                         0 => [
                             'media'       => 'min-width',
                             'size'        => $size,
