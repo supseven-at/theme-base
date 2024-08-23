@@ -7,7 +7,6 @@
 /.phpunit.result.cache
 /Documentation-GENERATED-temp/
 /clover.xml
-/composer.lock
 /generate-documentation.sh
 /nbproject
 /node_modules/
