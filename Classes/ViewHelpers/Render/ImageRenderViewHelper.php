@@ -141,7 +141,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      * @param Area $cropArea The crop area to apply on the image.
      * @return string The URI of the processed image.
      */
-    private function processImage(int $width, Area $cropArea): array
+    public function processImage(int $width, Area $cropArea): array
     {
         if ((string)$this->arguments['fileExtension'] && !GeneralUtility::inList($GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'], (string)$this->arguments['fileExtension'])) {
             throw new Exception(
