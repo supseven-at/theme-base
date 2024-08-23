@@ -23,31 +23,48 @@ use Supseven\ThemeBase\ViewHelpers\Render\ImageRenderViewHelper;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Core\Resource\FileReference;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
-use TYPO3\CMS\Core\Resource\ResourceFactory;
-use Psr\Container\ContainerInterface;
-use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Fluid\Core\ViewHelper\ViewHelperResolverFactoryInterface;
-use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3\CMS\Core\Resource\ProcessedFile;
 
 /**
- * ImageRenderViewHelperTest
+ * Test for Supseven\ThemeBase\ViewHelpers\Render\ImageRenderViewHelper
  */
 final class ImageRenderViewHelperTest extends TestCase
 {
+    /**
+     * Test the whole render method
+     *
+     * @return void
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     #[Test]
     public function render(): void
     {
-        $imageServiceMock = self::createMock(ImageService::class);
+        $maxWidth = 1000;
+        $size = '576';
+        $fileExtension = 'jpg';
+        $filePath = 'fileadmin/someFile.jpg';
+        $imgClass = 'img-fluid';
+        $minRatio = 2;
+        $loading = 'lazy';
 
         $fileReferenceMock = self::createMock(FileReference::class);
         $fileReferenceMock->expects(self::any())
             ->method('getProperty')
             ->willReturn('');
+
+        $processedFileMock = self::createMock(ProcessedFile::class);
+
+        $imageServiceMock = self::createMock(ImageService::class);
+        $imageServiceMock->expects(self::any())
+            ->method('applyProcessingInstructions')
+            ->willReturn($processedFileMock);
+        $imageServiceMock->expects(self::any())
+            ->method('getImageUri')
+            ->willReturn($filePath);
 
         $subject = new ImageRenderViewHelper($imageServiceMock);
 
@@ -78,35 +95,35 @@ final class ImageRenderViewHelperTest extends TestCase
             'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode',
             'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode',
         ];
-        $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'] = 'jpg,jpeg,png,gif,svg';
+        $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'] = $fileExtension . ',jpeg,png,gif,svg';
 
         $subject->setRenderingContext($renderingContextMock);
 
         $subject->setArguments([
             'image' => $fileReferenceMock,
             'breakpoints' => 'default',
-            'fileExtension' => 'jpg',
-            'imgClass' => 'img-fluid',
-            'loading' => 'lazy',
+            'fileExtension' => $fileExtension,
+            'imgClass' => $imgClass,
+            'loading' => $loading,
             'settings' => [
                 'breakpoints' => [
                     'default' => [
-                        0 => [
+                        0 =>[
                             'media' => 'min-width',
-                            'size' => '0',
-                            'maxWidth' => '543',
+                            'size' => $size,
+                            'maxWidth' => $maxWidth,
                             'cropVariant' => 'xs',
                         ],
                         1 =>[
                             'media' => 'min-width',
-                            'size' => '576',
-                            'maxWidth' => '735',
+                            'size' => $size*2,
+                            'maxWidth' => $maxWidth*2,
                             'cropVariant' => 'xs',
                         ],
                     ],
                     'pixelDensities' => [
                         0 => [
-                            'min-ratio' => '2.0',
+                            'min-ratio' => $minRatio,
                             'min-resolution' => '192',
                         ],
                     ],
@@ -120,6 +137,13 @@ final class ImageRenderViewHelperTest extends TestCase
 
         $result = $subject->render();
 
-        self::assertStringContainsString('srcset', $result);
+        self::assertIsString($result);
+        self::assertStringContainsString('<picture><source srcset="', $result);
+        self::assertStringContainsString($filePath, $result);
+        self::assertStringContainsString('only screen and (min-width: ' . $size . 'px)', $result);
+        self::assertStringContainsString('only screen and (min-width: ' . $size*(int)$minRatio . 'px)', $result);
+        self::assertStringContainsString('class="' . $imgClass . '"', $result);
+        self::assertStringContainsString('loading="' . $loading . '"', $result);
+
     }
 }
