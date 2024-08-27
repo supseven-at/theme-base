@@ -174,7 +174,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      * @param string $media The media attribute value.
      * @return string The rendered source element.
      */
-    private function getSourceElement(array $imgSrc, string $media): string
+    public function getSourceElement(array $imgSrc, string $media): string
     {
         $this->tag->reset();
         $this->tag->setTagName('source');

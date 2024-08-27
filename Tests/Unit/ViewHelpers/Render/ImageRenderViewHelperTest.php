@@ -244,7 +244,7 @@ final class ImageRenderViewHelperTest extends TestCase
         $area = $this->subject->getCropping('xs');
 
         self::assertInstanceOf(Area::class, $area);
-        self::assertSame(2.0, $area->getOffsetLeft());E
+        self::assertSame(2.0, $area->getOffsetLeft());
         self::assertSame(4.0, $area->getOffsetTop());
         self::assertSame(6.0, $area->getWidth());
         self::assertSame(8.0, $area->getHeight());
@@ -256,5 +256,26 @@ final class ImageRenderViewHelperTest extends TestCase
         self::assertSame(0.125, $area->getOffsetTop());
         self::assertSame(1.0, $area->getWidth());
         self::assertSame(0.75, $area->getHeight());
+    }
+
+    /**
+     * @return void
+     */
+    #[Test]
+    public function getSourceElement(): void
+    {
+        $this->subject->initialize();
+
+        $imgSrc = [
+            'test1.png',
+            'test2.png 2x',
+        ];
+
+        $sourceElement = $this->subject->getSourceElement($imgSrc, 'test3');
+
+        self::assertStringContainsString('srcset', $sourceElement);
+        self::assertStringContainsString('test1', $sourceElement);
+        self::assertStringContainsString('test2', $sourceElement);
+        self::assertStringContainsString('test3', $sourceElement);
     }
 }
