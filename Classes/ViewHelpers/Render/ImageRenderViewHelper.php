@@ -187,6 +187,30 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     }
 
     /**
+     * Get the exception message for rendering an image tag.
+     *
+     * @param string $detailedMessage The detailed error message.
+     *
+     * @return string The exception message.
+     */
+    public function getExceptionMessage(string $detailedMessage): string
+    {
+        /** @var RenderingContext $renderingContext */
+        $renderingContext = $this->renderingContext;
+        $request = $renderingContext->getRequest();
+
+        if ($request instanceof RequestInterface) {
+            $currentContentObject = $request->getAttribute('currentContentObject');
+
+            if ($currentContentObject instanceof ContentObjectRenderer) {
+                return sprintf('Unable to render image tag in "%s": %s', $currentContentObject->currentRecord, $detailedMessage);
+            }
+        }
+
+        return "Unable to render image tag: {$detailedMessage}";
+    }
+
+    /**
      * Render the image element for the given file reference.
      *
      * @return string The rendered image element.
@@ -269,29 +293,5 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         $this->tag->setContent($content);
 
         return $this->tag->render();
-    }
-
-    /**
-     * Get the exception message for rendering an image tag.
-     *
-     * @param string $detailedMessage The detailed error message.
-     *
-     * @return string The exception message.
-     */
-    public function getExceptionMessage(string $detailedMessage): string
-    {
-        /** @var RenderingContext $renderingContext */
-        $renderingContext = $this->renderingContext;
-        $request = $renderingContext->getRequest();
-
-        if ($request instanceof RequestInterface) {
-            $currentContentObject = $request->getAttribute('currentContentObject');
-
-            if ($currentContentObject instanceof ContentObjectRenderer) {
-                return sprintf('Unable to render image tag in "%s": %s', $currentContentObject->currentRecord, $detailedMessage);
-            }
-        }
-
-        return "Unable to render image tag: {$detailedMessage}";
     }
 }

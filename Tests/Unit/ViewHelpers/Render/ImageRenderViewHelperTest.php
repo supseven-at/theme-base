@@ -259,9 +259,6 @@ final class ImageRenderViewHelperTest extends TestCase
         self::assertSame(0.75, $area->getHeight());
     }
 
-    /**
-     * @return void
-     */
     #[Test]
     public function getSourceElement(): void
     {
@@ -280,9 +277,6 @@ final class ImageRenderViewHelperTest extends TestCase
         self::assertStringContainsString('test3', $sourceElement);
     }
 
-    /**
-     * @return void
-     */
     #[Test]
     public function getExceptionMessage(): void
     {
