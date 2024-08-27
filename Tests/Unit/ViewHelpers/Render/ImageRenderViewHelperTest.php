@@ -115,21 +115,7 @@ final class ImageRenderViewHelperTest extends TestCase
         $this->fileReferenceMock->expects(self::any())
                           ->method('getProperty')
                           ->willReturn('');
-    }
 
-    public function tearDown(): void
-    {
-        unset($this->subject);
-    }
-
-    /**
-     * Test the whole render method
-     *
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
-    #[Test]
-    public function render(): void
-    {
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
             'breakpoints'   => 'default',
@@ -163,7 +149,21 @@ final class ImageRenderViewHelperTest extends TestCase
             'cropString'        => '',
             'contentObjectData' => [],
         ]);
+    }
 
+    public function tearDown(): void
+    {
+        unset($this->subject);
+    }
+
+    /**
+     * Test the whole render method
+     *
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    #[Test]
+    public function render(): void
+    {
         $this->subject->initialize();
 
         $result = $this->subject->render();
@@ -196,23 +196,9 @@ final class ImageRenderViewHelperTest extends TestCase
             'image'         => $this->fileReferenceMock,
             'breakpoints'   => 'default',
             'fileExtension' => $this->fileExtension,
-            'imgClass'      => $this->imgClass,
-            'loading'       => $this->loading,
             'settings'      => [
                 'breakpoints' => [
                     'default' => [
-                        0 => [
-                            'media'       => 'min-width',
-                            'size'        => $this->size,
-                            'maxWidth'    => $this->maxWidth,
-                            'cropVariant' => 'xs',
-                        ],
-                    ],
-                    'pixelDensities' => [
-                        0 => [
-                            'min-ratio'      => $this->minRatio,
-                            'min-resolution' => '192',
-                        ],
                     ],
                 ],
             ],
@@ -246,24 +232,6 @@ final class ImageRenderViewHelperTest extends TestCase
             'settings'      => [
                 'breakpoints' => [
                     'default' => [
-                        0 => [
-                            'media'       => 'min-width',
-                            'size'        => $this->size,
-                            'maxWidth'    => $this->maxWidth,
-                            'cropVariant' => 'xs',
-                        ],
-                        1 => [
-                            'media'       => 'min-width',
-                            'size'        => $this->size * 2,
-                            'maxWidth'    => $this->maxWidth * 2,
-                            'cropVariant' => 'xl',
-                        ],
-                    ],
-                    'pixelDensities' => [
-                        0 => [
-                            'min-ratio'      => $this->minRatio,
-                            'min-resolution' => '192',
-                        ],
                     ],
                 ],
             ],
@@ -276,7 +244,7 @@ final class ImageRenderViewHelperTest extends TestCase
         $area = $this->subject->getCropping('xs');
 
         self::assertInstanceOf(Area::class, $area);
-        self::assertSame(2.0, $area->getOffsetLeft());
+        self::assertSame(2.0, $area->getOffsetLeft());E
         self::assertSame(4.0, $area->getOffsetTop());
         self::assertSame(6.0, $area->getWidth());
         self::assertSame(8.0, $area->getHeight());
