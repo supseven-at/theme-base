@@ -278,7 +278,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      *
      * @return string The exception message.
      */
-    private function getExceptionMessage(string $detailedMessage): string
+    public function getExceptionMessage(string $detailedMessage): string
     {
         /** @var RenderingContext $renderingContext */
         $renderingContext = $this->renderingContext;

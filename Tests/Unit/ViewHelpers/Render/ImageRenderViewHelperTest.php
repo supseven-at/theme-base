@@ -84,6 +84,7 @@ final class ImageRenderViewHelperTest extends TestCase
         $contentObjectRendererMock->data = [
             'image_zoom' => '0',
         ];
+        $contentObjectRendererMock->currentRecord = 'tt_content:1';
 
         $serverRequestMock = self::createMock(ServerRequest::class);
         $serverRequestMock->expects(self::any())
@@ -277,5 +278,21 @@ final class ImageRenderViewHelperTest extends TestCase
         self::assertStringContainsString('test1', $sourceElement);
         self::assertStringContainsString('test2', $sourceElement);
         self::assertStringContainsString('test3', $sourceElement);
+    }
+
+    /**
+     * @return void
+     */
+    #[Test]
+    public function getExceptionMessage(): void
+    {
+        $this->subject->initialize();
+
+        $exceptionMessage = $this->subject->getExceptionMessage('message');
+
+        self::assertStringContainsString(
+            'Unable to render image tag in "tt_content:1": message',
+            $exceptionMessage
+        );
     }
 }
