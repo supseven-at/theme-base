@@ -39,7 +39,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     private array $breakpoints;
 
     /** @var string $cropString */
-    private string $cropString;
+    private string $cropString = '';
 
     /** @var array $contentObjectData */
     private array $contentObjectData;
@@ -160,7 +160,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      * @param string $cropVariant The name of the crop variant.
      * @return Area The cropping area for the specified crop variant.
      */
-    private function getCropping(string $cropVariant): Area
+    public function getCropping(string $cropVariant): Area
     {
         $cropVariantCollection = CropVariantCollection::create((string)$this->cropString);
 

@@ -15,7 +15,7 @@ declare(strict_types=1);
  * The TYPO3 project - inspiring people to share!
  */
 
-namespace Supseven\ThemeBase\Tests\ViewHelpers;
+namespace Supseven\ThemeBase\Tests\ViewHelpers\Render;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -47,6 +47,21 @@ final class ImageRenderViewHelperTest extends TestCase
 
     /** @var FileReference */
     private FileReference|null $fileReferenceMock = null;
+
+    /** @var int */
+    private int $maxWidth = 1000;
+
+    /** @var int */
+    private int $size = 576;
+
+    /** @var string */
+    private $imgClass = 'img-fluid';
+
+    /** @var int */
+    private int $minRatio = 2;
+
+    /** @var string */
+    private $loading = 'lazy';
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
@@ -115,37 +130,31 @@ final class ImageRenderViewHelperTest extends TestCase
     #[Test]
     public function render(): void
     {
-        $maxWidth = 1000;
-        $size = '576';
-        $imgClass = 'img-fluid';
-        $minRatio = 2;
-        $loading = 'lazy';
-
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
             'breakpoints'   => 'default',
             'fileExtension' => $this->fileExtension,
-            'imgClass'      => $imgClass,
-            'loading'       => $loading,
+            'imgClass'      => $this->imgClass,
+            'loading'       => $this->loading,
             'settings'      => [
                 'breakpoints' => [
                     'default' => [
                         0 => [
                             'media'       => 'min-width',
-                            'size'        => $size,
-                            'maxWidth'    => $maxWidth,
+                            'size'        => $this->size,
+                            'maxWidth'    => $this->maxWidth,
                             'cropVariant' => 'xs',
                         ],
                         1 => [
                             'media'       => 'min-width',
-                            'size'        => $size * 2,
-                            'maxWidth'    => $maxWidth * 2,
-                            'cropVariant' => 'xs',
+                            'size'        => $this->size * 2,
+                            'maxWidth'    => $this->maxWidth * 2,
+                            'cropVariant' => 'xl',
                         ],
                     ],
                     'pixelDensities' => [
                         0 => [
-                            'min-ratio'      => $minRatio,
+                            'min-ratio'      => $this->minRatio,
                             'min-resolution' => '192',
                         ],
                     ],
@@ -162,10 +171,10 @@ final class ImageRenderViewHelperTest extends TestCase
         self::assertIsString($result);
         self::assertStringContainsString('<picture><source srcset="', $result);
         self::assertStringContainsString($this->filePath, $result);
-        self::assertStringContainsString('only screen and (min-width: ' . $size . 'px)', $result);
-        self::assertStringContainsString('only screen and (min-width: ' . $size * (int)$minRatio . 'px)', $result);
-        self::assertStringContainsString('class="' . $imgClass . '"', $result);
-        self::assertStringContainsString('loading="' . $loading . '"', $result);
+        self::assertStringContainsString('only screen and (min-width: ' . $this->size . 'px)', $result);
+        self::assertStringContainsString('only screen and (min-width: ' . ($this->size * $this->minRatio) . 'px)', $result);
+        self::assertStringContainsString('class="' . $this->imgClass . '"', $result);
+        self::assertStringContainsString('loading="' . $this->loading . '"', $result);
     }
 
     /**
@@ -176,12 +185,6 @@ final class ImageRenderViewHelperTest extends TestCase
     #[Test]
     public function processImageThrowsException(): void
     {
-        $maxWidth = 1000;
-        $size = '576';
-        $imgClass = 'img-fluid';
-        $minRatio = 2;
-        $loading = 'lazy';
-
         $this->fileExtension = 'webp';
 
         $this->expectException(Exception::class);
@@ -193,21 +196,21 @@ final class ImageRenderViewHelperTest extends TestCase
             'image'         => $this->fileReferenceMock,
             'breakpoints'   => 'default',
             'fileExtension' => $this->fileExtension,
-            'imgClass'      => $imgClass,
-            'loading'       => $loading,
+            'imgClass'      => $this->imgClass,
+            'loading'       => $this->loading,
             'settings'      => [
                 'breakpoints' => [
                     'default' => [
                         0 => [
                             'media'       => 'min-width',
-                            'size'        => $size,
-                            'maxWidth'    => $maxWidth,
+                            'size'        => $this->size,
+                            'maxWidth'    => $this->maxWidth,
                             'cropVariant' => 'xs',
                         ],
                     ],
                     'pixelDensities' => [
                         0 => [
-                            'min-ratio'      => $minRatio,
+                            'min-ratio'      => $this->minRatio,
                             'min-resolution' => '192',
                         ],
                     ],
@@ -220,5 +223,70 @@ final class ImageRenderViewHelperTest extends TestCase
         $this->subject->initialize();
 
         $this->subject->processImage(100, self::createStub(Area::class));
+    }
+
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    #[Test]
+    public function getCroppingArea(): void
+    {
+        $this->fileReferenceMock = self::createMock(FileReference::class);
+        $this->fileReferenceMock->expects(self::any())
+                                ->method('getProperty')
+                                ->with('crop')
+                                ->willReturn('{"xs":{"cropArea":{"x":2,"y":4,"width":6,"height":8},"selectedRatio":"1:1","focusArea":null},"xl":{"cropArea":{"x":0,"y":0.125,"width":1,"height":0.75},"selectedRatio":"4:3","focusArea":null}}');
+
+        $this->subject->setArguments([
+            'image'         => $this->fileReferenceMock,
+            'breakpoints'   => 'default',
+            'fileExtension' => $this->fileExtension,
+            'imgClass'      => $this->imgClass,
+            'loading'       => $this->loading,
+            'settings'      => [
+                'breakpoints' => [
+                    'default' => [
+                        0 => [
+                            'media'       => 'min-width',
+                            'size'        => $this->size,
+                            'maxWidth'    => $this->maxWidth,
+                            'cropVariant' => 'xs',
+                        ],
+                        1 => [
+                            'media'       => 'min-width',
+                            'size'        => $this->size * 2,
+                            'maxWidth'    => $this->maxWidth * 2,
+                            'cropVariant' => 'xl',
+                        ],
+                    ],
+                    'pixelDensities' => [
+                        0 => [
+                            'min-ratio'      => $this->minRatio,
+                            'min-resolution' => '192',
+                        ],
+                    ],
+                ],
+            ],
+            'cropString'        => '',
+            'contentObjectData' => [],
+        ]);
+
+        $this->subject->initialize();
+
+        $area = $this->subject->getCropping('xs');
+
+        self::assertInstanceOf(Area::class, $area);
+        self::assertSame(2.0, $area->getOffsetLeft());
+        self::assertSame(4.0, $area->getOffsetTop());
+        self::assertSame(6.0, $area->getWidth());
+        self::assertSame(8.0, $area->getHeight());
+
+        $area = $this->subject->getCropping('xl');
+
+        self::assertInstanceOf(Area::class, $area);
+        self::assertSame(0.0, $area->getOffsetLeft());
+        self::assertSame(0.125, $area->getOffsetTop());
+        self::assertSame(1.0, $area->getWidth());
+        self::assertSame(0.75, $area->getHeight());
     }
 }
