@@ -8,6 +8,7 @@ use Psr\Http\Message\RequestInterface;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileReference;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
@@ -52,8 +53,8 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     public function initialize(): void
     {
         parent::initialize();
-        $this->image = $this->arguments['image'];
-        $this->breakpoints = $this->arguments['settings']['breakpoints'][$this->arguments['breakpoints']] ?? $this->arguments['settings']['breakpoints']['default'];
+        $this->image = $this->imageService->getImage('', $this->arguments['image'], false);
+        $this->getBreakpoints($this->arguments);
         $this->cropString = null !== $this->image ? $this->image->getProperty('crop') : '';
         $this->contentObjectData = $this->renderingContext->getRequest()->getAttribute('currentContentObject')->data;
     }
@@ -67,9 +68,10 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         $this->registerUniversalTagAttributes();
 
         $this->registerArgument('settings', 'array', 'The Content Element Settings', true);
-        $this->registerArgument('image', FileReference::class, 'Image Element', true);
+        $this->registerArgument('image', 'object', 'Image Element', true);
 
         $this->registerArgument('breakpoints', 'string', 'The breakpoints array key in the settings', false, 'default');
+        $this->registerArgument('breakpointsPath', 'string', 'If the Breakpoints are set in a path like youtube.breakpoints.default', false);
 
         $this->registerArgument('pictureClass', 'string', 'CSS ClassNames for the Picture Element', false);
         $this->registerArgument('imgClass', 'string', 'CSS ClassNames for the Image Element', false, 'img-fluid');
@@ -99,9 +101,11 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
             $cropArea = $this->getCropping($breakpoint['cropVariant'] ?? 'default');
             $imgSrc[] = $this->processImage((int)$breakpoint['maxWidth'], $cropArea)['src'];
 
-            if (!isset($this->arguments['settings']['breakpoints']['pixelDensities']['disabled'])) {
-                foreach ($this->arguments['settings']['breakpoints']['pixelDensities'] as $value) {
-                    $imgSrc[] = $this->processImage((int)$breakpoint['maxWidth'] * (int)$value['min-ratio'], $cropArea)['src'] . ' ' . (int)$value['min-ratio'] . 'x';
+            if (isset($this->arguments['settings']['breakpoints']['pixelDensities'])) {
+                if (!isset($this->arguments['settings']['breakpoints']['pixelDensities']['disabled'])) {
+                    foreach ($this->arguments['settings']['breakpoints']['pixelDensities'] as $value) {
+                        $imgSrc[] = $this->processImage((int)$breakpoint['maxWidth'] * (int)$value['min-ratio'], $cropArea)['src'] . ' ' . (int)$value['min-ratio'] . 'x';
+                    }
                 }
             }
 
@@ -112,7 +116,12 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
 
         $this->tag->reset();
         $this->tag->setTagName($this->tagName);
+        $this->tag->addAttribute('class', $this->arguments['pictureClass']);
         $this->tag->setContent(implode("\n", $source));
+
+        // test attribute, to check if the image is correct loaded
+        // can be removed later without any stress
+        $this->tag->addAttribute('data-viewhelper', 'theme');
 
         if ($this->image->getProperty('link') || (int)$this->contentObjectData['image_zoom'] === 1) {
             return $this->getAnchorElement($this->tag->render());
@@ -240,7 +249,8 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         if (null !== $alternative) {
             $attributes['alt'] = $alternative;
         } else {
-            $attributes['aria-hidden'] = true;
+            $attributes['aria-hidden'] = 'true';
+            $attributes['alt'] = '';
         }
 
         $this->tag->addAttributes(
@@ -293,5 +303,25 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         $this->tag->setContent($content);
 
         return $this->tag->render();
+    }
+
+    /**
+     * Get the breakpoints for rendering the picture element.
+     *
+     * This method retrieves the breakpoints from the settings based on the provided arguments.
+     * If the 'breakpointsPath' argument contains a dot ('.'), it assumes a nested array structure
+     * and retrieves the breakpoints using the ArrayUtility::getValueByPath() method.
+     * Otherwise, it retrieves the breakpoints directly from the 'settings' array.
+     * The retrieved breakpoints are assigned to the 'breakpoints' property for later use in rendering the picture element.
+     */
+    private function getBreakpoints(): void
+    {
+        if (isset($this->arguments['breakpointsPath']) && str_contains($this->arguments['breakpointsPath'], '.')) {
+            $breakpoints = ArrayUtility::getValueByPath($this->arguments['settings'], $this->arguments['breakpointsPath'], '.');
+            $this->arguments['settings']['breakpoints'] = $breakpoints;
+            $this->breakpoints = $breakpoints[$this->arguments['breakpoints']] ?? $this->arguments['settings']['breakpoints']['default'];
+        } else {
+            $this->breakpoints = $this->arguments['settings']['breakpoints'][$this->arguments['breakpoints']] ?? $this->arguments['settings']['breakpoints']['default'];
+        }
     }
 }
