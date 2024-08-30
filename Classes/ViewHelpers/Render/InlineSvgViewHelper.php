@@ -11,6 +11,7 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Page\AssetCollector;
+use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -83,9 +84,8 @@ class InlineSvgViewHelper extends AbstractViewHelper
     ) {
         $file = self::getFilePath($arguments['source']);
 
-        // return html comment, if file couldn't be found
         if (empty($arguments['source']) || !file_exists($file)) {
-            return '<!-- SVG file couldn\'t be found -->';
+            throw new FileDoesNotExistException('File not found', 1725027772);
         }
 
         try {
@@ -175,7 +175,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
             }
         }
 
-        // if there is a id, it means, this svg should be accessible. therefore a title MUST be set
+        // if there is an id, it means, this svg should be accessible. therefore a title MUST be set
         // if not, it throws a exception and will not be rendered.
         // if no id is set, the SVG is automatically marked as aria-hidden for a11y reasons
         if (!empty($arguments['id'])) {
