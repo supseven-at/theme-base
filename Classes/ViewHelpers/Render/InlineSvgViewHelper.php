@@ -81,11 +81,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
     ) {
-        if (stripos($arguments['source'], 'EXT:') !== false) {
-            $file = GeneralUtility::makeInstance(PackageManager::class)->resolvePackagePath($arguments['source']);
-        } else {
-            $file = Environment::getPublicPath() . '/' . $arguments['source'];
-        }
+        $file = self::getFilePath($arguments['source']);
 
         // return html comment, if file couldn't be found
         if (empty($arguments['source']) || !file_exists($file)) {
@@ -105,6 +101,37 @@ class InlineSvgViewHelper extends AbstractViewHelper
 
     /**
      * @param string $source
+     *
+     * @return string
+     * @throws \TYPO3\CMS\Core\Package\Exception\UnknownPackageException
+     * @throws \TYPO3\CMS\Core\Package\Exception\UnknownPackagePathException
+     */
+    public static function getFilePath(string $source): string
+    {
+        if (stripos($source, 'EXT:') !== false) {
+            return GeneralUtility::makeInstance(PackageManager::class)->resolvePackagePath($source);
+        }
+
+        return Environment::getPublicPath() . '/' . $source;
+    }
+
+    /**
+     * sanitizes a possible id string to a correct usable id string
+     *
+     * @param string $id
+     * @return string
+     */
+    public static function sanitizeId(string $id): string
+    {
+        // Replace any character that is not a letter, digit, colon, hyphen, or period with an underscore
+        $svgId = (string)preg_replace('/[^a-zA-Z0-9_:.-]/', '_', $id);
+
+        // If the ID starts with a digit, prepend it with an 'x' and convert the rest of the string
+        return htmlspecialchars((string)preg_replace('/^[^a-zA-Z]/', 'x', $svgId), ENT_QUOTES, 'UTF-8');
+    }
+
+    /**
+     * @param string $source
      * @param array $arguments
      * @return string
      */
@@ -115,9 +142,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
         $svgContent = preg_replace('/<title[\\s\\S]*?>[\\s\\S]*?<\\/title>/i', '', $svgContent);
 
         // Disables the functionality to allow external entities to be loaded when parsing the XML, must be kept
-        $previousValueOfEntityLoader = libxml_disable_entity_loader(true);
         $svgElement = simplexml_load_string($svgContent);
-        libxml_disable_entity_loader($previousValueOfEntityLoader);
         // remove xml version tag
         $domXml = dom_import_simplexml($svgElement);
 
@@ -153,7 +178,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
         // if there is a id, it means, this svg should be accessible. therefore a title MUST be set
         // if not, it throws a exception and will not be rendered.
         // if no id is set, the SVG is automatically marked as aria-hidden for a11y reasons
-        if (isset($arguments['id'])) {
+        if (!empty($arguments['id'])) {
             $domXml->setAttribute('aria-labelledby', self::sanitizeId($arguments['id']));
 
             if (isset($title)) {
@@ -206,19 +231,6 @@ class InlineSvgViewHelper extends AbstractViewHelper
         $finalSvgString = $domXml->ownerDocument->saveXML($domXml->ownerDocument->documentElement);
 
         return self::sanitizeContent($finalSvgString, $arguments);
-    }
-
-    /**
-     * sanitizes a possible id string to a correct usable id string
-     *
-     * @param string $id
-     * @return string
-     */
-    protected static function sanitizeId(string $id): string
-    {
-        $svgId = (string)preg_replace('/[^a-zA-Z0-9_:.-]/', '_', $id);
-
-        return htmlspecialchars((string)preg_replace('/^[^a-zA-Z]/', 'x', $svgId));
     }
 
     /**

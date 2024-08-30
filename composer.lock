@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eea723a582c6bfb95d68ec53258dcdad",
+    "content-hash": "ef2b00d5e2fe37a46082ab716b3eb138",
     "packages": [
         {
             "name": "b13/bolt",
@@ -8089,6 +8089,58 @@
             "time": "2024-08-07T17:03:09+00:00"
         },
         {
+            "name": "mikey179/vfsstream",
+            "version": "v1.6.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bovigo/vfsStream.git",
+                "reference": "fe695ec993e0a55c3abdda10a9364eb31c6f1bf0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/fe695ec993e0a55c3abdda10a9364eb31c6f1bf0",
+                "reference": "fe695ec993e0a55c3abdda10a9364eb31c6f1bf0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5||^8.5||^9.6",
+                "yoast/phpunit-polyfills": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "org\\bovigo\\vfs\\": "src/main/php"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Frank Kleine",
+                    "homepage": "http://frankkleine.de/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Virtual file system to mock the real file system in unit tests.",
+            "homepage": "http://vfs.bovigo.org/",
+            "support": {
+                "issues": "https://github.com/bovigo/vfsStream/issues",
+                "source": "https://github.com/bovigo/vfsStream/tree/master",
+                "wiki": "https://github.com/bovigo/vfsStream/wiki"
+            },
+            "time": "2024-08-29T18:43:31+00:00"
+        },
+        {
             "name": "myclabs/deep-copy",
             "version": "1.12.0",
             "source": {
@@ -10520,6 +10572,78 @@
                 }
             ],
             "time": "2024-03-03T12:36:25+00:00"
+        },
+        {
+            "name": "typo3/testing-framework",
+            "version": "8.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/TYPO3/testing-framework.git",
+                "reference": "d317133015a7028854f05ad68b97666c7b6d634d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/TYPO3/testing-framework/zipball/d317133015a7028854f05ad68b97666c7b6d634d",
+                "reference": "d317133015a7028854f05ad68b97666c7b6d634d",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/psr7": "^2.5.0",
+                "php": "^8.1",
+                "phpunit/phpunit": "^10.1 || ^11.0",
+                "psr/container": "^1.1.0 || ^2.0.0",
+                "typo3/cms-backend": "12.*.*@dev || 13.*.*@dev",
+                "typo3/cms-core": "12.*.*@dev || 13.*.*@dev",
+                "typo3/cms-extbase": "12.*.*@dev || 13.*.*@dev",
+                "typo3/cms-fluid": "12.*.*@dev || 13.*.*@dev",
+                "typo3/cms-frontend": "12.*.*@dev || 13.*.*@dev"
+            },
+            "replace": {
+                "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.37.1",
+                "phpstan/phpstan": "^1.9.2",
+                "phpstan/phpstan-phpunit": "^1.1.1",
+                "typo3/cms-workspaces": "12.*.*@dev || 13.*.*@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TYPO3\\JsonResponse\\": "Resources/Core/Functional/Extensions/json_response/Classes/",
+                    "TYPO3\\PrivateContainer\\": "Resources/Core/Functional/Extensions/private_container/Classes/",
+                    "TYPO3\\TestingFramework\\": "Classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "TYPO3 CMS Core Team",
+                    "homepage": "https://forge.typo3.org/projects/typo3cms-core",
+                    "role": "Developer"
+                },
+                {
+                    "name": "The TYPO3 Community",
+                    "homepage": "https://typo3.org/community/",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "The TYPO3 testing framework provides base classes for unit, functional and acceptance testing.",
+            "homepage": "https://typo3.org/",
+            "keywords": [
+                "testing",
+                "tests",
+                "typo3"
+            ],
+            "support": {
+                "general": "https://typo3.org/support/",
+                "issues": "https://github.com/TYPO3/testing-framework/issues",
+                "source": "https://github.com/TYPO3/testing-framework/tree/8.2.1"
+            },
+            "time": "2024-08-14T18:02:34+00:00"
         }
     ],
     "aliases": [],

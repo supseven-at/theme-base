@@ -15,7 +15,7 @@ declare(strict_types=1);
  * The TYPO3 project - inspiring people to share!
  */
 
-namespace Supseven\ThemeBase\Tests\ViewHelpers\Render;
+namespace Supseven\ThemeBase\Tests\Unit\ViewHelpers\Render;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
