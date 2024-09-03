@@ -36,8 +36,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
  */
 final class ImageRenderViewHelperTest extends TestCase
 {
-    /** @var \Supseven\ThemeBase\ViewHelpers\Render\ImageRenderViewHelper SUT */
+    /** @var ImageRenderViewHelper SUT */
     private ?ImageRenderViewHelper $subject = null;
+
+    /** @var object */
+    private ?object $imageServiceMock = null;
 
     /** @var string */
     private string $filePath = 'fileadmin/someFile.jpg';
@@ -55,13 +58,16 @@ final class ImageRenderViewHelperTest extends TestCase
     private int $size = 576;
 
     /** @var string */
-    private $imgClass = 'img-fluid';
+    private string $imgClass = 'img-fluid';
+
+    /** @var string */
+    private string $pictureClass = 'picture-fluid';
 
     /** @var int */
     private int $minRatio = 2;
 
     /** @var string */
-    private $loading = 'lazy';
+    private string $loading = 'lazy';
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
@@ -70,15 +76,15 @@ final class ImageRenderViewHelperTest extends TestCase
     {
         $processedFileMock = self::createMock(ProcessedFile::class);
 
-        $imageServiceMock = self::createMock(ImageService::class);
-        $imageServiceMock->expects(self::any())
+        $this->imageServiceMock = self::createMock(ImageService::class);
+        $this->imageServiceMock->expects(self::any())
                          ->method('applyProcessingInstructions')
                          ->willReturn($processedFileMock);
-        $imageServiceMock->expects(self::any())
+        $this->imageServiceMock->expects(self::any())
                          ->method('getImageUri')
                          ->willReturn($this->filePath);
 
-        $this->subject = new ImageRenderViewHelper($imageServiceMock);
+        $this->subject = new ImageRenderViewHelper($this->imageServiceMock);
 
         $contentObjectRendererMock = self::createMock(ContentObjectRenderer::class);
         $contentObjectRendererMock->data = [
@@ -111,17 +117,36 @@ final class ImageRenderViewHelperTest extends TestCase
         $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'] = $this->fileExtension . ',jpeg,png,gif,svg';
 
         $this->subject->setRenderingContext($renderingContextMock);
+    }
 
+    public function tearDown(): void
+    {
+        unset($this->subject);
+    }
+
+    /**
+     * Test the whole render method
+     *
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    #[Test]
+    public function render(): void
+    {
         $this->fileReferenceMock = self::createMock(FileReference::class);
         $this->fileReferenceMock->expects(self::any())
-                          ->method('getProperty')
-                          ->willReturn('');
+                                ->method('getProperty')
+                                ->willReturn('');
+
+        $this->imageServiceMock->expects(self::any())
+                               ->method('getImage')
+                               ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
             'breakpoints'   => 'default',
             'fileExtension' => $this->fileExtension,
             'imgClass'      => $this->imgClass,
+            'pictureClass'  => $this->pictureClass,
             'loading'       => $this->loading,
             'settings'      => [
                 'breakpoints' => [
@@ -147,30 +172,16 @@ final class ImageRenderViewHelperTest extends TestCase
                     ],
                 ],
             ],
-            'cropString'        => '',
             'contentObjectData' => [],
         ]);
-    }
 
-    public function tearDown(): void
-    {
-        unset($this->subject);
-    }
-
-    /**
-     * Test the whole render method
-     *
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
-    #[Test]
-    public function render(): void
-    {
         $this->subject->initialize();
 
         $result = $this->subject->render();
 
         self::assertIsString($result);
-        self::assertStringContainsString('<picture><source srcset="', $result);
+        self::assertStringContainsString('<picture', $result);
+        self::assertStringContainsString('<source', $result);
         self::assertStringContainsString($this->filePath, $result);
         self::assertStringContainsString('only screen and (min-width: ' . $this->size . 'px)', $result);
         self::assertStringContainsString('only screen and (min-width: ' . ($this->size * $this->minRatio) . 'px)', $result);
@@ -193,6 +204,15 @@ final class ImageRenderViewHelperTest extends TestCase
                                       . ' as a valid image file extension and can not be processed.');
         $this->expectExceptionCode(1618989190);
 
+        $this->fileReferenceMock = self::createMock(FileReference::class);
+        $this->fileReferenceMock->expects(self::any())
+                                ->method('getProperty')
+                                ->willReturn('');
+
+        $this->imageServiceMock->expects(self::any())
+                               ->method('getImage')
+                               ->willReturn($this->fileReferenceMock);
+
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
             'breakpoints'   => 'default',
@@ -203,7 +223,6 @@ final class ImageRenderViewHelperTest extends TestCase
                     ],
                 ],
             ],
-            'cropString'        => '',
             'contentObjectData' => [],
         ]);
 
@@ -224,6 +243,10 @@ final class ImageRenderViewHelperTest extends TestCase
                                 ->with('crop')
                                 ->willReturn('{"xs":{"cropArea":{"x":2,"y":4,"width":6,"height":8},"selectedRatio":"1:1","focusArea":null},"xl":{"cropArea":{"x":0,"y":0.125,"width":1,"height":0.75},"selectedRatio":"4:3","focusArea":null}}');
 
+        $this->imageServiceMock->expects(self::any())
+                               ->method('getImage')
+                               ->willReturn($this->fileReferenceMock);
+
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
             'breakpoints'   => 'default',
@@ -236,7 +259,6 @@ final class ImageRenderViewHelperTest extends TestCase
                     ],
                 ],
             ],
-            'cropString'        => '',
             'contentObjectData' => [],
         ]);
 
@@ -262,6 +284,37 @@ final class ImageRenderViewHelperTest extends TestCase
     #[Test]
     public function getSourceElement(): void
     {
+        $this->fileReferenceMock = self::createMock(FileReference::class);
+        $this->fileReferenceMock->expects(self::any())
+                                ->method('getProperty')
+                                ->willReturn('');
+
+        $this->imageServiceMock->expects(self::any())
+                               ->method('getImage')
+                               ->willReturn($this->fileReferenceMock);
+
+        $this->subject->setArguments([
+            'image'         => $this->fileReferenceMock,
+            'breakpoints'   => 'default',
+            'fileExtension' => $this->fileExtension,
+            'imgClass'      => $this->imgClass,
+            'pictureClass'  => $this->pictureClass,
+            'loading'       => $this->loading,
+            'settings'      => [
+                'breakpoints' => [
+                    'default' => [
+                        0 => [
+                            'media'       => 'min-width',
+                            'size'        => $this->size,
+                            'maxWidth'    => $this->maxWidth,
+                            'cropVariant' => 'xs',
+                        ],
+                    ],
+                ],
+            ],
+            'contentObjectData' => [],
+        ]);
+
         $this->subject->initialize();
 
         $imgSrc = [
@@ -280,6 +333,37 @@ final class ImageRenderViewHelperTest extends TestCase
     #[Test]
     public function getExceptionMessage(): void
     {
+        $this->fileReferenceMock = self::createMock(FileReference::class);
+        $this->fileReferenceMock->expects(self::any())
+                                ->method('getProperty')
+                                ->willReturn('');
+
+        $this->imageServiceMock->expects(self::any())
+                               ->method('getImage')
+                               ->willReturn($this->fileReferenceMock);
+
+        $this->subject->setArguments([
+            'image'         => $this->fileReferenceMock,
+            'breakpoints'   => 'default',
+            'fileExtension' => $this->fileExtension,
+            'imgClass'      => $this->imgClass,
+            'pictureClass'  => $this->pictureClass,
+            'loading'       => $this->loading,
+            'settings'      => [
+                'breakpoints' => [
+                    'default' => [
+                        0 => [
+                            'media'       => 'min-width',
+                            'size'        => $this->size,
+                            'maxWidth'    => $this->maxWidth,
+                            'cropVariant' => 'xs',
+                        ],
+                    ],
+                ],
+            ],
+            'contentObjectData' => [],
+        ]);
+
         $this->subject->initialize();
 
         $exceptionMessage = $this->subject->getExceptionMessage('message');
