@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guides xmlns="https://www.phpdoc.org/guides" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://www.phpdoc.org/guides ../vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
+        links-are-relative="true"
+        default-code-language="php"
+>
+    <extension class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+               project-home="https://www.supseven.at"
+               project-contact="support@supseven.at"
+               project-repository="https://github.com/supseven-at/theme-base/"
+               project-issues="https://github.com/supseven-at/theme-base/issues"
+               typo3-core-preferred="12.4"
+               interlink-shortcode="supseven-at/theme-base"
+    />
+    <project title="Theme Base"
+             version="local"
+    />
+    <inventory id="t3extbasebook" url="https://docs.typo3.org/m/typo3/book-extbasefluid/10.4/en-us/"/>
+</guides>
+
