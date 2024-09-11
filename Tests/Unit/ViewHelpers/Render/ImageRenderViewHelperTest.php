@@ -82,16 +82,16 @@ final class ImageRenderViewHelperTest extends TestCase
 
         $this->imageServiceMock = self::createMock(ImageService::class);
         $this->imageServiceMock->expects(self::any())
-                         ->method('applyProcessingInstructions')
-                         ->willReturn($processedFileMock);
+            ->method('applyProcessingInstructions')
+            ->willReturn($processedFileMock);
         $this->imageServiceMock->expects(self::any())
-                         ->method('getImageUri')
-                         ->willReturn($this->filePath);
+            ->method('getImageUri')
+            ->willReturn($this->filePath);
 
         $this->contentObjectRendererMock = self::createMock(ContentObjectRenderer::class);
         $this->contentObjectRendererMock->expects(self::any())
-                                       ->method('typoLink_URL')
-                                       ->willReturn('foobar');
+            ->method('typoLink_URL')
+            ->willReturn('foobar');
 
         $this->subject = new ImageRenderViewHelper(
             $this->imageServiceMock,
@@ -106,20 +106,20 @@ final class ImageRenderViewHelperTest extends TestCase
 
         $serverRequestMock = self::createMock(ServerRequest::class);
         $serverRequestMock->expects(self::any())
-                          ->method('getAttribute')
-                          ->with('currentContentObject')
-                          ->willReturn($contentObjectRendererMock);
+            ->method('getAttribute')
+            ->with('currentContentObject')
+            ->willReturn($contentObjectRendererMock);
 
         $renderingContextMock = self::createMock(RenderingContext::class);
         $renderingContextMock->expects(self::once())
-                             ->method('getVariableProvider')
-                             ->willReturn(self::createStub(VariableProviderInterface::class));
+            ->method('getVariableProvider')
+            ->willReturn(self::createStub(VariableProviderInterface::class));
         $renderingContextMock->expects(self::once())
-                             ->method('getViewHelperVariableContainer')
-                             ->willReturn(self::createStub(ViewHelperVariableContainer::class));
+            ->method('getViewHelperVariableContainer')
+            ->willReturn(self::createStub(ViewHelperVariableContainer::class));
         $renderingContextMock->expects(self::any())
-                             ->method('getRequest')
-                             ->willReturn($serverRequestMock);
+            ->method('getRequest')
+            ->willReturn($serverRequestMock);
 
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['fluid']['expressionNodeTypes'] = [
             'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
@@ -148,13 +148,19 @@ final class ImageRenderViewHelperTest extends TestCase
     public function render(): void
     {
         $this->fileReferenceMock = self::createMock(FileReference::class);
-        $this->fileReferenceMock->expects(self::any())
-                                ->method('getProperty')
-                                ->willReturn('');
+        $this->fileReferenceMock->expects(self::once())
+            ->method('getProperties')
+            ->willReturn(
+                ['crop' => ''],
+                ['link'        => ''],
+                ['description' => ''],
+                ['title'       => ''],
+                ['alternative' => ''],
+            );
 
         $this->imageServiceMock->expects(self::any())
-                               ->method('getImage')
-                               ->willReturn($this->fileReferenceMock);
+            ->method('getImage')
+            ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
@@ -221,13 +227,19 @@ final class ImageRenderViewHelperTest extends TestCase
         $this->expectExceptionCode(1618989190);
 
         $this->fileReferenceMock = self::createMock(FileReference::class);
-        $this->fileReferenceMock->expects(self::any())
-                                ->method('getProperty')
-                                ->willReturn('');
+        $this->fileReferenceMock->expects(self::once())
+            ->method('getProperties')
+            ->willReturn(
+                ['crop' => ''],
+                ['link'        => ''],
+                ['description' => ''],
+                ['title'       => ''],
+                ['alternative' => ''],
+            );
 
         $this->imageServiceMock->expects(self::any())
-                               ->method('getImage')
-                               ->willReturn($this->fileReferenceMock);
+            ->method('getImage')
+            ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
@@ -253,14 +265,19 @@ final class ImageRenderViewHelperTest extends TestCase
     public function getCroppingArea(): void
     {
         $this->fileReferenceMock = self::createMock(FileReference::class);
-        $this->fileReferenceMock->expects(self::any())
-                                ->method('getProperty')
-                                ->with('crop')
-                                ->willReturn('{"xs":{"cropArea":{"x":2,"y":4,"width":6,"height":8},"selectedRatio":"1:1","focusArea":null},"xl":{"cropArea":{"x":0,"y":0.125,"width":1,"height":0.75},"selectedRatio":"4:3","focusArea":null}}');
+        $this->fileReferenceMock->expects(self::once())
+            ->method('getProperties')
+            ->willReturn(
+                ['crop' => '{"xs":{"cropArea":{"x":2,"y":4,"width":6,"height":8},"selectedRatio":"1:1","focusArea":null},"xl":{"cropArea":{"x":0,"y":0.125,"width":1,"height":0.75},"selectedRatio":"4:3","focusArea":null}}'],
+                ['link'        => ''],
+                ['description' => ''],
+                ['title'       => ''],
+                ['alternative' => ''],
+            );
 
         $this->imageServiceMock->expects(self::any())
-                               ->method('getImage')
-                               ->willReturn($this->fileReferenceMock);
+            ->method('getImage')
+            ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
@@ -295,17 +312,26 @@ final class ImageRenderViewHelperTest extends TestCase
         self::assertSame(0.75, $area->getHeight());
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     #[Test]
     public function getSourceElement(): void
     {
         $this->fileReferenceMock = self::createMock(FileReference::class);
-        $this->fileReferenceMock->expects(self::any())
-                                ->method('getProperty')
-                                ->willReturn('');
+        $this->fileReferenceMock->expects(self::once())
+            ->method('getProperties')
+            ->willReturn(
+                ['crop' => ''],
+                ['link'        => ''],
+                ['description' => ''],
+                ['title'       => ''],
+                ['alternative' => ''],
+            );
 
         $this->imageServiceMock->expects(self::any())
-                               ->method('getImage')
-                               ->willReturn($this->fileReferenceMock);
+            ->method('getImage')
+            ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
@@ -343,17 +369,26 @@ final class ImageRenderViewHelperTest extends TestCase
         self::assertStringContainsString('test3', $sourceElement);
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     #[Test]
     public function getExceptionMessage(): void
     {
         $this->fileReferenceMock = self::createMock(FileReference::class);
-        $this->fileReferenceMock->expects(self::any())
-                                ->method('getProperty')
-                                ->willReturn('');
+        $this->fileReferenceMock->expects(self::once())
+            ->method('getProperties')
+            ->willReturn(
+                ['crop' => ''],
+                ['link'        => ''],
+                ['description' => ''],
+                ['title'       => ''],
+                ['alternative' => ''],
+            );
 
         $this->imageServiceMock->expects(self::any())
-                               ->method('getImage')
-                               ->willReturn($this->fileReferenceMock);
+            ->method('getImage')
+            ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,
@@ -386,6 +421,9 @@ final class ImageRenderViewHelperTest extends TestCase
         );
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     #[Test]
     public function getAnchorElement(): void
     {
@@ -394,17 +432,19 @@ final class ImageRenderViewHelperTest extends TestCase
         $lightboxClass = 'lightboxClass';
 
         $this->fileReferenceMock = self::createMock(FileReference::class);
-        $this->fileReferenceMock->expects(self::any())
-                                ->method('getProperty')
-                                ->willReturnOnConsecutiveCalls(
-                                    '{"xs":{"cropArea":{"x":2,"y":4,"width":6,"height":8},"selectedRatio":"1:1","focusArea":null},"xl":{"cropArea":{"x":0,"y":0.125,"width":1,"height":0.75},"selectedRatio":"4:3","focusArea":null}}',
-                                    't3://file?uid=1',
-                                    ''
-                                );
+        $this->fileReferenceMock->expects(self::once())
+            ->method('getProperties')
+            ->willReturn(
+                ['crop' => '{"list":{"cropArea":{"x":0.08340259308510638,"y":0,"width":0.8331948138297872,"height":1},"selectedRatio":"5:4","focusArea":null},"list_big":{"cropArea":{"x":0,"y":0.07805486284289277,"width":1,"height":0.8438902743142145},"selectedRatio":"16:9","focusArea":null},"detail_xs":{"cropArea":{"x":0.1667220744680851,"y":0,"width":0.6665558510638298,"height":1},"selectedRatio":"1:1","focusArea":null},"detail":{"cropArea":{"x":0,"y":0.07805486284289277,"width":1,"height":0.8438902743142145},"selectedRatio":"16:9","focusArea":null}}'],
+                ['link'        => 't3://file?uid=1'],
+                ['description' => ''],
+                ['title'       => ''],
+                ['alternative' => ''],
+            );
 
         $this->imageServiceMock->expects(self::any())
-                                ->method('getImage')
-                                ->willReturn($this->fileReferenceMock);
+            ->method('getImage')
+            ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
             'image'         => $this->fileReferenceMock,

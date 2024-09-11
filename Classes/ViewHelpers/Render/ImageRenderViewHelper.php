@@ -39,11 +39,23 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     /** @var array $breakpoints */
     private array $breakpoints;
 
-    /** @var string $cropString */
-    private string $cropString = '';
-
     /** @var array $contentObjectData */
     private array $contentObjectData;
+
+    /** @var string $crop */
+    private string $crop = '';
+
+    /** @var string $link */
+    private string $link = '';
+
+    /** @var string $description */
+    private string $description = '';
+
+    /** @var string $title */
+    private string $title = '';
+
+    /** @var string $alternative */
+    private string $alternative = '';
 
     public function __construct(
         protected ImageService $imageService,
@@ -56,8 +68,19 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     {
         parent::initialize();
         $this->image = $this->imageService->getImage('', $this->arguments['image'], false);
+
+        if ($this->image !== null) {
+            // Do not access image properties via image->getProperty() one after each other accross the whole
+            // viewhelper, because this overcomplicates unit testing for each method.
+            $imageProperties = $this->image->getProperties();
+            $this->crop = $imageProperties['crop'] ?? '';
+            $this->link = $imageProperties['link'] ?? '';
+            $this->description = $imageProperties['description'] ?? '';
+            $this->title = $imageProperties['title'] ?? '';
+            $this->alternative = $imageProperties['alternative'] ?? '';
+        }
+
         $this->getBreakpoints($this->arguments);
-        $this->cropString = null !== $this->image ? $this->image->getProperty('crop') : '';
         $this->contentObjectData = $this->renderingContext->getRequest()->getAttribute('currentContentObject')->data;
     }
 
@@ -125,7 +148,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         // can be removed later without any stress
         $this->tag->addAttribute('data-viewhelper', 'theme');
 
-        if ($this->image->getProperty('link') || (int)$this->contentObjectData['image_zoom'] === 1) {
+        if ($this->link || (int)$this->contentObjectData['image_zoom'] === 1) {
             return $this->getAnchorElement($this->tag->render());
         }
 
@@ -173,7 +196,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      */
     public function getCropping(string $cropVariant): Area
     {
-        $cropVariantCollection = CropVariantCollection::create((string)$this->cropString);
+        $cropVariantCollection = CropVariantCollection::create((string)$this->crop);
 
         return $cropVariantCollection->getCropArea($cropVariant);
     }
@@ -231,12 +254,11 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     {
         $this->tag->reset();
         $this->tag->setTagName('a');
-        $imageLink = $this->image->getProperty('link');
         $attributes = [];
 
-        if ($imageLink) {
+        if ($this->link) {
             $href = $this->contentObjectRenderer->typoLink_URL([
-                'parameter' => $imageLink,
+                'parameter' => $this->link,
             ]);
             $attributes['href'] = $href;
         }
@@ -249,7 +271,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
 
             $attributes = [
                 'href'             => $imgSrc,
-                'data-description' => $this->image->getProperty('description') ?: null,
+                'data-description' => $this->description ?: null,
                 'data-gallery'     => $this->arguments['lightboxName'],
                 'class'            => $this->arguments['lightboxClass'],
             ];
@@ -269,7 +291,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      *
      * @return string The rendered image element.
      */
-    private function getImageElement(): string
+    public function getImageElement(): string
     {
         $cropVariant = end($this->breakpoints)['cropVariant'] ?? 'default';
         $cropArea = $this->getCropping($cropVariant);
@@ -283,13 +305,13 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
             'class'   => $this->arguments['imgClass'],
             'width'   => $processedImage['processedImage']->getProperty('width'),
             'height'  => $processedImage['processedImage']->getProperty('height'),
-            'title'   => $this->image->getProperty('title') ?: null,
+            'title'   => $this->title ?: null,
             'loading' => $this->arguments['loading'],
         ];
 
         // add alt attribute, or, if no alt is available, set image to aria-hidden to prevent
         // a11y issues.
-        $alternative = $this->image->getProperty('alternative') ?: null;
+        $alternative = $this->alternative ?: null;
 
         if (null !== $alternative) {
             $attributes['alt'] = $alternative;
