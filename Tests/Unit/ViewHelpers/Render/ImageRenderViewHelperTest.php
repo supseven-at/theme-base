@@ -27,6 +27,7 @@ use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
@@ -41,6 +42,9 @@ final class ImageRenderViewHelperTest extends TestCase
 
     /** @var object */
     private ?object $imageServiceMock = null;
+
+    /** @var ContentObjectRenderer */
+    private ?ContentObjectRenderer $contentObjectRendererMock = null;
 
     /** @var string */
     private string $filePath = 'fileadmin/someFile.jpg';
@@ -84,11 +88,19 @@ final class ImageRenderViewHelperTest extends TestCase
                          ->method('getImageUri')
                          ->willReturn($this->filePath);
 
-        $this->subject = new ImageRenderViewHelper($this->imageServiceMock);
+        $this->contentObjectRendererMock = self::createMock(ContentObjectRenderer::class);
+        $this->contentObjectRendererMock->expects(self::any())
+                                       ->method('typoLink_URL')
+                                       ->willReturn('foobar');
+
+        $this->subject = new ImageRenderViewHelper(
+            $this->imageServiceMock,
+            $this->contentObjectRendererMock
+        );
 
         $contentObjectRendererMock = self::createMock(ContentObjectRenderer::class);
         $contentObjectRendererMock->data = [
-            'image_zoom' => '0',
+            'image_zoom' => '1',
         ];
         $contentObjectRendererMock->currentRecord = 'tt_content:1';
 
@@ -117,6 +129,9 @@ final class ImageRenderViewHelperTest extends TestCase
         $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'] = $this->fileExtension . ',jpeg,png,gif,svg';
 
         $this->subject->setRenderingContext($renderingContextMock);
+
+        $viewHelperNode = self::createStub(ViewHelperNode::class);
+        $this->subject->setViewHelperNode($viewHelperNode);
     }
 
     public function tearDown(): void
@@ -148,6 +163,8 @@ final class ImageRenderViewHelperTest extends TestCase
             'imgClass'      => $this->imgClass,
             'pictureClass'  => $this->pictureClass,
             'loading'       => $this->loading,
+            'lightboxName'  => 'lightbox',
+            'lightboxClass' => 'lightbox',
             'settings'      => [
                 'breakpoints' => [
                     'default' => [
@@ -172,7 +189,6 @@ final class ImageRenderViewHelperTest extends TestCase
                     ],
                 ],
             ],
-            'contentObjectData' => [],
         ]);
 
         $this->subject->initialize();
@@ -223,7 +239,6 @@ final class ImageRenderViewHelperTest extends TestCase
                     ],
                 ],
             ],
-            'contentObjectData' => [],
         ]);
 
         $this->subject->initialize();
@@ -259,7 +274,6 @@ final class ImageRenderViewHelperTest extends TestCase
                     ],
                 ],
             ],
-            'contentObjectData' => [],
         ]);
 
         $this->subject->initialize();
@@ -312,7 +326,6 @@ final class ImageRenderViewHelperTest extends TestCase
                     ],
                 ],
             ],
-            'contentObjectData' => [],
         ]);
 
         $this->subject->initialize();
@@ -361,7 +374,6 @@ final class ImageRenderViewHelperTest extends TestCase
                     ],
                 ],
             ],
-            'contentObjectData' => [],
         ]);
 
         $this->subject->initialize();
@@ -372,5 +384,51 @@ final class ImageRenderViewHelperTest extends TestCase
             'Unable to render image tag in "tt_content:1": message',
             $exceptionMessage
         );
+    }
+
+    #[Test]
+    public function getAnchorElement(): void
+    {
+        $linkText = 'Linktext';
+        $lightboxName = 'lightboxName';
+        $lightboxClass = 'lightboxClass';
+
+        $this->fileReferenceMock = self::createMock(FileReference::class);
+        $this->fileReferenceMock->expects(self::any())
+                                ->method('getProperty')
+                                ->willReturnOnConsecutiveCalls(
+                                    '{"xs":{"cropArea":{"x":2,"y":4,"width":6,"height":8},"selectedRatio":"1:1","focusArea":null},"xl":{"cropArea":{"x":0,"y":0.125,"width":1,"height":0.75},"selectedRatio":"4:3","focusArea":null}}',
+                                    't3://file?uid=1',
+                                    ''
+                                );
+
+        $this->imageServiceMock->expects(self::any())
+                                ->method('getImage')
+                                ->willReturn($this->fileReferenceMock);
+
+        $this->subject->setArguments([
+            'image'         => $this->fileReferenceMock,
+            'breakpoints'   => 'default',
+            'fileExtension' => $this->fileExtension,
+            'imgClass'      => $this->imgClass,
+            'loading'       => $this->loading,
+            'lightboxName'  => $lightboxName,
+            'lightboxClass' => $lightboxClass,
+            'settings'      => [
+                'breakpoints' => [
+                    'default' => [
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->subject->initialize();
+
+        $result = $this->subject->getAnchorElement($linkText);
+
+        self::assertStringContainsString($this->filePath, $result);
+        self::assertStringContainsString($linkText, $result);
+        self::assertStringContainsString('data-gallery="' . $lightboxName . '"', $result);
+        self::assertStringContainsString('class="' . $lightboxClass . '"', $result);
     }
 }

@@ -45,8 +45,10 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     /** @var array $contentObjectData */
     private array $contentObjectData;
 
-    public function __construct(protected ImageService $imageService)
-    {
+    public function __construct(
+        protected ImageService $imageService,
+        protected ContentObjectRenderer $contentObjectRenderer
+    ) {
         parent::__construct();
     }
 
@@ -220,6 +222,49 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     }
 
     /**
+     * Get the anchor element for the image.
+     *
+     * @param string $content The content to be displayed within the anchor element.
+     * @return string The rendered anchor element.
+     */
+    public function getAnchorElement(string $content): string
+    {
+        $this->tag->reset();
+        $this->tag->setTagName('a');
+        $imageLink = $this->image->getProperty('link');
+        $attributes = [];
+
+        if ($imageLink) {
+            $href = $this->contentObjectRenderer->typoLink_URL([
+                'parameter' => $imageLink,
+            ]);
+            $attributes['href'] = $href;
+        }
+
+        if ((int)$this->contentObjectData['image_zoom'] === 1) {
+            $cropVariant = end($this->breakpoints)['cropVariant'] ?? 'default';
+            $cropArea = $this->getCropping($cropVariant);
+            $processedImage = $this->processImage(1280, $cropArea);
+            $imgSrc = $processedImage['src'];
+
+            $attributes = [
+                'href'             => $imgSrc,
+                'data-description' => $this->image->getProperty('description') ?: null,
+                'data-gallery'     => $this->arguments['lightboxName'],
+                'class'            => $this->arguments['lightboxClass'],
+            ];
+
+            $content = $this->renderChildren() . $content;
+        }
+
+        $this->tag->addAttributes(array_filter($attributes));
+
+        $this->tag->setContent($content);
+
+        return $this->tag->render();
+    }
+
+    /**
      * Render the image element for the given file reference.
      *
      * @return string The rendered image element.
@@ -256,51 +301,6 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         $this->tag->addAttributes(
             array_filter($attributes, fn ($value) => $value !== null)
         );
-
-        return $this->tag->render();
-    }
-
-    /**
-     * Get the anchor element for the image.
-     *
-     * @param string $content The content to be displayed within the anchor element.
-     * @return string The rendered anchor element.
-     */
-    private function getAnchorElement(string $content): string
-    {
-        $this->tag->reset();
-        $this->tag->setTagName('a');
-        $attributes = [];
-
-        /** @var ContentObjectRenderer $contentObjectRenderer */
-        $contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-
-        if ($this->image->getProperty('link')) {
-            $href = $contentObjectRenderer->typoLink_URL([
-                'parameter' => $this->image->getProperty('link'),
-            ]);
-            $attributes['href'] = $href;
-        }
-
-        if ((int)$this->contentObjectData['image_zoom'] === 1) {
-            $cropVariant = end($this->breakpoints)['cropVariant'] ?? 'default';
-            $cropArea = $this->getCropping($cropVariant);
-            $processedImage = $this->processImage(1280, $cropArea);
-            $imgSrc = $processedImage['src'];
-
-            $attributes = [
-                'href'             => $imgSrc,
-                'data-description' => $this->image->getProperty('description') ?: null,
-                'data-gallery'     => $this->arguments['lightboxName'],
-                'class'            => $this->arguments['lightboxClass'],
-            ];
-
-            $content = $this->renderChildren() . $content;
-        }
-
-        $this->tag->addAttributes(array_filter($attributes));
-
-        $this->tag->setContent($content);
 
         return $this->tag->render();
     }
