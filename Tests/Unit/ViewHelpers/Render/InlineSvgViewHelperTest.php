@@ -40,7 +40,16 @@ final class InlineSvgViewHelperTest extends UnitTestCase
     /**
      * @var string $svgContent
      */
-    private string $svgContent = '<svg xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" /></svg>';
+    private string $svgContent = '<svg xmlns="http://www.w3.org/2000/svg" id="test-id">
+              <style>
+                circle {
+                  fill: gold;
+                  stroke: maroon;
+                  stroke-width: 2px;
+                }
+              </style>
+            <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+        </svg>';
 
     /**
      * @var string $rootPath
@@ -84,16 +93,23 @@ final class InlineSvgViewHelperTest extends UnitTestCase
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
+    #[DataProvider('renderStaticDataProvider')]
     #[Test]
-    public function renderStatic(): void
+    public function renderStatic(array $arguments, array $expectedResult): void
     {
         $arguments = [
+            'id'                => $arguments['id'] ?? null,
+            'uniqueId'          => $arguments['uniqueId'] ?? null,
+            'title'             => $arguments['title'] ?? null,
             'source'            => $this->fileName,
-            'remove-styles'     => false,
-            'fill'              => 'red',
-            'uniqueId'          => 'uniqueId',
+            'remove-styles'     => $arguments['remove-styles'] ?? false,
+            'move-styles'       => false,
+            'fill'              => $arguments['fill'] ?? '#ffffff',
             'custom-tags'       => [],
             'custom-attributes' => [],
+            'class'             => $arguments['class'] ?? null,
+            'width'             => $arguments['width'] ?? null,
+            'height'            => $arguments['height'] ?? null,
         ];
 
         $renderChildrenClosure = fn () => null;
@@ -102,11 +118,16 @@ final class InlineSvgViewHelperTest extends UnitTestCase
 
         $sut = InlineSvgViewHelper::renderStatic($arguments, $renderChildrenClosure, $renderingContext);
 
-        self::assertStringContainsString('<svg xmlns="http://www.w3.org/2000/svg"', $sut);
+        if (isset($expectedResult['misses'])) {
+            self::assertStringNotContainsString($expectedResult['misses'], $sut);
+        }
+
+        if (isset($expectedResult['contains'])) {
+            self::assertStringContainsString($expectedResult['contains'], $sut);
+        }
     }
 
     /**
-     * @return void
      * @throws \TYPO3\CMS\Core\Package\Exception\UnknownPackageException
      * @throws \TYPO3\CMS\Core\Package\Exception\UnknownPackagePathException
      */
@@ -119,7 +140,6 @@ final class InlineSvgViewHelperTest extends UnitTestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \TYPO3\CMS\Core\Package\Exception\UnknownPackageException
      * @throws \TYPO3\CMS\Core\Package\Exception\UnknownPackagePathException
@@ -173,6 +193,109 @@ final class InlineSvgViewHelperTest extends UnitTestCase
         $sut = InlineSvgViewHelper::sanitizeId($svgIdString);
 
         self::assertSame($expected, $sut);
+    }
+
+    /**
+     * Dataprovider for renderStatic test method
+     *
+     * @return array[]
+     */
+    public static function renderStaticDataProvider(): array
+    {
+        return [
+            'no arguments' => [
+                [],
+                [
+                    'contains' => '<svg xmlns="http://www.w3.org/2000/svg',
+                ],
+            ],
+            'remove styles' => [
+                ['remove-styles' => true],
+                [
+                    'misses' => 'style',
+                ],
+            ],
+            'set title' => [
+                ['title' => 'SVG Title'],
+                [
+                    'contains' => '<title>SVG Title</title>',
+                ],
+            ],
+            'set fill color' => [
+                ['fill' => '#000000'],
+                [
+                    'misses'   => 'fill="#red"',
+                    'contains' => 'fill="#000000"',
+                ],
+            ],
+            'set id without title' => [
+                ['id' => 'asdf'],
+                [
+                    'contains' => '<!-- This SVG is not accessible, if there is no Title attribute available -->',
+                ],
+            ],
+            'set id' => [
+                [
+                    'id'    => 'asdf',
+                    'title' => 'SVG Title',
+                ],
+                [
+                    'misses'   => '<!-- This SVG is not accessible, if there is no Title attribute available -->',
+                    'contains' => 'aria-labelledby="asdf"',
+                ],
+            ],
+            'set unique-id' => [
+                [
+                    'id'       => 'asdf',
+                    'uniqueId' => 'sdfg',
+                    'title'    => 'SVG Title',
+                ],
+                [
+                    'misses'   => 'id="test-id"',
+                    'contains' => 'id="svg-sdfg"',
+                ],
+            ],
+            'set class' => [
+                [
+                    'class' => 'test-class',
+                ],
+                [
+                    'contains' => 'class="test-class"',
+                ],
+            ],
+            'set width larger 0' => [
+                [
+                    'width' => 100,
+                ],
+                [
+                    'contains' => 'width="100"',
+                ],
+            ],
+            'set width = 0' => [
+                [
+                    'width' => 0,
+                ],
+                [
+                    'missing' => 'width=',
+                ],
+            ],
+            'set height larger 0' => [
+                [
+                    'height' => 100,
+                ],
+                [
+                    'contains' => 'height="100"',
+                ],
+            ],
+            'set height = 0' => [
+                [
+                    'height' => 0,
+                ],
+                [
+                    'missing' => 'height=',
+                ],
+            ],
+        ];
     }
 
     /**
