@@ -293,7 +293,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      */
     public function getImageElement(): string
     {
-        $cropVariant = end($this->breakpoints)['cropVariant'] ?? 'default';
+        $cropVariant = '';
         $cropArea = $this->getCropping($cropVariant);
         $processedImage = $this->processImage(1280, $cropArea);
         $imgSrc = $processedImage['src'];
