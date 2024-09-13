@@ -7,7 +7,7 @@ namespace Supseven\ThemeBase\ViewHelpers\Render;
 use Psr\Http\Message\RequestInterface;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
-use TYPO3\CMS\Core\Resource\FileReference;
+use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Service\ImageService;
@@ -33,8 +33,8 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     /** @var bool $escapeOutput */
     protected $escapeOutput = false;
 
-    /** @var FileReference|null $image */
-    private ?FileReference $image;
+    /** @var null|FileInterface $image */
+    private ?FileInterface $image;
 
     /** @var array $breakpoints */
     private array $breakpoints;
