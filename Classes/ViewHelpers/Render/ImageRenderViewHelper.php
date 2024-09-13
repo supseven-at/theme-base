@@ -33,7 +33,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     /** @var bool $escapeOutput */
     protected $escapeOutput = false;
 
-    /** @var null|FileInterface $image */
+    /** @var FileInterface|null $image */
     private ?FileInterface $image;
 
     /** @var array $breakpoints */
