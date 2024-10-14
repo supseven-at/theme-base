@@ -17,3 +17,8 @@ services:
     public: true
     arguments:
       $siteFinder: '@TYPO3\CMS\Core\Site\SiteFinder'
+
+  Supseven\ThemeBase\DataProcessing\ConcatDataProcessor:
+    public: true
+    arguments:
+      $typoScriptService: '@TYPO3\CMS\Core\TypoScript\TypoScriptService'
