@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\Utility;
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 /**
  * Class Tca
@@ -127,5 +129,63 @@ class Tca
         $findPosition = array_filter($showitem, fn ($v) => str_starts_with($v, $position));
 
         return key($findPosition);
+    }
+
+    /**
+     * Add a extbase plugin
+     *
+     * @param string $extension
+     * @param string $plugin
+     * @param string $label
+     * @param string $icon
+     * @param string $flexform
+     * @param string $fields
+     * @param string $group
+     * @param string $description
+     * @return void
+     */
+    public static function addPlugin(string $extension, string $plugin, string $label, string $icon = '', string $flexform = '', string $fields = '', string $group = 'plugins', string $description = ''): void
+    {
+        ExtensionUtility::registerPlugin(
+            $extension,
+            $plugin,
+            $label,
+            $icon ?: null,
+            $group ?: 'plugins',
+            $description,
+        );
+
+        $key = strtolower($extension) . '_' . strtolower($plugin);
+
+        $GLOBALS['TCA']['tt_content']['types'][$key] = $GLOBALS['TCA']['tt_content']['types']['header'];
+
+        if ($icon) {
+            $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$key] = $icon;
+        }
+
+        if ($flexform) {
+            if ($fields) {
+                $fields .= ', ';
+            }
+
+            if (!str_contains($fields, 'pi_flexform')) {
+                $fields .= 'pi_flexform';
+            }
+
+            ExtensionManagementUtility::addPiFlexFormValue(
+                '*',
+                $flexform,
+                $key
+            );
+        }
+
+        if ($fields) {
+            ExtensionManagementUtility::addToAllTCAtypes(
+                'tt_content',
+                '--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.plugin,' . $fields,
+                $key,
+                'after:header'
+            );
+        }
     }
 }
