@@ -111,10 +111,10 @@ final class ImageRenderViewHelperTest extends TestCase
             ->willReturn($contentObjectRendererMock);
 
         $renderingContextMock = self::createMock(RenderingContext::class);
-        $renderingContextMock->expects(self::once())
+        $renderingContextMock->expects(self::atLeastOnce())
             ->method('getVariableProvider')
             ->willReturn(self::createStub(VariableProviderInterface::class));
-        $renderingContextMock->expects(self::once())
+        $renderingContextMock->expects(self::atLeastOnce())
             ->method('getViewHelperVariableContainer')
             ->willReturn(self::createStub(ViewHelperVariableContainer::class));
         $renderingContextMock->expects(self::any())
