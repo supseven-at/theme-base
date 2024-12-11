@@ -1,0 +1,17 @@
+options {
+  pageTree {
+    showPageIdWithTitle = 0
+    showNavTitle = 0
+    separateNotinmenuPages = 0
+    alphasortNotinmenuPages = 0
+    disableTitleHighlight = 0
+    showDomainNameWithTitle = 0
+    showPathAboveMounts = 1
+  }
+}
+
+[backend.user.isAdmin]
+  options.pageTree {
+    showPageIdWithTitle = 1
+  }
+[global]
