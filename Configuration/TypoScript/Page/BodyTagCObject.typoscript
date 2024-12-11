@@ -77,6 +77,17 @@ page {
                     negate = 1
                 }
             }
+
+            # Add "develop" helper CSS class in non-live context
+            1338 = TEXT
+            1338 {
+                value = develop-local
+                noTrimWrap = | ||
+                if {
+                    value.data = getenv : TYPO3_CONTEXT
+                    equals = Development/Docker
+                }
+            }
         }
     }
 }
