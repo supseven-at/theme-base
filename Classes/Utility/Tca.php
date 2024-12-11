@@ -110,28 +110,6 @@ class Tca
     }
 
     /**
-     * returns the array key / position of a given showitem item
-     *
-     * @param array $showitem
-     * @param string $position
-     * @return int
-     */
-    private static function getPosition(array $showitem, string $position): int
-    {
-        $pos = GeneralUtility::trimExplode(':', $position, true);
-
-        if (count($pos) > 1) {
-            $findPosition = array_filter($showitem, fn ($v) => str_starts_with($v, $pos[1]));
-
-            return ($pos[0] === 'before') ? key($findPosition) - 1 : key($findPosition) + 1;
-        }
-
-        $findPosition = array_filter($showitem, fn ($v) => str_starts_with($v, $position));
-
-        return key($findPosition);
-    }
-
-    /**
      * Add a extbase plugin
      *
      * @param string $extension
@@ -142,7 +120,6 @@ class Tca
      * @param string $fields
      * @param string $group
      * @param string $description
-     * @return void
      */
     public static function addPlugin(string $extension, string $plugin, string $label, string $icon = '', string $flexform = '', string $fields = '', string $group = 'plugins', string $description = ''): void
     {
@@ -187,5 +164,27 @@ class Tca
                 'after:header'
             );
         }
+    }
+
+    /**
+     * returns the array key / position of a given showitem item
+     *
+     * @param array $showitem
+     * @param string $position
+     * @return int
+     */
+    private static function getPosition(array $showitem, string $position): int
+    {
+        $pos = GeneralUtility::trimExplode(':', $position, true);
+
+        if (count($pos) > 1) {
+            $findPosition = array_filter($showitem, fn ($v) => str_starts_with($v, $pos[1]));
+
+            return ($pos[0] === 'before') ? key($findPosition) - 1 : key($findPosition) + 1;
+        }
+
+        $findPosition = array_filter($showitem, fn ($v) => str_starts_with($v, $position));
+
+        return key($findPosition);
     }
 }

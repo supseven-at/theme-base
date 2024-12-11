@@ -274,7 +274,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
         $styles = '';
         $styleTags = $svg->getElementsByTagName('style');
 
-        for($i = 0; $i < $styleTags->length; $i++) {
+        for ($i = 0; $i < $styleTags->length; $i++) {
             $styleTag = $styleTags->item($i);
             $styles .= $styleTag->nodeValue;
             $styleTag->parentNode->removeChild($styleTag);
