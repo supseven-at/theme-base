@@ -8,12 +8,6 @@
 			"Supseven\\ThemeBase\\": "Classes"
 		}
 	},
-	"require": {
-		"typo3/cms-core": "^12.4",
-		"typo3/cms-frontend": "^12.4",
-		"typo3/cms-extbase": "^12.4",
-		"symfony/expression-language": ">= 6"
-	},
 	"suggest": {
 		"b13/bolt": "^2.3",
 		"b13/doktypemapper": "^1.1.1",
@@ -34,6 +28,10 @@
 		"typo3/cms-adminpanel": "^12.4"
 	},
 	"require-dev": {
+		"typo3/cms-core": "^12.4",
+		"typo3/cms-frontend": "^12.4",
+		"typo3/cms-extbase": "^12.4",
+		"symfony/expression-language": ">= 6",
 		"typo3/cms-form": "^12.4",
 		"enshrined/svg-sanitize": "^0.15",
 		"typo3/cms-lowlevel": "^12.4",
@@ -55,10 +53,9 @@
 	},
 	"config": {
 		"allow-plugins": {
-			"typo3/cms-composer-installers": true,
-			"typo3/class-alias-loader": true,
-			"php-http/discovery": true,
-			"helhum/dotenv-connector": true
+			"typo3/cms-composer-installers": false,
+			"typo3/class-alias-loader": false,
+			"php-http/discovery": false
 		}
 	}
 }
