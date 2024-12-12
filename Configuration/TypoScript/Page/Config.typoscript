@@ -1,0 +1,20 @@
+config {
+  cache_clearAtMidnight = 1
+  sendCacheHeaders = 0
+
+  concatenateCss = 0
+  concatenateJs = 0
+  compressJs = 0
+  compressCss = 0
+  removeDefaultJS = 0
+  removeDefaultCss = 1
+
+  headerComment = Created by supseven :: https://www.supseven.at/
+
+  disableImgBorderAttr = 1
+  absRefPrefix = auto
+
+  intTarget = _self
+  extTarget = _blank
+  fileTarget =
+}
