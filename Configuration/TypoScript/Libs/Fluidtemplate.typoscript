@@ -1,0 +1,57 @@
+
+lib.fluidTemplate {
+    base = FLUIDTEMPLATE
+    base {
+        layoutRootPaths {
+            10 = EXT:theme_project/Resources/Private/Layouts/Page/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Layouts/Page/
+        }
+
+        partialRootPaths {
+            10 = EXT:theme_project/Resources/Private/Partials/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Partials/
+        }
+
+        templateRootPaths {
+            10 = EXT:theme_project/Resources/Private/Templates/Page/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Templates/Page/
+        }
+
+        variables {
+            RootUid = TEXT
+            RootUid {
+                data = leveluid : 0
+            }
+
+            Level1Title = TEXT
+            Level1Title {
+                data = leveltitle: 1
+                if.value.data = level
+                if.isLessThan = 1
+            }
+        }
+
+        dataProcessing {
+
+        }
+    }
+
+    // default templateName selection based on active beLayout
+    default < .base
+    default {
+        templateName = TEXT
+        templateName.stdWrap {
+            cObject = TEXT
+            cObject {
+                data = pagelayout
+                split {
+                    token = pagets__
+                    1.current = 1
+                    1.wrap = |
+                }
+            }
+
+            ifEmpty = Default
+        }
+    }
+}

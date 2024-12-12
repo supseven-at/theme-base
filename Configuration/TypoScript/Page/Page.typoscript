@@ -3,7 +3,7 @@ page {
     ###########################
     ### FLUID TEMPLATE BODY ###
     ###########################
-    10 = FLUIDTEMPLATE
+    10 < lib.fluidTemplate.default
     10 {
         layoutRootPaths {
             10 = EXT:theme_base/Resources/Private/Layouts/Page/
@@ -16,29 +16,6 @@ page {
         templateRootPaths {
             10 = EXT:theme_base/Resources/Private/Templates/Page/
             20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Templates/Page/
-        }
-
-        #################
-        ### VARIABLES ###
-        #################
-        variables {
-            Level1Title = TEXT
-            Level1Title {
-                data = leveltitle: 1
-                if.value.data = level
-                if.isLessThan = 1
-            }
-        }
-
-        // default templateName selection based on active beLayout
-        templateName = TEXT
-        templateName {
-            data = pagelayout
-            split {
-                token = pagets__
-                1.current = 1
-            }
-            ifEmpty = Default
         }
 
         #######################
