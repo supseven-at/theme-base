@@ -3,18 +3,18 @@ lib.fluidTemplate {
     base = FLUIDTEMPLATE
     base {
         layoutRootPaths {
-            10 = EXT:theme_project/Resources/Private/Layouts/Page/
-            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Layouts/Page/
+            100 = EXT:theme_project/Resources/Private/Layouts/Page/
+            200 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Layouts/Page/
         }
 
         partialRootPaths {
-            10 = EXT:theme_project/Resources/Private/Partials/
-            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Partials/
+            100 = EXT:theme_project/Resources/Private/Partials/
+            200 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Partials/
         }
 
         templateRootPaths {
-            10 = EXT:theme_project/Resources/Private/Templates/Page/
-            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Templates/Page/
+            100 = EXT:theme_project/Resources/Private/Templates/Page/
+            200 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Templates/Page/
         }
 
         variables {
@@ -53,5 +53,24 @@ lib.fluidTemplate {
 
             ifEmpty = Default
         }
+    }
+}
+
+lib.contentElement {
+    layoutRootPaths {
+        10 = EXT:theme_project/Resources/Private/Layouts/
+        20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Layouts/
+    }
+
+    partialRootPaths {
+        10 = EXT:theme_project/Resources/Private/Partials/
+        20 = EXT:theme_project/Resources/Private/Partials/Content/
+        30 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Partials/
+        40 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Partials/Content/
+    }
+
+    templateRootPaths {
+        10 = EXT:theme_project/Resources/Private/Templates/Content/
+        20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Templates/Content/
     }
 }

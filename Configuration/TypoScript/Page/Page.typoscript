@@ -3,18 +3,20 @@ page {
     ###########################
     ### FLUID TEMPLATE BODY ###
     ###########################
-    10 < lib.fluidTemplate.default
+    10 =< lib.fluidTemplate.default
     10 {
         layoutRootPaths {
-            10 = EXT:theme_base/Resources/Private/Layouts/Page/
-            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Layouts/Page/
+            10 = EXT:theme_project/Resources/Private/Layouts/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Layouts/
         }
+
         partialRootPaths {
-            10 = EXT:theme_base/Resources/Private/Partials/Page/
-            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Partials/Page/
+            10 = EXT:theme_project/Resources/Private/Partials/
+            20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Partials/
         }
+
         templateRootPaths {
-            10 = EXT:theme_base/Resources/Private/Templates/Page/
+            10 = EXT:theme_project/Resources/Private/Templates/Page/
             20 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Templates/Page/
         }
 
