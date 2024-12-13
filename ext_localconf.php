@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask;
 
 unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['processors']['DeferredBackendImageProcessor']);
@@ -30,3 +31,8 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr')) {
         'expirePeriod' => 60,
     ];
 }
+
+// @todo: remove this for TYPO3 v13
+ExtensionManagementUtility::addUserTSConfig(
+    '@import "EXT:theme_base/Configuration/user.tsconfig"',
+);
