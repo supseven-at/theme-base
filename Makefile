@@ -20,3 +20,6 @@ vendor/autoload.php: composer.json composer.lock
 	composer install --prefer-dist --no-scripts --no-plugins
 	touch vendor/autoload.php
 
+.PHONY: clean
+clean:
+	rm -rf vendor
