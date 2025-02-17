@@ -34,7 +34,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     protected $escapeOutput = false;
 
     /** @var FileInterface|null $image */
-    private ?FileInterface $image;
+    private ?FileInterface $image = null;
 
     /** @var array $breakpoints */
     private array $breakpoints;
@@ -67,17 +67,20 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     public function initialize(): void
     {
         parent::initialize();
-        $this->image = $this->imageService->getImage('', $this->arguments['image'], false);
 
-        if ($this->image !== null) {
-            // Do not access image properties via image->getProperty() one after each other accross the whole
-            // viewhelper, because this overcomplicates unit testing for each method.
-            $imageProperties = $this->image->getProperties();
-            $this->crop = $imageProperties['crop'] ?? '';
-            $this->link = $imageProperties['link'] ?? '';
-            $this->description = $imageProperties['description'] ?? '';
-            $this->title = $imageProperties['title'] ?? '';
-            $this->alternative = $imageProperties['alternative'] ?? '';
+        if (isset($this->arguments['image'])) {
+            $this->image = $this->imageService->getImage('', $this->arguments['image'], false);
+
+            if ($this->image !== null) {
+                // Do not access image properties via image->getProperty() one after each other accross the whole
+                // viewhelper, because this overcomplicates unit testing for each method.
+                $imageProperties = $this->image->getProperties();
+                $this->crop = $imageProperties['crop'] ?? '';
+                $this->link = $imageProperties['link'] ?? '';
+                $this->description = $imageProperties['description'] ?? '';
+                $this->title = $imageProperties['title'] ?? '';
+                $this->alternative = $imageProperties['alternative'] ?? '';
+            }
         }
 
         $this->getBreakpoints($this->arguments);
