@@ -36,3 +36,6 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('solr')) {
 ExtensionManagementUtility::addUserTSConfig(
     '@import "EXT:theme_base/Configuration/user.tsconfig"',
 );
+
+// Set default scheme for all external links added through the link wizard
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['defaultScheme'] = 'https';
