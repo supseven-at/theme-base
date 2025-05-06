@@ -109,6 +109,10 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
 
         $this->registerArgument('loading', 'string', 'Native lazy-loading for images property. Can be "lazy", "eager" or "auto"', false, 'lazy');
         $this->registerArgument('fileExtension', 'string', 'Custom file extension to use', false);
+
+        $this->registerArgument('a11y', 'bool', 'If a link is set (imgzoom or link), then add a visually hidden element inside the link', false, false);
+        $this->registerArgument('a11yClass', 'string', 'a11y class name', false, 'visually-hidden');
+        $this->registerArgument('a11yText', 'string', 'a11y text', false, 'Link to target');
     }
 
     /**
@@ -279,6 +283,10 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
                 'class'            => $this->arguments['lightboxClass'],
             ];
 
+            if ($this->arguments['a11y'] === true) {
+                $content = $this->getA11yElement() . $content;
+            }
+
             $content = $this->renderChildren() . $content;
         }
 
@@ -287,6 +295,16 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         $this->tag->setContent($content);
 
         return $this->tag->render();
+    }
+
+    /**
+     * Generate an accessible element as a span with specific attributes and content.
+     *
+     * @return string The rendered accessible span element.
+     */
+    public function getA11yElement(): string
+    {
+        return '<span class="' . $this->arguments['a11yClass'] . '">' . $this->arguments['a11yText'] . '</span>';
     }
 
     /**
