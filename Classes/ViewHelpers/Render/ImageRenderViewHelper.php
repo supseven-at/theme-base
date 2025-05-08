@@ -155,7 +155,9 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         // can be removed later without any stress
         $this->tag->addAttribute('data-viewhelper', 'theme');
 
-        if ($this->link || (int)$this->contentObjectData['image_zoom'] === 1) {
+        $imageZoom = $this->contentObjectData['image_zoom'] ?? 0;
+
+        if ($this->link || (int)$imageZoom === 1) {
             return $this->getAnchorElement($this->tag->render());
         }
 
