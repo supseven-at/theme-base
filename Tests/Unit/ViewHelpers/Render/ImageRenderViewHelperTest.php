@@ -171,6 +171,7 @@ final class ImageRenderViewHelperTest extends TestCase
             'loading'       => $this->loading,
             'lightboxName'  => 'lightbox',
             'lightboxClass' => 'lightbox',
+            'a11y'          => false,
             'settings'      => [
                 'breakpoints' => [
                     'default' => [
@@ -458,6 +459,7 @@ final class ImageRenderViewHelperTest extends TestCase
             'loading'       => $this->loading,
             'lightboxName'  => $lightboxName,
             'lightboxClass' => $lightboxClass,
+            'a11y'          => false,
             'settings'      => [
                 'breakpoints' => [
                     'default' => [
