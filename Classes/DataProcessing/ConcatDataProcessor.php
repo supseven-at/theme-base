@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\DataProcessing;
 
-use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
@@ -40,14 +39,6 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
  */
 class ConcatDataProcessor implements DataProcessorInterface
 {
-    /** @var TypoScriptService $typoscriptService */
-    protected TypoScriptService $typoscriptService;
-
-    public function __construct(TypoScriptService $typoScriptService)
-    {
-        $this->typoscriptService = $typoScriptService;
-    }
-
     /**
      * Processes the given data and returns the modified processed data array.
      *
@@ -64,7 +55,7 @@ class ConcatDataProcessor implements DataProcessorInterface
         $sort = (bool)$cObj->stdWrapValue('sort', $processorConfiguration, true);
 
         $data = $processedData['data'] ?: [];
-        $filter = $this->typoscriptService->convertTypoScriptArrayToPlainArray($processorConfiguration)['fields'] ?? [];
+        $filter = $processorConfiguration['fields.'] ?? [];
         $result = array_intersect_key($data, $filter);
 
         foreach ($result as $key => $value) {
