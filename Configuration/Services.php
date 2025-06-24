@@ -30,14 +30,15 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
         ->share(false)
         ->autowire(false)
         ->autoconfigure(false)
-        ->alias(ServerRequestInterface::class, 'typo3.request')
-        ->alias(ServerRequest::class, 'typo3.request');
+        ->lazy()
+        ->alias(ServerRequestInterface::class, 'typo3.request');
 
     $services->set('typo3.app.context', ApplicationContext::class)
         ->factory([service(DependencyValuesService::class), 'getApplicationContext'])
         ->share(false)
         ->autowire(false)
         ->autoconfigure(false)
+        ->lazy()
         ->alias(ApplicationContext::class, 'typo3.app.context');
 
     $services->set('typo3.app.type', ApplicationType::class)
