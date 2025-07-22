@@ -10,7 +10,7 @@ use Supseven\ThemeBase\Service\LegalNoticeService;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use TYPO3\CMS\Core\Core\ApplicationContext;
 use TYPO3\CMS\Core\Http\ApplicationType;
-use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Localization\LanguageService;
 
 return static function (ContainerConfigurator $container, ContainerBuilder $containerBuilder): void {
     $services = $container->services();
@@ -47,4 +47,10 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
         ->autowire(false)
         ->autoconfigure(false)
         ->alias(ApplicationType::class, 'typo3.app.type');
+
+    $services->set('typo3.lang', LanguageService::class)
+        ->factory([service(DependencyValuesService::class), 'getLanguageService'])
+        ->share(false)
+        ->autowire(false)
+        ->autoconfigure(false);
 };
