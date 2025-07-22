@@ -8,28 +8,27 @@
 			"Supseven\\ThemeBase\\": "Classes"
 		}
 	},
+	"require": {
+		"typo3/cms-core": "^12.4",
+		"typo3/cms-scheduler": "^12.4"
+	},
 	"suggest": {
 		"b13/bolt": "For autoloading site integrations via packages",
 		"b13/doktypemapper": "For doktype-to-be_layout mapping",
-		"eliashaeussler/typo3-warming": "For HTTP cache warming and testing if all HTTP URLs work",
 		"helhum/dotenv-connector": "For easy .env integration",
 		"ichhabrecht/content-defender": "To configure CTypes per be_layout",
 		"josefglatz/hide-sys-template": "To disable sys_template record editing in the BE",
 		"josefglatz/beuser-fastswitch": "For quickly switching to other BE users",
 		"josefglatz/cropvariantsbuilder": "For easy configuration of crops of image fields",
 		"studiomitte/live-search-extended": "For extended BE search capabilties",
-		"lolli/dbdoctor": "For extended DB checks and maintenance",
-		"plan2net/webp": "For webp support in TYPO3 v12 and earlier",
 		"supseven/supi": "For integration of user consent of third party elements in the frontend",
 		"christophlehmann/pagetreefilter": "For an extended BE page tree search",
-		"spooner/deployer-information": "To show the date of the last deployment in the BE",
-		"o-ba/custom_dashboard_widgets": "For additional widgets for the BE dashboard",
 		"typo3/cms-linkvalidator": "To check the availability of links on TYPO3 pages",
 		"typo3/cms-adminpanel": "Show a panel of infos and actions in the frontend for editors",
 		"typo3/cms-form": "For frontend forms"
 	},
 	"require-dev": {
-		"typo3/cms-core": "^12.4",
+		"typo3/cms-form": "^12.4",
 		"typo3/cms-fluid": "^12.4",
 		"typo3/cms-frontend": "^12.4",
 		"typo3/cms-extbase": "^12.4",
