@@ -27,6 +27,11 @@ class DependencyValuesService
     ) {
     }
 
+    /**
+     * Get the current request
+     *
+     * @return ServerRequestInterface
+     */
     public function getRequest(): ServerRequestInterface
     {
         if (empty($GLOBALS['TYPO3_REQUEST'])) {
@@ -36,21 +41,41 @@ class DependencyValuesService
         return $GLOBALS['TYPO3_REQUEST'];
     }
 
+    /**
+     * Get the current application context
+     *
+     * @return ApplicationContext
+     */
     public function getApplicationContext(): ApplicationContext
     {
         return Environment::getContext();
     }
 
+    /**
+     * Get the current application type
+     *
+     * @return ApplicationType
+     */
     public function getApplicationType(): ApplicationType
     {
         return ApplicationType::fromRequest($this->getRequest());
     }
 
+    /**
+     * Get the logged in backend user if available
+     *
+     * @return BackendUserAuthentication|null
+     */
     public function getBackendUser(): ?BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'] ?? null;
     }
 
+    /**
+     * Get a language service based on the current environment
+     *
+     * @return LanguageService
+     */
     public function getLanguageService(): LanguageService
     {
         if (!empty($GLOBALS['LANG'])) {

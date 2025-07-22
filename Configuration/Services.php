@@ -7,6 +7,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Psr\Http\Message\ServerRequestInterface;
 use Supseven\ThemeBase\Service\DependencyValuesService;
 use Supseven\ThemeBase\Service\LegalNoticeService;
+use Supseven\ThemeBase\Service\PageCacheService;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use TYPO3\CMS\Core\Core\ApplicationContext;
 use TYPO3\CMS\Core\Http\ApplicationType;
@@ -53,4 +54,9 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
         ->share(false)
         ->autowire(false)
         ->autoconfigure(false);
+
+    $services->set(PageCacheService::class)
+        ->share()
+        ->lazy(false)
+        ->tag('event.listener', ['identifier' => 'supseven/theme-base-cache-lifetime']);
 };
