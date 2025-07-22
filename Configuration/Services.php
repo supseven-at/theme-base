@@ -6,6 +6,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Supseven\ThemeBase\Service\DependencyValuesService;
+use Supseven\ThemeBase\Service\ErrorPageService;
 use Supseven\ThemeBase\Service\LegalNoticeService;
 use Supseven\ThemeBase\Service\PageCacheService;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -59,4 +60,10 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
         ->share()
         ->lazy(false)
         ->tag('event.listener', ['identifier' => 'supseven/theme-base-cache-lifetime']);
+
+    $services->set(ErrorPageService::class)
+        ->share(false)
+        ->autowire(false)
+        ->autoconfigure(false)
+        ->lazy();
 };
