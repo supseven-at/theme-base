@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Supseven\ThemeBase\Service\DataProcessingTemplateView;
 use Supseven\ThemeBase\Service\DependencyValuesService;
 use Supseven\ThemeBase\Service\ErrorPageService;
 use Supseven\ThemeBase\Service\LegalNoticeService;
@@ -26,6 +27,7 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
     $services->set(LegalNoticeService::class);
 
     $services->set(DependencyValuesService::class)->public()->share();
+    $services->set(DataProcessingTemplateView::class)->public()->share(false);
 
     $services->set('typo3.request', ServerRequestInterface::class)
         ->factory([service(DependencyValuesService::class), 'getRequest'])
