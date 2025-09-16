@@ -365,13 +365,21 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     {
         $imageCopyright = $this->image->getProperty('copyright');
 
-        if ($imageCopyright !== '') {
+        if (!is_null($imageCopyright) && $imageCopyright !== '') {
             return '© ' . $imageCopyright;
+        }
+
+        if (!$this->image->getOriginalFile()) {
+            return null;
         }
 
         $originalFileCopyright = $this->image->getOriginalFile()->getProperty('copyright');
 
-        if ($originalFileCopyright !== '') {
+        if (!is_null($originalFileCopyright) && $originalFileCopyright !== '') {
+            if (stripos($originalFileCopyright, '©') !== false) {
+                return $originalFileCopyright;
+            }
+
             return '© ' . $originalFileCopyright;
         }
 
