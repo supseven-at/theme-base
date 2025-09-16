@@ -151,6 +151,12 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         $this->tag->addAttribute('class', $this->arguments['pictureClass']);
         $this->tag->setContent(implode("\n", $source));
 
+        $imageCopyright = $this->getCopyrightFromImage();
+
+        if ($imageCopyright !== null) {
+            $this->tag->addAttribute('data-copyright', $imageCopyright);
+        }
+
         // test attribute, to check if the image is correct loaded
         // can be removed later without any stress
         $this->tag->addAttribute('data-viewhelper', 'theme');
@@ -348,6 +354,28 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         );
 
         return $this->tag->render();
+    }
+
+    /**
+     * Retrieves the copyright information from the current image or its original file.
+     *
+     * @return string|null Returns the copyright information as a string if available, or null if no copyright information is found.
+     */
+    private function getCopyrightFromImage(): ?string
+    {
+        $imageCopyright = $this->image->getProperty('copyright');
+
+        if ($imageCopyright !== '') {
+            return $imageCopyright;
+        }
+
+        $originalFileCopyright = $this->image->getOriginalFile()->getProperty('copyright');
+
+        if ($originalFileCopyright !== '') {
+            return $originalFileCopyright;
+        }
+
+        return null;
     }
 
     /**
