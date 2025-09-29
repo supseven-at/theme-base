@@ -8,6 +8,7 @@ use Psr\Http\Message\RequestInterface;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Service\ImageService;
@@ -364,16 +365,19 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     private function getCopyrightFromImage(): ?string
     {
         $imageCopyright = $this->image->getProperty('copyright');
+        $originalFileCopyright = null;
 
         if (!is_null($imageCopyright) && $imageCopyright !== '') {
             return '© ' . $imageCopyright;
         }
 
-        if (!$this->image->getOriginalFile()) {
-            return null;
-        }
+        if ($this->image instanceof FileReference) {
+            if (!$this->image->getOriginalFile()) {
+                return null;
+            }
 
-        $originalFileCopyright = $this->image->getOriginalFile()->getProperty('copyright');
+            $originalFileCopyright = $this->image->getOriginalFile()->getProperty('copyright');
+        }
 
         if (!is_null($originalFileCopyright) && $originalFileCopyright !== '') {
             if (stripos($originalFileCopyright, '©') !== false) {
