@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\Hooks;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Supseven\ThemeBase\Service\DependencyValuesService;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
 use TYPO3\CMS\Form\Domain\Model\Renderable\RenderableInterface;
 
 /**
@@ -29,35 +28,27 @@ use TYPO3\CMS\Form\Domain\Model\Renderable\RenderableInterface;
  */
 class PrefillFormFieldsWithTestValues
 {
-    protected array $formSettings;
-    protected array $testdata;
+    public function __construct(
+        protected readonly DependencyValuesService $values,
+        protected readonly ConfigurationManagerInterface $configurationManager,
+    ) {
+    }
 
     /**
      * @param RenderableInterface $renderable
-     * @throws InvalidConfigurationTypeException
      */
     public function initializeFormElement(RenderableInterface $renderable): void
     {
+        $formSettings = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS, 'form');
 
-        $prefillWithTestdata = 0;
+        if (!empty($formSettings['prefillWithTestdata']) && !empty($formSettings['testdata'])) {
+            if ($this->values->getBackendUser()?->isAdmin()) {
+                $testdata = $formSettings['testdata'];
+                $field = $renderable->getIdentifier();
 
-        $configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
-        $this->formSettings = $configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS, 'form');
-
-        if (isset($this->formSettings['prefillWithTestdata'])) {
-            $prefillWithTestdata = $this->formSettings['prefillWithTestdata'];
-        }
-
-        if (isset($this->formSettings['testdata'])) {
-            $this->testdata = $this->formSettings['testdata'];
-        }
-
-        if ($GLOBALS['BE_USER'] && $GLOBALS['BE_USER']->isAdmin() && $prefillWithTestdata) {
-
-            $field = $renderable->getIdentifier();
-
-            if (isset($this->testdata[$field])) {
-                $renderable->setDefaultValue($this->testdata[$field]);
+                if (isset($testdata[$field])) {
+                    $renderable->setDefaultValue($testdata[$field]);
+                }
             }
         }
     }

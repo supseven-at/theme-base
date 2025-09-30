@@ -6,14 +6,12 @@ namespace Supseven\ThemeBase\DataProcessing;
 
 use Supseven\Supi\CSP\SupiPolicyExtender;
 use Supseven\ThemeBase\Service\LegalNoticeService;
-use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
-use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -24,16 +22,10 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
  */
 class LegalNoticeDataProcessor implements DataProcessorInterface
 {
-    /** @var PageRenderer $pageRenderer */
-    protected PageRenderer $pageRenderer;
-
-    /** @var LegalNoticeService $service */
-    protected LegalNoticeService $service;
-
-    public function __construct(PageRenderer $pageRenderer, LegalNoticeService $service)
-    {
-        $this->pageRenderer = $pageRenderer;
-        $this->service = $service;
+    public function __construct(
+        protected readonly PageRenderer $pageRenderer,
+        protected readonly LegalNoticeService $service
+    ) {
     }
 
     /**
@@ -43,9 +35,7 @@ class LegalNoticeDataProcessor implements DataProcessorInterface
      * @param array $contentObjectConfiguration The content object configuration
      * @param array $processorConfiguration The processor configuration
      * @param array $processedData The processed data
-     *
      * @return array The processed data
-     * @throws ContentRenderingException|SiteNotFoundException
      */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData)
     {

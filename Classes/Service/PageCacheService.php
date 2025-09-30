@@ -6,6 +6,8 @@ namespace Supseven\ThemeBase\Service;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
+use TYPO3\CMS\Core\Cache\CacheTag;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Frontend\Event\ModifyCacheLifetimeForPageEvent;
 
@@ -14,6 +16,7 @@ use TYPO3\CMS\Frontend\Event\ModifyCacheLifetimeForPageEvent;
  *
  * @author Georg Großberger <g.grossberger@supseven.at>
  */
+#[AsEventListener(identifier: 'supseven/theme-base-cache-lifetime')]
 class PageCacheService implements SingletonInterface
 {
     public int $cacheLifetime = 0;
@@ -33,11 +36,13 @@ class PageCacheService implements SingletonInterface
 
     public function addTags(string ...$tags): void
     {
-        $this->request->getAttribute('frontend.controller')->addCacheTags($tags);
+        foreach ($tags as $tag) {
+            $this->request->getAttribute('frontend.cache.collector')->addCacheTags(new CacheTag($tag));
+        }
     }
 
     public function disable(string $reason): void
     {
-        $this->request->getAttribute('frontend.controller')->set_no_cache($reason, true);
+        $this->request->getAttribute('frontend.cache.instruction')->disableCache($reason);
     }
 }

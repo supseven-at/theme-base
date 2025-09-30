@@ -23,6 +23,7 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
 
     $services->load('Supseven\\ThemeBase\\DataProcessing\\', __DIR__ . '/../Classes/DataProcessing/*');
     $services->load('Supseven\\ThemeBase\\ViewHelpers\\', __DIR__ . '/../Classes/ViewHelpers/*');
+    $services->load('Supseven\\ThemeBase\\Hooks\\', __DIR__ . '/../Classes/Hooks/*');
 
     $services->set(LegalNoticeService::class);
 
@@ -54,14 +55,12 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
 
     $services->set('typo3.lang', LanguageService::class)
         ->factory([service(DependencyValuesService::class), 'getLanguageService'])
-        ->share(false)
         ->autowire(false)
         ->autoconfigure(false);
 
     $services->set(PageCacheService::class)
         ->share()
-        ->lazy(false)
-        ->tag('event.listener', ['identifier' => 'supseven/theme-base-cache-lifetime']);
+        ->lazy();
 
     $services->set(ErrorPageService::class)
         ->share(false)

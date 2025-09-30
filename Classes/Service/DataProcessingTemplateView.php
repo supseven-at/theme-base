@@ -53,6 +53,8 @@ use TYPO3\CMS\Frontend\ContentObject\ContentDataProcessor;
  * The ContentObjectRenderer instance passed to the data processors is
  * a clone of the Extbase-cObj and contains the Extbase request object
  *
+ * @todo This needs to be moved to a Template-Adapter which needs a custom view-factory impl
+ *
  * @author Georg Großberger <g.grossberger@supseven.at>
  */
 class DataProcessingTemplateView extends TemplateView implements LoggerAwareInterface
