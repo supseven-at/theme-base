@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\ViewHelpers\Format;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * SanitizeStringViewHelper class
@@ -23,14 +21,12 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class SanitizeStringViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
-
     /**
      * Basic character map
      *
      * @var array
      */
-    protected static $characterMap = [
+    protected const characterMap = [
         '¹' => 1, '²' => 2, '³' => 3, '°' => 0, '€' => 'eur', 'æ' => 'ae', 'ǽ' => 'ae', 'À' => 'A',
         'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Å' => 'AA', 'Ǻ' => 'A', 'Ă' => 'A', 'Ǎ' => 'A', 'Æ' => 'AE',
         'Ǽ' => 'AE', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'å' => 'aa', 'ǻ' => 'a', 'ă' => 'a',
@@ -107,26 +103,29 @@ class SanitizeStringViewHelper extends AbstractViewHelper
         );
     }
 
+    public function getContentArgumentName(): ?string
+    {
+        return 'string';
+    }
+
     /**
      * @return mixed
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
-        $string = $renderChildrenClosure();
+    public function render(): ?string
+    {
+        $string = $this->renderChildren();
 
-        if (null === $string) {
+        if (!$string) {
             return null;
         }
 
-        $characterMap = static::$characterMap;
-        $customMap = $arguments['customMap'];
+        $characterMap = static::characterMap;
+        $customMap = $this->arguments['customMap'];
 
         if (true === is_array($customMap) && 0 < count($customMap)) {
             $characterMap = array_merge($characterMap, $customMap);
         }
+
         $specialCharsSearch = array_keys($characterMap);
         $specialCharsReplace = array_values($characterMap);
         $string = str_replace($specialCharsSearch, $specialCharsReplace, (string)$string);

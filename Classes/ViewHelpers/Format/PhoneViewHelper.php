@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\ViewHelpers\Format;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * Class PhoneViewHelper
@@ -21,8 +19,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class PhoneViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
-
     protected $escapeChildren = false;
 
     protected $escapeOutput = false;
@@ -32,12 +28,14 @@ class PhoneViewHelper extends AbstractViewHelper
         $this->registerArgument('number', 'string', '');
     }
 
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
-        $content = (string)$renderChildrenClosure();
+    public function getContentArgumentName(): ?string
+    {
+        return 'number';
+    }
+
+    public function render(): string
+    {
+        $content = (string)$this->renderChildren();
         $content = html_entity_decode($content, ENT_QUOTES, 'UTF-8');
         $content = trim($content);
         $hasPlus = str_starts_with($content, '+');

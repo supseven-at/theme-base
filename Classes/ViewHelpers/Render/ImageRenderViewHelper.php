@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Supseven\ThemeBase\ViewHelpers\Render;
 
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Service\ImageService;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
@@ -58,8 +58,8 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     private string $alternative = '';
 
     public function __construct(
-        protected ImageService $imageService,
-        protected ContentObjectRenderer $contentObjectRenderer
+        protected readonly ImageService $imageService,
+        protected readonly ContentObjectRenderer $contentObjectRenderer
     ) {
         parent::__construct();
     }
@@ -84,7 +84,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         }
 
         $this->getBreakpoints($this->arguments);
-        $this->contentObjectData = $this->renderingContext->getRequest()->getAttribute('currentContentObject')->data;
+        $this->contentObjectData = $this->getRequest()->getAttribute('currentContentObject')->data;
     }
 
     /**
@@ -93,7 +93,6 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerUniversalTagAttributes();
 
         $this->registerArgument('settings', 'array', 'The Content Element Settings', true);
         $this->registerArgument('image', 'object', 'Image Element', true);
@@ -244,9 +243,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      */
     public function getExceptionMessage(string $detailedMessage): string
     {
-        /** @var RenderingContext $renderingContext */
-        $renderingContext = $this->renderingContext;
-        $request = $renderingContext->getRequest();
+        $request = $this->getRequest();
 
         if ($request instanceof RequestInterface) {
             $currentContentObject = $request->getAttribute('currentContentObject');
@@ -354,6 +351,11 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         );
 
         return $this->tag->render();
+    }
+
+    protected function getRequest(): ServerRequestInterface
+    {
+        return $this->renderingContext->getAttribute(ServerRequestInterface::class);
     }
 
     /**

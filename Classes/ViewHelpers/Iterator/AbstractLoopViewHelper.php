@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\ViewHelpers\Iterator;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -36,21 +35,17 @@ abstract class AbstractLoopViewHelper extends AbstractViewHelper
      * @param int $to
      * @param int $step
      * @param string $iterationArgument
-     * @param RenderingContextInterface $renderingContext
-     * @param \Closure $renderChildrenClosure
      * @return string
      */
-    protected static function renderIteration(
-        $i,
-        $from,
-        $to,
-        $step,
-        $iterationArgument,
-        RenderingContextInterface $renderingContext,
-        \Closure $renderChildrenClosure
-    ) {
+    protected function renderIteration(
+        int $i,
+        int $from,
+        int $to,
+        int $step,
+        string $iterationArgument,
+    ): string {
         if (false === empty($iterationArgument)) {
-            $variableProvider = $renderingContext->getVariableProvider();
+            $variableProvider = $this->renderingContext->getVariableProvider();
             $cycle = (int)(($i - $from) / $step) + 1;
             $iteration = [
                 'index'   => $i,
@@ -61,10 +56,10 @@ abstract class AbstractLoopViewHelper extends AbstractViewHelper
                 'isLast'  => static::isLast($i, $from, $to, $step),
             ];
             $variableProvider->add($iterationArgument, $iteration);
-            $content = $renderChildrenClosure();
+            $content = (string)$this->renderChildren();
             $variableProvider->remove($iterationArgument);
         } else {
-            $content = $renderChildrenClosure();
+            $content = (string)$this->renderChildren();
         }
 
         return $content;
@@ -77,7 +72,7 @@ abstract class AbstractLoopViewHelper extends AbstractViewHelper
      * @param int $step
      * @return bool
      */
-    protected static function isLast($i, $from, $to, $step)
+    protected function isLast(int $i, int $from, int $to, int $step): bool
     {
         if ($from === $to) {
             $isLast = true;

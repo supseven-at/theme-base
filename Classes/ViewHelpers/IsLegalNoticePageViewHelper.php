@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Supseven\ThemeBase\ViewHelpers;
 
 use Supseven\ThemeBase\Service\LegalNoticeService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class IsLegalNoticePageViewHelper extends AbstractViewHelper
 {
+    public function __construct(
+        protected readonly LegalNoticeService $legalNoticeService,
+    ) {
+    }
+
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -18,12 +21,12 @@ class IsLegalNoticePageViewHelper extends AbstractViewHelper
         $this->registerArgument('title', 'string', 'The current Page Title', true);
     }
 
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): bool
+    public function render(): bool
     {
-        /** @var LegalNoticeService $service */
-        $service = GeneralUtility::makeInstance(LegalNoticeService::class);
+        $pageUid = (int)$this->arguments['pageUid'];
+        $title = (string)$this->arguments['title'];
 
-        return $service->isLegalNoticePage((int)$arguments['pageUid'], $arguments['title']);
+        return $this->legalNoticeService->isLegalNoticePage($pageUid, $title);
     }
 
 }

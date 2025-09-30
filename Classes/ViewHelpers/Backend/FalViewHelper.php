@@ -6,9 +6,7 @@ namespace Supseven\ThemeBase\ViewHelpers\Backend;
 
 use TYPO3\CMS\Core\Resource\FileRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class FalViewHelper
@@ -34,12 +32,14 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class FalViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
     protected $escapeOutput = false;
+    public function __construct(
+        protected readonly FileRepository $fileRepository,
+    ) {
+    }
 
     public function initializeArguments(): void
     {
@@ -51,28 +51,24 @@ class FalViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     *
      * @return mixed
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): mixed
+    public function render(): mixed
     {
-        $fields = [ $arguments['field'] ];
+        $fields = [ $this->arguments['field'] ];
 
-        if ($arguments['combine']) {
-            $fields = GeneralUtility::trimExplode(',', $arguments['field']);
+        if ($this->arguments['combine']) {
+            $fields = GeneralUtility::trimExplode(',', $this->arguments['field']);
         }
 
         foreach ($fields as $field) {
-            $files = GeneralUtility::makeInstance(FileRepository::class)->findByRelation(
-                $arguments['table'],
+            $files = $this->fileRepository->findByRelation(
+                $this->arguments['table'],
                 $field,
-                $arguments['id']
+                $this->arguments['id']
             );
 
-            if ($arguments['combine']) {
+            if ($this->arguments['combine']) {
                 $arr[] = $files;
             }
         }
@@ -81,11 +77,11 @@ class FalViewHelper extends AbstractViewHelper
             $files = array_merge(...$arr);
         }
 
-        $vars = $renderingContext->getVariableProvider();
-        $as = $arguments['as'];
+        $vars = $this->renderingContext->getVariableProvider();
+        $as = $this->arguments['as'];
 
         $vars->add($as, $files ?? []);
-        $content = $renderChildrenClosure();
+        $content = $this->renderChildren();
         $vars->remove($as);
 
         return $content;

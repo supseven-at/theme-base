@@ -5,21 +5,16 @@ declare(strict_types=1);
 namespace Supseven\ThemeBase\ViewHelpers\Format;
 
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
-use TYPO3\CMS\Core\Package\Exception\UnknownPackagePathException;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * InlineCssViewHelper class
  *
  * this viewhelper adds inline css with nonce attributes to the page header.
  *
- * Mostly used, if you need an separate above the fold css.
+ * Mostly used, if you need a separate above the fold css.
  *
  * EXAMPLE:
  *
@@ -31,49 +26,47 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class InlineCssViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
+    public function __construct(
+        protected readonly PackageManager $packageManager,
+        protected readonly PageRenderer $pageRenderer,
+    ) {
+    }
 
     /**
      * Initialize
      */
     public function initializeArguments(): void
     {
-        $this->registerArgument('name', 'string', 'The Name of the CSS to include. Should be unique', true);
+        $this->registerArgument('name', 'string', 'The Name of the CSS to include. Should be unique');
         $this->registerArgument('file', 'string', 'The css file to include, if no inline css is used');
         $this->registerArgument('compress', 'bool', 'compress the inlined css?', false, false);
         $this->registerArgument('forceOnTop', 'bool', 'force included css on top?', false, false);
     }
 
-    /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @throws UnknownPackageException
-     * @throws UnknownPackagePathException
-     */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ): void {
+    public function render(): void
+    {
         $file = null;
 
-        if (isset($arguments['file'])) {
-            if (stripos($arguments['file'], 'EXT:') !== false) {
-                $file = GeneralUtility::makeInstance(PackageManager::class)->resolvePackagePath($arguments['file']);
+        if (isset($this->arguments['file'])) {
+            if (stripos($this->arguments['file'], 'EXT:') !== false) {
+                $file = $this->packageManager->resolvePackagePath($this->arguments['file']);
             } else {
-                $file = Environment::getPublicPath() . '/' . $arguments['file'];
+                $file = Environment::getPublicPath() . '/' . $this->arguments['file'];
             }
         }
 
         if (null === $file) {
-            $content = $renderChildrenClosure();
+            $content = $this->renderChildren();
         } else {
             $content = is_file($file) ? file_get_contents($file) : null;
         }
 
-        /** @var PageRenderer $pageRenderer */
-        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-        $pageRenderer->addCssInlineBlock($arguments['name'], $content, $arguments['compress'], $arguments['forceOnTop'], true);
+        $this->pageRenderer->addCssInlineBlock(
+            $this->arguments['name'] ?: hash('xxh3', $content),
+            $content,
+            $this->arguments['compress'],
+            $this->arguments['forceOnTop'],
+            true,
+        );
     }
 }

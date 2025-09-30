@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Supseven\ThemeBase\ViewHelpers\Math;
 
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * Returns the result of simple expression
@@ -30,9 +28,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  *     {expr -> t:math.calc()} -> "4"
  * </code>
  *
- * @deprecated
- * you might use fluid inline notation if no rounding is needed
- *
  * EXAMPLE:
  *
  * <f:variable name="test" value="10" />
@@ -40,8 +35,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class CalcViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
-
     /** @var bool */
     protected $escapeOutput = false;
     protected $escapeChildren = false;
@@ -52,22 +45,22 @@ class CalcViewHelper extends AbstractViewHelper
         $this->registerArgument('round', 'bool', 'Round result', false);
     }
 
+    public function getContentArgumentName(): ?string
+    {
+        return 'expression';
+    }
+
     /**
      * Return result
      *
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     *
      * @return float|string
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): float|string
+    public function render(): float|string
     {
-        $expression = (string)$renderChildrenClosure();
-
+        $expression = (string)$this->renderChildren();
         $value = MathUtility::calculateWithParentheses($expression);
 
-        if ($arguments['round']) {
+        if ($this->arguments['round']) {
             return round((float)$value);
         }
 

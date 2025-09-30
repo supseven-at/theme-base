@@ -6,10 +6,7 @@ namespace Supseven\ThemeBase\ViewHelpers\Backend;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class MenuSubpagesViewHelper
@@ -22,12 +19,14 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class MenuSubpagesViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     private const EXCLUDE = [
-        PageRepository::DOKTYPE_RECYCLER,
         PageRepository::DOKTYPE_SYSFOLDER,
     ];
+
+    public function __construct(
+        protected readonly ConnectionPool $connectionPool,
+    ) {
+    }
 
     public function initializeArguments(): void
     {
@@ -38,20 +37,19 @@ class MenuSubpagesViewHelper extends AbstractViewHelper
         $this->registerArgument('limit', 'int', '', false);
     }
 
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render(): iterable
     {
         $menu = [];
-        $excludedDoktypes = explode(',', $arguments['excludedDoktypes']);
+        $excludedDoktypes = explode(',', $this->arguments['excludedDoktypes']);
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('pages');
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
 
         $queryBuilder->select('uid')
             ->from('pages')
             ->where(
                 $queryBuilder->expr()->In(
                     'pid',
-                    $arguments['pageId'],
+                    $this->arguments['pageId'],
                 ),
                 $queryBuilder->expr()->eq(
                     'nav_hide',
@@ -62,19 +60,18 @@ class MenuSubpagesViewHelper extends AbstractViewHelper
                     $excludedDoktypes,
                 )
             )
-            ->orderBy($arguments['order'], $arguments['orderDirection']);
+            ->orderBy($this->arguments['order'], $this->arguments['orderDirection']);
 
-        if ($arguments['limit']) {
-            $queryBuilder->setMaxResults($arguments['limit']);
+        if ($this->arguments['limit']) {
+            $queryBuilder->setMaxResults($this->arguments['limit']);
         }
 
         $pages = $queryBuilder
-        ->executeQuery()
-        ->fetchAllAssociative();
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         foreach ($pages as $page) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-                ->getQueryBuilderForTable('pages');
+            $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
 
             $result = $queryBuilder->select('*')
                 ->from('pages')

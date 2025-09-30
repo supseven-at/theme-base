@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\ViewHelpers\Format;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * Class CleanupStringViewHelper
  *
- * This view helper is used to cleanup strings by eliminating whitespace characters, tabs, line breaks,
+ * This view helper is used to clean up strings by eliminating whitespace characters, tabs, line breaks,
  * UNIX line breaks, and Windows carriage returns.
  *
  * EXAMPLE:
@@ -23,8 +21,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class CleanupStringViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
-
     /**
      * @var bool
      */
@@ -41,33 +37,30 @@ class CleanupStringViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string
+    public function renderStatic(): string
     {
-        $content = $renderChildrenClosure();
+        $content = $this->renderChildren();
 
-        if (true === $arguments['whitespace']) {
-            $content = static::eliminateWhitespace($content);
+        if (true === $this->arguments['whitespace']) {
+            $content = $this->eliminateWhitespace($content);
         }
 
-        if (true === $arguments['tabs']) {
-            $content = static::eliminateTabs($content);
+        if (true === $this->arguments['tabs']) {
+            $content = $this->eliminateTabs($content);
         }
 
-        if (true === $arguments['lineBreaks']) {
-            $content = static::eliminateLineBreaks($content);
+        if (true === $this->arguments['lineBreaks']) {
+            $content = $this->eliminateLineBreaks($content);
         }
 
-        if (true === $arguments['unixBreaks']) {
-            $content = static::eliminateUnixBreaks($content);
+        if (true === $this->arguments['unixBreaks']) {
+            $content = $this->eliminateUnixBreaks($content);
         }
 
-        if (true === $arguments['windowsBreaks']) {
-            $content = static::eliminateWindowsCarriageReturns($content);
+        if (true === $this->arguments['windowsBreaks']) {
+            $content = $this->eliminateWindowsCarriageReturns($content);
         }
 
         return $content;
@@ -78,7 +71,7 @@ class CleanupStringViewHelper extends AbstractViewHelper
      *
      * @return string
      */
-    protected static function eliminateWhitespace(string $content): string
+    protected function eliminateWhitespace(string $content): string
     {
         return (string)preg_replace('/\\s+/', ' ', $content);
     }
@@ -88,7 +81,7 @@ class CleanupStringViewHelper extends AbstractViewHelper
      *
      * @return string
      */
-    protected static function eliminateTabs(string $content): string
+    protected function eliminateTabs(string $content): string
     {
         return str_replace("\t", '', $content);
     }
@@ -98,7 +91,7 @@ class CleanupStringViewHelper extends AbstractViewHelper
      *
      * @return string
      */
-    protected static function eliminateLineBreaks(string $content): string
+    protected function eliminateLineBreaks(string $content): string
     {
         return str_replace("\n\r", '', $content);
     }
@@ -108,7 +101,7 @@ class CleanupStringViewHelper extends AbstractViewHelper
      *
      * @return string
      */
-    protected static function eliminateUnixBreaks(string $content): string
+    protected function eliminateUnixBreaks(string $content): string
     {
         return str_replace("\n", '', $content);
     }
@@ -118,7 +111,7 @@ class CleanupStringViewHelper extends AbstractViewHelper
      *
      * @return string
      */
-    protected static function eliminateWindowsCarriageReturns(string $content): string
+    protected function eliminateWindowsCarriageReturns(string $content): string
     {
         return str_replace("\r", '', $content);
     }

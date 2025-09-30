@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\ViewHelpers\Iterator;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-
 /**
  * Repeats rendering of children $count times while updating $iteration.
  *
@@ -30,11 +28,8 @@ class LoopViewHelper extends AbstractLoopViewHelper
         $this->registerArgument('maximum', 'integer', 'Maxiumum number of loops before stopping', false, PHP_INT_MAX);
     }
 
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
+    public function render()
+    {
         $count = (int)$arguments['count'];
         $minimum = (int)$arguments['minimum'];
         $maximum = (int)$arguments['maximum'];
@@ -79,7 +74,7 @@ class LoopViewHelper extends AbstractLoopViewHelper
      * @param int $step
      * @return bool
      */
-    protected static function isLast($i, $from, $to, $step)
+    protected function isLast($i, $from, $to, $step): bool
     {
         return $i + $step >= $to;
     }

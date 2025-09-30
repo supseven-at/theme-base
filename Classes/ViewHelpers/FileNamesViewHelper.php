@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\ViewHelpers;
 
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * fetches filenames within a given public folder
  */
 class FileNamesViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
+    public function __construct(
+        protected readonly \TYPO3\CMS\Core\Package\PackageManager $packageManager,
+    ) {
+    }
 
     public function initializeArguments(): void
     {
@@ -25,15 +25,14 @@ class FileNamesViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
+     * @return array
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): array
+    public function render(): array
     {
         $arr = []; // Images/Icons/*.svg
-        $files = ExtensionManagementUtility::extPath($arguments['extensionName']) . 'Resources/Public/' . $arguments['path'] . $arguments['pattern'];
+        $extPath = $this->packageManager->getPackage($this->arguments['extensionName'])->getPackagePath();
+        $files = $extPath . 'Resources/Public/' . $this->arguments['path'] . $this->arguments['pattern'];
+
         foreach (glob($files) as $file) {
             $arr[] = pathinfo($file)['filename'];
         }

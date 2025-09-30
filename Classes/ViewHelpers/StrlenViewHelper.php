@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * StrlenViewHelper extends AbstractViewHelper and provides a static method to count the length of a string.
@@ -16,8 +14,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class StrlenViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -36,17 +32,20 @@ class StrlenViewHelper extends AbstractViewHelper
         );
     }
 
+    public function getContentArgumentName(): ?string
+    {
+        return 'string';
+    }
+
     /**
      * @return int
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
+    public function render(): int
+    {
         /** @var string $encoding */
-        $encoding = $arguments['encoding'];
+        $encoding = $this->arguments['encoding'];
+        $content = (string)$this->renderChildren();
 
-        return (int)mb_strlen($renderChildrenClosure(), $encoding);
+        return (int)mb_strlen($content, $encoding);
     }
 }

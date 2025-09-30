@@ -118,7 +118,7 @@ final class ImageRenderViewHelperTest extends TestCase
             ->method('getViewHelperVariableContainer')
             ->willReturn(self::createStub(ViewHelperVariableContainer::class));
         $renderingContextMock->expects(self::any())
-            ->method('getRequest')
+            ->method('getAttribute')
             ->willReturn($serverRequestMock);
 
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['fluid']['expressionNodeTypes'] = [

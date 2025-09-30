@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Supseven\ThemeBase\ViewHelpers\Backend;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class MenuPagesViewHelper
@@ -20,22 +17,24 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class MenuPagesViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
+    public function __construct(
+        protected readonly ConnectionPool $connectionPool,
+    ) {
+    }
 
     public function initializeArguments(): void
     {
         $this->registerArgument('pageIds', 'string', '', true);
     }
 
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render(): iterable
     {
-        $pages = explode(',', $arguments['pageIds']);
+        $pages = explode(',', $this->arguments['pageIds']);
 
         $menu = [];
 
         foreach ($pages as $page) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-                ->getQueryBuilderForTable('pages');
+            $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
 
             $result = $queryBuilder->select('uid', 'title', 'doktype')
                 ->from('pages')

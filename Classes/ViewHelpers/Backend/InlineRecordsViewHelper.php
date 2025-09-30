@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Supseven\ThemeBase\ViewHelpers\Backend;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class InlineRecordsViewHelper
@@ -20,7 +17,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class InlineRecordsViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
+    public function __construct(
+        protected readonly ConnectionPool $connectionPool,
+    ) {
+    }
 
     public function initializeArguments(): void
     {
@@ -31,18 +31,17 @@ class InlineRecordsViewHelper extends AbstractViewHelper
         $this->registerArgument('sortorder', 'string', '', false, 'ASC');
     }
 
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render(): iterable
     {
-        $localField = $arguments['field'];
-        $localTable = $arguments['table'];
-        $localUid = $arguments['uid'];
-        $foreignTable = $GLOBALS['TCA'][$localTable]['columns'][$localField]['config']['foreign_table'];
-        $foreignField = $GLOBALS['TCA'][$localTable]['columns'][$localField]['config']['foreign_field'];
+        $localField = $this->arguments['field'];
+        $localTable = $this->arguments['table'];
+        $localUid = $this->arguments['uid'];
+        $foreignTable = $GLOBALS['TCA'][$localTable]['columns'][$localField]['config']['foreign_table'] ?? null;
+        $foreignField = $GLOBALS['TCA'][$localTable]['columns'][$localField]['config']['foreign_field'] ?? null;
 
         // process db query if foreign table could be fetched from TCA
         if (!empty($foreignTable)) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-                ->getQueryBuilderForTable($foreignTable);
+            $queryBuilder = $this->connectionPool->getQueryBuilderForTable($foreignTable);
             // Build Query
             $queryBuilder
                 ->select('*')
@@ -50,17 +49,17 @@ class InlineRecordsViewHelper extends AbstractViewHelper
                 ->where(
                     $queryBuilder->expr()->eq(
                         $foreignField,
-                        $queryBuilder->createNamedParameter($localUid, \PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($localUid)
                     )
                 )
-                ->orderBy($arguments['sortby'], $arguments['sortorder']);
+                ->orderBy($this->arguments['sortby'], $this->arguments['sortorder']);
 
             // foreign_sortby
             if (!empty($GLOBALS['TCA'][$localTable]['columns'][$localField]['config']['foreign_sortby'])) {
                 $queryBuilder->orderBy($GLOBALS['TCA'][$localTable]['columns'][$localField]['config']['foreign_sortby']);
             }
 
-            return $queryBuilder->execute()->fetchAllAssociative();
+            return $queryBuilder->executeQuery()->fetchAllAssociative();
         }
 
         return [];

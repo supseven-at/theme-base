@@ -6,8 +6,6 @@ namespace Supseven\ThemeBase\ViewHelpers\Iterator;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 
@@ -50,21 +48,15 @@ class ChunkViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
      * @return array|mixed
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
-        $count = (int)$arguments['count'];
-        $fixed = (bool)($arguments['fixed'] ?? false);
-        $preserveKeys = (bool)($arguments['preserveKeys'] ?? false);
-        $subject = static::arrayFromArrayOrTraversableOrCSVStatic(
-            empty($arguments['as']) ? ($arguments['subject'] ?? $renderChildrenClosure()) : $arguments['subject'],
+    public function render()
+    {
+        $count = (int)$this->arguments['count'];
+        $fixed = (bool)($this->arguments['fixed'] ?? false);
+        $preserveKeys = (bool)($this->arguments['preserveKeys'] ?? false);
+        $subject = $this->arrayFromArrayOrTraversableOrCSVStatic(
+            empty($this->arguments['as']) ? ($this->arguments['subject'] ?? $this->renderChildren()) : $this->arguments['subject'],
             $preserveKeys
         );
         $output = [];
@@ -91,12 +83,7 @@ class ChunkViewHelper extends AbstractViewHelper
             $output = array_chunk($subject, $count, $preserveKeys);
         }
 
-        return static::renderChildrenWithVariableOrReturnInputStatic(
-            $output,
-            $arguments['as'],
-            $renderingContext,
-            $renderChildrenClosure
-        );
+        return $this->renderChildrenWithVariableOrReturnInputStatic($output, $this->arguments['as']);
     }
 
     /**
@@ -104,16 +91,14 @@ class ChunkViewHelper extends AbstractViewHelper
      * @param bool $useKeys
      *
      * @return array
-     * @throws Exception
      */
-    protected static function arrayFromArrayOrTraversableOrCSVStatic($candidate, $useKeys = true): array
+    protected function arrayFromArrayOrTraversableOrCSVStatic(string|iterable $candidate, $useKeys = true): array
     {
         if ($candidate instanceof \Traversable) {
             return iterator_to_array($candidate, $useKeys);
         }
 
         if ($candidate instanceof QueryResultInterface) {
-            /** @var QueryResultInterface $candidate */
             return $candidate->toArray();
         }
 
@@ -124,33 +109,24 @@ class ChunkViewHelper extends AbstractViewHelper
         if (is_array($candidate)) {
             return $candidate;
         }
+
         throw new Exception('Unsupported input type; cannot convert to array!', 1588049231);
     }
 
     /**
      * @param mixed $variable
      * @param string $as
-     * @param \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
-     * @param \Closure $renderChildrenClosure
      * @return mixed
      */
-    protected static function renderChildrenWithVariableOrReturnInputStatic(
-        $variable,
-        $as,
-        RenderingContextInterface $renderingContext,
-        \Closure $renderChildrenClosure
-    ) {
+    protected function renderChildrenWithVariableOrReturnInputStatic(mixed $variable, string $as)
+    {
         if (empty($as) === true) {
             return $variable;
         }
-        $variables = [$as => $variable];
-        $content = static::renderChildrenWithVariablesStatic(
-            $variables,
-            $renderingContext->getVariableProvider(),
-            $renderChildrenClosure
-        );
 
-        return $content;
+        $variables = [$as => $variable];
+
+        return $this->renderChildrenWithVariablesStatic($variables);
     }
 
     /**
@@ -160,36 +136,30 @@ class ChunkViewHelper extends AbstractViewHelper
      * Returns the output of the renderChildren() method on $viewHelper.
      *
      * @param array $variables
-     * @param VariableProviderInterface $templateVariableContainer
-     * @param \Closure $renderChildrenClosure
      * @return mixed
      */
-    protected static function renderChildrenWithVariablesStatic(
-        array $variables,
-        $templateVariableContainer,
-        $renderChildrenClosure
-    ) {
-        $backups = static::backupVariables($variables, $templateVariableContainer);
-        $content = $renderChildrenClosure();
-        static::restoreVariables($variables, $backups, $templateVariableContainer);
+    protected function renderChildrenWithVariablesStatic(array $variables)
+    {
+        $backups = $this->backupVariables($variables);
+        $content = $this->renderChildren();
+        $this->restoreVariables($variables, $backups);
 
         return $content;
     }
 
     /**
      * @param array $variables
-     * @param VariableProviderInterface $templateVariableContainer
      * @return array
      */
-    private static function backupVariables(array $variables, $templateVariableContainer): array
+    private function backupVariables(array $variables): array
     {
         $backups = [];
         foreach ($variables as $variableName => $variableValue) {
-            if ($templateVariableContainer->exists($variableName)) {
-                $backups[$variableName] = $templateVariableContainer->get($variableName);
-                $templateVariableContainer->remove($variableName);
+            if ($this->templateVariableContainer->exists($variableName)) {
+                $backups[$variableName] = $this->templateVariableContainer->get($variableName);
+                $this->templateVariableContainer->remove($variableName);
             }
-            $templateVariableContainer->add($variableName, $variableValue);
+            $this->templateVariableContainer->add($variableName, $variableValue);
         }
 
         return $backups;
@@ -198,15 +168,14 @@ class ChunkViewHelper extends AbstractViewHelper
     /**
      * @param array $variables
      * @param array $backups
-     * @param VariableProviderInterface $templateVariableContainer
      */
-    private static function restoreVariables(array $variables, array $backups, $templateVariableContainer): void
+    private function restoreVariables(array $variables, array $backups): void
     {
         foreach ($variables as $variableName => $variableValue) {
-            $templateVariableContainer->remove($variableName);
+            $this->templateVariableContainer->remove($variableName);
 
             if (isset($backups[$variableName]) === true) {
-                $templateVariableContainer->add($variableName, $variableValue);
+                $this->templateVariableContainer->add($variableName, $variableValue);
             }
         }
     }

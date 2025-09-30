@@ -6,7 +6,6 @@ namespace Supseven\ThemeBase\ViewHelpers\Iterator;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class RangeViewHelper
@@ -20,8 +19,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class RangeViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -35,13 +32,10 @@ class RangeViewHelper extends AbstractViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return array
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ): array {
-        $to = (int)$arguments['to'];
-        $from = (int)$arguments['from'];
+    public function render(): array
+    {
+        $from = (int)$this->arguments['from'];
+        $to = (int)$this->arguments['to'];
 
         return range($from, $to);
     }

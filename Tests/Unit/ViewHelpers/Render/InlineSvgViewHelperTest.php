@@ -14,8 +14,8 @@ use TYPO3\CMS\Core\Core\ApplicationContext;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Package\PackageManager;
+use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -70,7 +70,12 @@ final class InlineSvgViewHelperTest extends UnitTestCase
     {
         parent::setUp();
 
-        $applicationContext = new ApplicationContext('Development');
+        $applicationContext = new ApplicationContext('Testing');
+
+        $this->root = vfsStream::setup();
+        $this->file = vfsStream::newFile($this->fileName)->at($this->root);
+        $this->file->setContent($this->svgContent);
+
         Environment::initialize(
             $applicationContext,
             true,
@@ -82,12 +87,6 @@ final class InlineSvgViewHelperTest extends UnitTestCase
             '/app',
             'Linux'
         );
-
-        $this->root = vfsStream::setup();
-
-        $this->file = vfsStream::newFile($this->fileName)
-            ->at($this->root);
-        $this->file->setContent($this->svgContent);
     }
 
     /**
@@ -95,7 +94,7 @@ final class InlineSvgViewHelperTest extends UnitTestCase
      */
     #[DataProvider('renderStaticDataProvider')]
     #[Test]
-    public function renderStatic(array $arguments, array $expectedResult): void
+    public function render(array $arguments, array $expectedResult): void
     {
         $arguments = [
             'id'                => $arguments['id'] ?? null,
@@ -116,7 +115,15 @@ final class InlineSvgViewHelperTest extends UnitTestCase
 
         $renderingContext = $this->getTypoScriptFrontendControllerMock();
 
-        $sut = InlineSvgViewHelper::renderStatic($arguments, $renderChildrenClosure, $renderingContext);
+        $packageManager = self::createMock(PackageManager::class);
+        $packageManager->expects(self::never())->method('resolvePackagePath');
+        $assetCollector = $this->createMock(AssetCollector::class);
+
+        $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
+        $subject->setArguments($arguments);
+        $subject->setRenderingContext($renderingContext);
+        $subject->setRenderChildrenClosure($renderChildrenClosure);
+        $sut = $subject->render();
 
         if (isset($expectedResult['misses'])) {
             self::assertStringNotContainsString($expectedResult['misses'], $sut);
@@ -134,7 +141,11 @@ final class InlineSvgViewHelperTest extends UnitTestCase
     #[Test]
     public function getFilePath(): void
     {
-        $result = InlineSvgViewHelper::getFilePath($this->fileName);
+        $packageManager = self::createMock(PackageManager::class);
+        $assetCollector = $this->createMock(AssetCollector::class);
+
+        $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
+        $result = $subject->getFilePath($this->fileName);
 
         self::assertSame($this->rootPath . '/' . $this->fileName, $result);
     }
@@ -153,10 +164,11 @@ final class InlineSvgViewHelperTest extends UnitTestCase
             ->with('EXT:theme/Resources/Public/Images/' . $this->fileName)
             ->willReturn('foobar');
 
-        // Prevent the actual class from being instantiated in the sut:
-        GeneralUtility::setSingletonInstance(PackageManager::class, $packageManager);
+        $assetCollector = $this->createMock(AssetCollector::class);
 
-        $result = InlineSvgViewHelper::getFilePath('EXT:theme/Resources/Public/Images/' . $this->fileName);
+        $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
+
+        $result = $subject->getFilePath('EXT:theme/Resources/Public/Images/' . $this->fileName);
 
         // Assert, condition 'EXT' is true
         self::assertStringNotContainsString('.svg', $result);
@@ -167,7 +179,7 @@ final class InlineSvgViewHelperTest extends UnitTestCase
      * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
      */
     #[Test]
-    public function renderStaticThrowsFileDoesNotExistException(): void
+    public function renderThrowsFileDoesNotExistException(): void
     {
         self::expectException(FileDoesNotExistException::class);
 
@@ -177,9 +189,22 @@ final class InlineSvgViewHelperTest extends UnitTestCase
 
         $renderChildrenClosure = fn () => null;
 
+        $packageManager = self::createMock(PackageManager::class);
+        $packageManager->expects(self::never())
+            ->method('resolvePackagePath')
+            ->with('EXT:theme/Resources/Public/Images/' . $this->fileName)
+            ->willReturn('foobar');
+
+        $assetCollector = $this->createMock(AssetCollector::class);
+
         $renderingContext = $this->getTypoScriptFrontendControllerMock();
 
-        $sut = InlineSvgViewHelper::renderStatic($arguments, $renderChildrenClosure, $renderingContext);
+        $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
+        $subject->setArguments($arguments);
+        $subject->setRenderChildrenClosure($renderChildrenClosure);
+        $subject->setRenderingContext($renderingContext);
+
+        $subject->render();
     }
 
     /**
@@ -190,7 +215,11 @@ final class InlineSvgViewHelperTest extends UnitTestCase
     #[Test]
     public function sanitizeId(string $svgIdString, string $expected): void
     {
-        $sut = InlineSvgViewHelper::sanitizeId($svgIdString);
+        $packageManager = self::createMock(PackageManager::class);
+        $assetCollector = $this->createMock(AssetCollector::class);
+
+        $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
+        $sut = $subject->sanitizeId($svgIdString);
 
         self::assertSame($expected, $sut);
     }
@@ -322,7 +351,7 @@ final class InlineSvgViewHelperTest extends UnitTestCase
         $typoScriptFrontendController = $this->createMock(TypoScriptFrontendController::class);
         $request = (new ServerRequest())->withAttribute('frontend.controller', $typoScriptFrontendController);
         $renderingContext = $this->createMock(RenderingContext::class);
-        $renderingContext->method('getRequest')->willReturn($request);
+        $renderingContext->method('getAttribute')->willReturn($request);
 
         return $renderingContext;
     }

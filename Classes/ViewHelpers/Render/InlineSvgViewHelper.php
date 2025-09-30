@@ -12,10 +12,7 @@ use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class InlineSvgViewHelper
@@ -40,12 +37,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class InlineSvgViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
     protected $escapeOutput = false;
+
+    public function __construct(
+        protected readonly PackageManager $packageManager,
+        protected readonly AssetCollector $assetCollector,
+    ) {
+    }
 
     /**
      * Arguments initialization
@@ -72,24 +73,18 @@ class InlineSvgViewHelper extends AbstractViewHelper
     /**
      * Output different objects
      *
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
-        $file = self::getFilePath($arguments['source']);
+    public function render(): string
+    {
+        $file = $this->getFilePath($this->arguments['source']);
 
-        if (empty($arguments['source']) || !file_exists($file)) {
+        if (empty($this->arguments['source']) || !file_exists($file)) {
             throw new FileDoesNotExistException('File not found', 1725027772);
         }
 
         try {
-            return self::getInlineSvg($file, $arguments);
+            return $this->getInlineSvg($file, $this->arguments);
         } catch (\Exception $e) {
             if ($e->getCode() === 1614863553) {
                 return '<!-- ' . $e->getMessage() . ' -->';
@@ -101,15 +96,12 @@ class InlineSvgViewHelper extends AbstractViewHelper
 
     /**
      * @param string $source
-     *
      * @return string
-     * @throws \TYPO3\CMS\Core\Package\Exception\UnknownPackageException
-     * @throws \TYPO3\CMS\Core\Package\Exception\UnknownPackagePathException
      */
-    public static function getFilePath(string $source): string
+    public function getFilePath(string $source): string
     {
         if (stripos($source, 'EXT:') !== false) {
-            return GeneralUtility::makeInstance(PackageManager::class)->resolvePackagePath($source);
+            return $this->packageManager->resolvePackagePath($source);
         }
 
         return Environment::getPublicPath() . '/' . $source;
@@ -121,7 +113,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
      * @param string $id
      * @return string
      */
-    public static function sanitizeId(string $id): string
+    public function sanitizeId(string $id): string
     {
         // Replace any character that is not a letter, digit, colon, hyphen, or period with an underscore
         $svgId = (string)preg_replace('/[^a-zA-Z0-9_:.-]/', '_', $id);
@@ -135,7 +127,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @return string
      */
-    protected static function getInlineSvg(string $source, array $arguments)
+    protected function getInlineSvg(string $source, array $arguments): string
     {
         $svgContent = file_get_contents($source);
         $svgContent = preg_replace('/<script[\\s\\S]*?>[\\s\\S]*?<\\/script>/i', '', $svgContent);
@@ -150,7 +142,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
         $domXml->setAttribute('role', 'img');
 
         if ($arguments['remove-styles'] === true) {
-            self::removeStyleTags($domXml, $source, $arguments);
+            $this->removeStyleTags($domXml, $source, $arguments);
         }
 
         // if a title should be used, create an extra node
@@ -176,13 +168,13 @@ class InlineSvgViewHelper extends AbstractViewHelper
         }
 
         // if there is an id, it means, this svg should be accessible. therefore a title MUST be set
-        // if not, it throws a exception and will not be rendered.
+        // if not, it throws an exception and will not be rendered.
         // if no id is set, the SVG is automatically marked as aria-hidden for a11y reasons
         if (!empty($arguments['id'])) {
-            $domXml->setAttribute('aria-labelledby', self::sanitizeId($arguments['id']));
+            $domXml->setAttribute('aria-labelledby', $this->sanitizeId($arguments['id']));
 
             if (isset($title)) {
-                $title->setAttribute('id', self::sanitizeId($arguments['id']));
+                $title->setAttribute('id', $this->sanitizeId($arguments['id']));
             } else {
                 throw new Exception('This SVG is not accessible, if there is no Title attribute available', 1614863553);
             }
@@ -190,7 +182,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
             $domXml->setAttribute('aria-hidden', 'true');
         }
 
-        // replace a existing (possibly duplicate) id with a unique id.
+        // replace an existing (possibly duplicate) id with a unique id.
         // this is mostly required, if a svg is uploaded by an editor
         if (!is_null($arguments['uniqueId']) && $domXml->getAttribute('id') !== '') {
             $domXml->setAttribute('id', 'svg-' . $arguments['uniqueId']);
@@ -205,7 +197,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
         // if you have inline styles, like css variables, you can use this argument to add styles directly to the
         // svg.
         if (isset($arguments['insert-style'])) {
-            self::addStyles($arguments['insert-style'], time() . pathinfo($source)['filename']);
+            $this->addStyles($arguments['insert-style'], time() . pathinfo($source)['filename']);
         }
 
         if (isset($arguments['class'])) {
@@ -230,15 +222,17 @@ class InlineSvgViewHelper extends AbstractViewHelper
 
         $finalSvgString = $domXml->ownerDocument->saveXML($domXml->ownerDocument->documentElement);
 
-        return self::sanitizeContent($finalSvgString, $arguments);
+        return $this->sanitizeContent($finalSvgString, $arguments);
     }
 
     /**
-     * copied from core to to missing possibility to remove xml tag
+     * copied from core
+     *
+     * @todo missing possibility to remove xml tag
      *
      * @throws \BadFunctionCallException
      */
-    private static function sanitizeContent(string $svg, array $arguments): string
+    private function sanitizeContent(string $svg, array $arguments): string
     {
         $previousXmlErrorHandling = libxml_use_internal_errors(true);
         $sanitizer = new Sanitizer();
@@ -267,9 +261,8 @@ class InlineSvgViewHelper extends AbstractViewHelper
      * @param \DOMElement $svg The SVG element
      * @param string $source The source path of the SVG file
      * @param array $arguments The arguments array
-     * @throws \DOMException If an error occurred while removing the `style` tags
      */
-    private static function removeStyleTags(\DOMElement $svg, string $source, array $arguments): void
+    private function removeStyleTags(\DOMElement $svg, string $source, array $arguments): void
     {
         $styles = '';
         $styleTags = $svg->getElementsByTagName('style');
@@ -281,7 +274,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
         }
 
         if ($arguments['move-styles']) {
-            self::addStyles($styles, pathinfo($source)['filename']);
+            $this->addStyles($styles, pathinfo($source)['filename']);
         }
     }
 
@@ -292,11 +285,9 @@ class InlineSvgViewHelper extends AbstractViewHelper
      * @param string $name The name of the stylesheet
      * @throws \BadFunctionCallException
      */
-    private static function addStyles(string $styles, string $name): void
+    private function addStyles(string $styles, string $name): void
     {
-        /** @var AssetCollector $assetCollector */
-        $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
-        $assetCollector->addInlineStyleSheet($name, $styles, [], [
+        $this->assetCollector->addInlineStyleSheet($name, $styles, [], [
             'priority' => true,
             'useNonce' => true,
         ]);
