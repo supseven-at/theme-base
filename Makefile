@@ -6,11 +6,11 @@ build: vendor/autoload.php
 
 .PHONY: fix
 fix: vendor/autoload.php
-	PHP_CS_FIXER_IGNORE_ENV=1 php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --diff
+	php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --diff
 
 .PHONY: lint
 lint: vendor/autoload.php
-	PHP_CS_FIXER_IGNORE_ENV=1 php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --diff --dry-run
+	php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --diff --dry-run
 
 .PHONY: test
 test: vendor/autoload.php
