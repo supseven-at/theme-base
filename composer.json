@@ -9,11 +9,9 @@
 		}
 	},
 	"require": {
-		"typo3/cms-core": "^12.4",
-		"typo3/cms-scheduler": "^12.4"
+		"typo3/cms-core": "^13.4"
 	},
 	"suggest": {
-		"b13/bolt": "For autoloading site integrations via packages",
 		"b13/doktypemapper": "For doktype-to-be_layout mapping",
 		"helhum/dotenv-connector": "For easy .env integration",
 		"ichhabrecht/content-defender": "To configure CTypes per be_layout",
@@ -28,15 +26,15 @@
 		"typo3/cms-form": "For frontend forms"
 	},
 	"require-dev": {
-		"typo3/cms-form": "^12.4",
-		"typo3/cms-fluid": "^12.4",
-		"typo3/cms-frontend": "^12.4",
-		"typo3/cms-extbase": "^12.4",
+		"typo3/cms-form": "^13.4",
+		"typo3/cms-fluid": "^13.4",
+		"typo3/cms-frontend": "^13.4",
+		"typo3/cms-extbase": "^13.4",
 		"phpunit/phpunit": "^10",
 		"typo3/testing-framework": "^8.2",
 		"friendsofphp/php-cs-fixer": "^3.62",
 		"mikey179/vfsstream": "^1.6",
-		"typo3fluid/fluid": ">= 2.10"
+		"typo3fluid/fluid": ">= 4.0"
 	},
 	"autoload-dev": {
 		"psr-4": {
