@@ -1,0 +1,102 @@
+categories:
+  theme_base.be:
+    label: Backend
+  theme_base.fluid:
+    label: Fluid
+  theme_base.processing:
+    label: Data Processing
+
+settings:
+  themeBase.typo3.linkvalidator.httpAgentUrl:
+    label: HTTP Agent URL
+    category: theme_base.be
+    type: string
+    default: 'https://www.supseven.at'
+  themeBase.tcemain.permissions.groupid:
+    label: Default page owner
+    description: UID of the be_groups record that is saved as owner of new pages
+    category: theme_base.be
+    type: int
+    default: 1
+
+  themeBase.page.fluidtemplate.rootPaths.sitepackage:
+    label: Site package extension key
+    category: theme_base.fluid
+    type: string
+    default: theme_project
+  themeBase.page.includeCSS.10:
+    label: Default CSS file
+    category: theme_base.fluid
+    type: string
+    default: 'EXT:theme_project/Resources/Public/Css/Styles.min.css'
+  themeBase.page.includeJSFooter.10:
+    label: Default JS file
+    category: theme_base.fluid
+    type: string
+    default: 'EXT:theme_project/Resources/Public/JavaScript/Main.js'
+
+  themeBase.page.dataProcessing.mainNavigation.levels:
+    label: Main navigation levels
+    category: theme_base.processing
+    type: int
+    default: 4
+  themeBase.page.dataProcessing.mainNavigation.includeSpacer:
+    label: Include spacers in main navigation
+    category: theme_base.processing
+    type: bool
+    default: false
+  themeBase.page.dataProcessing.mainNavigation.file.enabled:
+    label: Enable loading files of page records in navigation items
+    category: theme_base.processing
+    type: bool
+    default: false
+  themeBase.page.dataProcessing.mainNavigation.file.fieldName:
+    label: Add files of this field to main navigation items
+    category: theme_base.processing
+    type: string
+    default: media
+
+  themeBase.page.dataProcessing.metaNavigation.uid:
+    label: Meta navigation PID
+    category: theme_base.processing
+    type: int
+    default: -1
+  themeBase.page.dataProcessing.metaNavigation.levels:
+    label: Meta navigation levels
+    category: theme_base.processing
+    type: int
+    default: 1
+
+  themeBase.page.dataProcessing.footerNavigation.uid:
+    label: Footer navigation PID
+    category: theme_base.processing
+    type: int
+    default: -1
+  themeBase.page.dataProcessing.footerNavigation.levels:
+    label: Footer navigation levels
+    category: theme_base.processing
+    type: int
+    default: 1
+
+  themeBase.page.dataProcessing.socialNavigation.uid:
+    label: Social navigation PID
+    category: theme_base.processing
+    type: int
+    default: -1
+
+  themeBase.tcemain.breadcrumbNavigation.enabled:
+    label: Breadcrumbs enabled
+    category: theme_base.processing
+    type: bool
+    default: true
+  themeBase.tcemain.breadcrumbNavigation.includeNotInMenu:
+    label: Breadcrumbs enabled
+    category: theme_base.processing
+    type: bool
+    default: false
+
+  themeBase.tcemain.legalNotice.uid:
+    label: Legal notice PID
+    category: theme_base.processing
+    type: int
+    default: -1

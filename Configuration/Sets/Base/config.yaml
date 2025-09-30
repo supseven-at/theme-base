@@ -1,0 +1,4 @@
+name: supseven/theme-base
+label: TYPO3 base setup
+dependencies:
+  - typo3/fluid-styled-content
