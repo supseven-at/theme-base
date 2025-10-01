@@ -1,0 +1,6 @@
+name: supseven/theme-base-solr
+label: Base Solr Settings
+dependencies:
+  - supseven/theme-base
+optionalDependencies:
+  - supseven/theme-base-solr-news

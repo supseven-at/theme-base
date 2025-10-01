@@ -1,0 +1,4 @@
+name: supseven/theme-base-solr-news
+label: Solr News
+dependencies:
+  - georgringer/news

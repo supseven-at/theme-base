@@ -1,0 +1,12 @@
+settings:
+  themeBase.solr.news.storagePages:
+    label: News storage page UIDs
+    description: UID list of storage folders containing news to index
+    category: theme_base.solr
+    type: string
+    default: ''
+  themeBase.solr.news.detailPage:
+    label: News detail UID
+    category: theme_base.solr
+    type: int
+    default: 0

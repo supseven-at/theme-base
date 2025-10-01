@@ -1,0 +1,103 @@
+@import 'EXT:solr/Configuration/TypoScript/Solr/setup.typoscript'
+@import 'EXT:solr/Configuration/TypoScript/Examples/Suggest/setup.typoscript'
+
+config.index_enable = 1
+
+plugin.tx_solr {
+    view {
+        templateRootPaths {
+            100 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Extensions/Solr/Templates/
+        }
+
+        partialRootPaths {
+            100 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Extensions/Solr/Partials/
+        }
+
+        layoutRootPaths {
+            100 = EXT:{$themeBase.page.fluidtemplate.rootPaths.sitepackage}/Resources/Private/Extensions/Solr/Layouts/
+        }
+    }
+
+    enableDebugMode = 0
+
+    search {
+        # Default results settings
+        results {
+            resultsHighlighting = 1
+            siteHighlighting = 0
+            showDocumentScoreAnalysis = 0
+            resultsPerPage = 8
+            resultsPerPageSwitchOptions = 8
+            maxPaginatorLinks = 5
+        }
+
+        initializeWithEmptyQuery = 1
+        showResultsOfInitialEmptyQuery = 1
+
+        # Misc solr settings
+        spellchecking = 1
+        lastSearches = 0
+        frequentSearches = 0
+        sorting = 0
+        statistics = 0
+    }
+
+    ###############################
+    # SUGGEST default configuration
+    ###############################
+    suggest = 1
+    suggest {
+        numberOfSuggestions = 10
+        suggestField = spell
+        showTopResults = 1
+    }
+
+    ###############################
+    # LOGGING
+    ###############################
+    logging {
+        exceptions = 1
+        indexing {
+            indexQueueInitialization = 0
+            missingTypo3SearchMarkers = 1
+            pageIndexed = 0
+        }
+
+        query {
+            filters = 0
+            searchWords = 0
+            queryString = 0
+            rawPost = 0
+            rawGet = 0
+        }
+    }
+
+    ###############################
+    # INDEX.QUEUE configuration
+    ###############################
+    index.queue {
+
+        pages = 1
+        pages {
+            indexer.authorization {
+                password = {$themeBase.solr.authorization.password}
+                username = {$themeBase.solr.authorization.username}
+            }
+            # allowed pagetypes (doktype) when indexing records from table "pages" (1 = standard)
+            allowedPageTypes = 1
+
+            additionalWhereClause = no_search = 0 AND doktype = 1 AND no_index = 0
+        }
+    }
+}
+
+# Prevent default ext:solr JS/CSS from include
+page.includeJSFooterlibs {
+    solr-jquery >
+    solr-autocomplete >
+    solr-suggest >
+}
+
+page.includeCSS {
+    solr-suggest >
+}

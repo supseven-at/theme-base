@@ -1,0 +1,33 @@
+categories:
+  theme_base.solr:
+    label: Solr
+    parent: theme_base
+
+settings:
+  plugin.tx_solr.enabled:
+    label: Enable solr
+    category: theme_base.solr
+    type: bool
+    default: false
+  plugin.tx_solr.search.targetPage:
+    label: Search page UID
+    category: theme_base.solr
+    type: int
+    default: 0
+
+  themeBase.solr.authorization.username:
+    label: Page Indexer FE Request HTTP Basic Auth Username
+    category: theme_base.solr
+    type: string
+    default: ''
+  themeBase.solr.authorization.password:
+    label: Page Indexer FE Request HTTP Basic Auth Password
+    category: theme_base.solr
+    type: string
+    default: ''
+
+  plugin.tx_solr.search.faceting.limit:
+    label: Limit of facets per filter
+    category: theme_base.solr
+    type: int
+    default: 15
