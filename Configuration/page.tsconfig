@@ -1,4 +1,4 @@
-@import './TsConfig/Page/Extensions/*'
-@import './TsConfig/Page/Mod/*'
-@import './TsConfig/Page/Tcemain/*'
-@import './TsConfig/Page/Tceform/*'
+@import 'EXT:theme_base/Configuration/TsConfig/Page/Extensions/*'
+@import 'EXT:theme_base/Configuration/TsConfig/Page/Mod/*'
+@import 'EXT:theme_base/Configuration/TsConfig/Page/Tcemain/*'
+@import 'EXT:theme_base/Configuration/TsConfig/Page/Tceform/*'

@@ -1,1 +1,1 @@
-@import './TsConfig/User/*'
+@import 'EXT:theme_base/Configuration/TsConfig/User/*'
