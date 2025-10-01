@@ -1,10 +1,18 @@
 categories:
+  theme_base:
+    label: Theme Base
   theme_base.be:
     label: Backend
+    parent: theme_base
   theme_base.fluid:
     label: Fluid
-  theme_base.processing:
-    label: Data Processing
+    parent: theme_base
+  theme_base.menus:
+    label: Menus
+    parent: theme_base
+  theme_base.other:
+    label: Other
+    parent: theme_base
 
 settings:
   themeBase.typo3.linkvalidator.httpAgentUrl:
@@ -14,7 +22,7 @@ settings:
     default: 'https://www.supseven.at'
   themeBase.tcemain.permissions.groupid:
     label: Default page owner
-    description: UID of the be_groups record that is saved as owner of new pages
+    description: UID of the be_groups record that is set as owner of new pages
     category: theme_base.be
     type: int
     default: 1
@@ -37,66 +45,66 @@ settings:
 
   themeBase.page.dataProcessing.mainNavigation.levels:
     label: Main navigation levels
-    category: theme_base.processing
+    category: theme_base.menus
     type: int
     default: 4
   themeBase.page.dataProcessing.mainNavigation.includeSpacer:
     label: Include spacers in main navigation
-    category: theme_base.processing
+    category: theme_base.menus
     type: bool
     default: false
   themeBase.page.dataProcessing.mainNavigation.file.enabled:
     label: Enable loading files of page records in navigation items
-    category: theme_base.processing
+    category: theme_base.menus
     type: bool
     default: false
   themeBase.page.dataProcessing.mainNavigation.file.fieldName:
     label: Add files of this field to main navigation items
-    category: theme_base.processing
+    category: theme_base.menus
     type: string
     default: media
 
   themeBase.page.dataProcessing.metaNavigation.uid:
     label: Meta navigation PID
-    category: theme_base.processing
+    category: theme_base.menus
     type: int
     default: -1
   themeBase.page.dataProcessing.metaNavigation.levels:
     label: Meta navigation levels
-    category: theme_base.processing
+    category: theme_base.menus
     type: int
     default: 1
 
   themeBase.page.dataProcessing.footerNavigation.uid:
     label: Footer navigation PID
-    category: theme_base.processing
+    category: theme_base.menus
     type: int
     default: -1
   themeBase.page.dataProcessing.footerNavigation.levels:
     label: Footer navigation levels
-    category: theme_base.processing
+    category: theme_base.menus
     type: int
     default: 1
 
   themeBase.page.dataProcessing.socialNavigation.uid:
     label: Social navigation PID
-    category: theme_base.processing
+    category: theme_base.menus
     type: int
     default: -1
 
   themeBase.tcemain.breadcrumbNavigation.enabled:
     label: Breadcrumbs enabled
-    category: theme_base.processing
+    category: theme_base.menus
     type: bool
     default: true
   themeBase.tcemain.breadcrumbNavigation.includeNotInMenu:
-    label: Breadcrumbs enabled
-    category: theme_base.processing
+    label: Breadcrumbs include not in menu
+    category: theme_base.menus
     type: bool
     default: false
 
   themeBase.tcemain.legalNotice.uid:
     label: Legal notice PID
-    category: theme_base.processing
+    category: theme_base.other
     type: int
     default: -1
