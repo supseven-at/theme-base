@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\DataProcessing;
 
-use Supseven\Supi\CSP\SupiPolicyExtender;
 use Supseven\ThemeBase\Service\LegalNoticeService;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * DataProcessor to show supseven Infos in PageHeader and on Legal Notice Pages in console.log
@@ -24,7 +21,9 @@ class LegalNoticeDataProcessor implements DataProcessorInterface
 {
     public function __construct(
         protected readonly PageRenderer $pageRenderer,
-        protected readonly LegalNoticeService $service
+        protected readonly LegalNoticeService $service,
+        #[Autowire(service: 'typo3.lang')]
+        protected readonly LanguageService $languageService,
     ) {
     }
 
@@ -39,6 +38,7 @@ class LegalNoticeDataProcessor implements DataProcessorInterface
      */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData)
     {
+        $label = $this->languageService->sL('LLL:EXT:theme_base/Resources/Private/Language/locallang.xlf:page.headerComment');
         $comment = "\r\n";
         $logo = <<<LOGO
             ╔═╗╦ ╦╔═╗╔═╗╔═╗╦  ╦╔═╗╔╗╔
@@ -47,27 +47,22 @@ class LegalNoticeDataProcessor implements DataProcessorInterface
             LOGO;
 
         $comment .= "\r\n";
-        $comment .= LocalizationUtility::translate('LLL:EXT:theme_base/Resources/Private/Language/locallang.xlf:page.headerComment');
+        $comment .= $label;
 
-        /** @var TypoScriptFrontendController $tsfe */
-        $tsfe = $cObj->getRequest()->getAttribute('frontend.controller');
-        $tsfe->config['config']['headerComment'] = $comment;
+        $typoscript = $cObj->getRequest()->getAttribute('frontend.typoscript');
+        $config = $typoscript->getConfigArray();
+        $setup = $typoscript->getSetupArray();
 
         if ($this->service->isLegalNoticePage($processedData['data']['uid'], $processedData['data']['title'])) {
-            $tsfe->config['config']['headerComment'] = $logo . $comment;
-            $consoleLog = 'console.log("' . LocalizationUtility::translate('LLL:EXT:theme_base/Resources/Private/Language/locallang.xlf:page.headerComment') . '"); console.log("\\r\\n\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2557   \\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557 \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2557   \\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2557   \\u2588\\u2588\\u2557\\r\\n\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u2550\\u255D\\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2554\\u2550\\u2550\\u2588\\u2588\\u2557\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u2550\\u255D\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u2550\\u255D\\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u2550\\u255D\\u2588\\u2588\\u2588\\u2588\\u2557  \\u2588\\u2588\\u2551\\r\\n\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2554\\u255D\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557  \\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557  \\u2588\\u2588\\u2554\\u2588\\u2588\\u2557 \\u2588\\u2588\\u2551\\r\\n\\u255A\\u2550\\u2550\\u2550\\u2550\\u2588\\u2588\\u2551\\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u255D \\u255A\\u2550\\u2550\\u2550\\u2550\\u2588\\u2588\\u2551\\u2588\\u2588\\u2554\\u2550\\u2550\\u255D  \\u255A\\u2588\\u2588\\u2557 \\u2588\\u2588\\u2554\\u255D\\u2588\\u2588\\u2554\\u2550\\u2550\\u255D  \\u2588\\u2588\\u2551\\u255A\\u2588\\u2588\\u2557\\u2588\\u2588\\u2551\\r\\n\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2551\\u255A\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2554\\u255D\\u2588\\u2588\\u2551     \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2551\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557 \\u255A\\u2588\\u2588\\u2588\\u2588\\u2554\\u255D \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2551 \\u255A\\u2588\\u2588\\u2588\\u2588\\u2551\\r\\n\\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D \\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D \\u255A\\u2550\\u255D     \\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D\\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D  \\u255A\\u2550\\u2550\\u2550\\u255D  \\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D\\u255A\\u2550\\u255D  \\u255A\\u2550\\u2550\\u2550\\u255D");';
-
-            // check, if supi is available and use the hash to implement inline js
-            // else use a simple nonce value.
-            if (ExtensionManagementUtility::isLoaded('supi')) {
-                /** @var SupiPolicyExtender $supiPolicyExtender */
-                $supiPolicyExtender = GeneralUtility::makeInstance(SupiPolicyExtender::class);
-                $supiPolicyExtender->addInlineScript($consoleLog);
-                $this->pageRenderer->addHeaderData('<script>' . $consoleLog . '</script>');
-            } else {
-                $this->pageRenderer->addJsInlineCode('legalNotice', $consoleLog, true, false, true);
-            }
+            $consoleLog = 'console.log(' . json_encode($comment) . '); console.log("\\r\\n\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2557   \\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557 \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2557   \\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2557   \\u2588\\u2588\\u2557\\r\\n\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u2550\\u255D\\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2554\\u2550\\u2550\\u2588\\u2588\\u2557\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u2550\\u255D\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u2550\\u255D\\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u2550\\u255D\\u2588\\u2588\\u2588\\u2588\\u2557  \\u2588\\u2588\\u2551\\r\\n\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2554\\u255D\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557  \\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557  \\u2588\\u2588\\u2554\\u2588\\u2588\\u2557 \\u2588\\u2588\\u2551\\r\\n\\u255A\\u2550\\u2550\\u2550\\u2550\\u2588\\u2588\\u2551\\u2588\\u2588\\u2551   \\u2588\\u2588\\u2551\\u2588\\u2588\\u2554\\u2550\\u2550\\u2550\\u255D \\u255A\\u2550\\u2550\\u2550\\u2550\\u2588\\u2588\\u2551\\u2588\\u2588\\u2554\\u2550\\u2550\\u255D  \\u255A\\u2588\\u2588\\u2557 \\u2588\\u2588\\u2554\\u255D\\u2588\\u2588\\u2554\\u2550\\u2550\\u255D  \\u2588\\u2588\\u2551\\u255A\\u2588\\u2588\\u2557\\u2588\\u2588\\u2551\\r\\n\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2551\\u255A\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2554\\u255D\\u2588\\u2588\\u2551     \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2551\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557 \\u255A\\u2588\\u2588\\u2588\\u2588\\u2554\\u255D \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2557\\u2588\\u2588\\u2551 \\u255A\\u2588\\u2588\\u2588\\u2588\\u2551\\r\\n\\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D \\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D \\u255A\\u2550\\u255D     \\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D\\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D  \\u255A\\u2550\\u2550\\u2550\\u255D  \\u255A\\u2550\\u2550\\u2550\\u2550\\u2550\\u2550\\u255D\\u255A\\u2550\\u255D  \\u255A\\u2550\\u2550\\u2550\\u255D");';
+            $this->pageRenderer->addJsInlineCode('legalNotice', $consoleLog, true, false, true);
+            $comment = $logo . $comment;
         }
+
+        $config['headerComment'] = $setup['config.']['headerComment'] = $comment;
+
+        $typoscript->setConfigArray($config);
+        $typoscript->setSetupArray($setup);
 
         return $processedData;
     }
