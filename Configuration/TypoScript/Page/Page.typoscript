@@ -24,24 +24,26 @@ page {
         ### DATA PROCESSING ###
         #######################
         dataProcessing {
+            10 = page-content
+
             // Site information
-            10 = TYPO3\CMS\Frontend\DataProcessing\SiteProcessor
-            10.as = site
-            20 = TYPO3\CMS\Frontend\DataProcessing\SiteLanguageProcessor
-            20.as = siteLanguage
+            20 = site
+            20.as = site
+            30 = site-language
+            30.as = siteLanguage
 
             // Legal Notice Informations in HeaderComment and as console.log
-            30 = Supseven\ThemeBase\DataProcessing\LegalNoticeDataProcessor
+            40 = legal-notice
 
             // Menus
-            100 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            100 = menu
             100 {
                 as = MainNavigation
                 levels = {$themeBase.page.dataProcessing.mainNavigation.levels}
                 titleField = nav_title // title
                 includeSpacer = {$themeBase.page.dataProcessing.mainNavigation.includeSpacer}
                 dataProcessing {
-                    10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
+                    10 = files
                     10 {
                         references.fieldName = {$themeBase.page.dataProcessing.mainNavigation.file.fieldName}
                         if {
@@ -52,7 +54,7 @@ page {
                 }
             }
 
-            120 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            120 = menu
             120 {
                 as = MetaNavigation
                 special = directory
@@ -63,7 +65,7 @@ page {
                 }
             }
 
-            130 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            130 = menu
             130 {
                 as = FooterNavigation
                 special = directory
@@ -74,7 +76,7 @@ page {
                 }
             }
 
-            150 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            150 = menu
             150 {
                 as = SocialNavigation
                 special = directory
@@ -85,7 +87,7 @@ page {
                 }
             }
 
-            160 = TYPO3\CMS\Frontend\DataProcessing\MenuProcessor
+            160 = menu
             160 {
                 as = BreadcrumbNavigation
                 special = rootline
@@ -95,6 +97,8 @@ page {
                     isTrue = {$themeBase.page.dataProcessing.breadcrumbNavigation.enabled}
                 }
             }
+            170 = language-menu
+            170.as = LanguageMenu
         }
     }
 }

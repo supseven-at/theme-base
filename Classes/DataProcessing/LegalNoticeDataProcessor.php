@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Supseven\ThemeBase\DataProcessing;
 
 use Supseven\ThemeBase\Service\LegalNoticeService;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
@@ -17,6 +18,7 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
  * set site.legalNotice.uid in site configuration, to set legal notice uid. otherwise the page title is used
  * to output the information (impressum or legal notice).
  */
+#[AutoconfigureTag('data.processor', ['identifier' => 'legal-notice'])]
 class LegalNoticeDataProcessor implements DataProcessorInterface
 {
     public function __construct(

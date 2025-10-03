@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\DataProcessing;
 
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
@@ -37,6 +38,7 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
  * sort = sort classnames alphabetically
  * as = the returned variable name usable in fluid
  */
+#[AutoconfigureTag('data.processor', ['identifier' => 'concat'])]
 class ConcatDataProcessor implements DataProcessorInterface
 {
     /**
