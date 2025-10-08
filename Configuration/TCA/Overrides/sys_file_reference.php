@@ -13,11 +13,11 @@ call_user_func(
                 'l10n_mode' => 'mergeIfNotBlank',
                 'config'    => [
                     'default'     => '',
-                    'eval'        => 'null',
                     'mode'        => 'useOrOverridePlaceholder',
                     'placeholder' => '__row|uid_local|metadata|caption',
                     'size'        => 20,
                     'type'        => 'text',
+                    'nullable'    => true,
                 ],
             ],
             'copyright' => [
@@ -25,11 +25,11 @@ call_user_func(
                 'l10n_mode' => 'mergeIfNotBlank',
                 'config'    => [
                     'default'     => '',
-                    'eval'        => 'null',
                     'mode'        => 'useOrOverridePlaceholder',
                     'placeholder' => '__row|uid_local|metadata|copyright',
                     'size'        => 20,
                     'type'        => 'input',
+                    'nullable'    => true,
                 ],
             ],
         ];

@@ -13,12 +13,9 @@ call_user_func(
             'tx_theme_base_link' => [
                 'label'  => $languageFileBePrefix . 'field.tt_content.tx_theme_base_link.label',
                 'config' => [
-                    'type'       => 'input',
-                    'renderType' => 'inputLink',
-                    'size'       => 50,
-                    'max'        => 1024,
-                    'eval'       => 'trim',
-                    'softref'    => 'typolink',
+                    'type' => 'link',
+                    'size' => 50,
+                    'max'  => 1024,
                 ],
             ],
             'tx_theme_base_link_label' => [
@@ -34,12 +31,9 @@ call_user_func(
             'tx_theme_base_link_1' => [
                 'label'  => $languageFileBePrefix . 'field.tt_content.tx_theme_base_link.label',
                 'config' => [
-                    'type'       => 'input',
-                    'renderType' => 'inputLink',
-                    'size'       => 50,
-                    'max'        => 1024,
-                    'eval'       => 'trim',
-                    'softref'    => 'typolink',
+                    'type' => 'link',
+                    'size' => 50,
+                    'max'  => 1024,
                 ],
             ],
             'tx_theme_base_link_label_1' => [
