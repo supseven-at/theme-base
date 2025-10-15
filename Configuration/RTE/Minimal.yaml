@@ -1,0 +1,40 @@
+# Load default processing options
+imports:
+  - { resource: 'EXT:rte_ckeditor/Configuration/RTE/Processing.yaml' }
+  - { resource: 'EXT:rte_ckeditor/Configuration/RTE/Editor/Base.yaml' }
+  - { resource: 'EXT:rte_ckeditor/Configuration/RTE/Editor/Plugins.yaml' }
+
+editor:
+  config:
+    importModules:
+      - { module: '@ckeditor/ckeditor5-word-count', exports: [ 'WordCount' ] }
+
+    contentsCss:
+      - 'EXT:theme_project/Resources/Public/Css/Backend/RteDefault.css'
+
+    removePlugins:
+          - TableCellProperties
+          - TableProperties
+
+    toolbar:
+      items:
+        - heading
+        - '|'
+        - bold
+        - italic
+        - '|'
+        - bulletedList
+        - numberedList
+        - alignment
+        - '|'
+        - link
+        - '|'
+        - clipboard
+        - removeFormat
+        - undo
+        - redo
+        - '|'
+        - find
+        - selectAll
+        - '|'
+        - sourceEditing
