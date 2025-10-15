@@ -2,6 +2,6 @@ editor:
   config:
     heading:
       options:
-        - { model: 'paragraph', title: 'Paragraph' }
-        - { model: 'heading3', view: 'h3', title: 'Heading 3' }
-        - { model: 'heading4', view: 'h4', title: 'Heading 4' }
+        - { model: 'paragraph', view: 'p', title: 'LLL:EXT:theme_base/Resources/Private/Language/locallang_backend.xlf:rte.model.p' }
+        - { model: 'heading3', view: 'h3', title: 'LLL:EXT:theme_base/Resources/Private/Language/locallang_backend.xlf:rte.model.h3' }
+        - { model: 'heading4', view: 'h4', title: 'LLL:EXT:theme_base/Resources/Private/Language/locallang_backend.xlf:rte.model.h4' }

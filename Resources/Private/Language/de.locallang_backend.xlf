@@ -1,46 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-	<file source-language="en" target-language="de" original="" datatype="plaintext" date="2024-06-17T15:42:17+02:00">
+	<file source-language="en" target-language="de" original="" datatype="plaintext" date="2025-10-15T08:58:29+02:00">
 		<body>
-			<trans-unit id="field.sys_file_reference.caption.label" resname="field.sys_file_reference.caption.label">
+			<trans-unit id="field.sys_file_reference.caption.label">
 				<source>Caption</source>
 				<target>Bildunterschrift</target>
 			</trans-unit>
-			<trans-unit id="field.sys_file_reference.copyright.label" resname="field.sys_file_reference.copyright.label">
+			<trans-unit id="field.sys_file_reference.copyright.label">
 				<source>Copyright</source>
 				<target>Copyright</target>
 			</trans-unit>
-			<trans-unit id="field.tt_content.tx_theme_link.label" resname="field.tt_content.tx_theme_link.label">
+			<trans-unit id="field.tt_content.tx_theme_link.label">
 				<source>Link</source>
 				<target>Link</target>
 			</trans-unit>
-			<trans-unit id="field.tt_content.tx_theme_link_label.label" resname="field.tt_content.tx_theme_link_label.label">
+			<trans-unit id="field.tt_content.tx_theme_link_label.label">
 				<source>Link Label</source>
 				<target>Link Label</target>
 			</trans-unit>
-			<trans-unit id="tt_content.header_layout.1" resname="tt_content.header_layout.1">
+			<trans-unit id="tt_content.header_layout.1">
 				<source>Header H1</source>
 				<target>Überschrift H1</target>
 			</trans-unit>
-			<trans-unit id="tt_content.header_layout.100" resname="tt_content.header_layout.100">
+			<trans-unit id="tt_content.header_layout.100">
 				<source>Hidden Header</source>
 				<target>Versteckte Überschrift</target>
 			</trans-unit>
-			<trans-unit id="tt_content.header_layout.2" resname="tt_content.header_layout.2">
+			<trans-unit id="tt_content.header_layout.2">
 				<source>Header H2</source>
 				<target>Überschrift H2</target>
 			</trans-unit>
-			<trans-unit id="tt_content.header_layout.3" resname="tt_content.header_layout.3">
+			<trans-unit id="tt_content.header_layout.3">
 				<source>Header H3</source>
 				<target>Überschrift H3</target>
 			</trans-unit>
-			<trans-unit id="tt_content.header_layout.4" resname="tt_content.header_layout.4">
+			<trans-unit id="tt_content.header_layout.4">
 				<source>Header H4</source>
 				<target>Überschrift H4</target>
 			</trans-unit>
-			<trans-unit id="tt_content.header_layout.5" resname="tt_content.header_layout.5">
+			<trans-unit id="tt_content.header_layout.5">
 				<source>Header H5</source>
 				<target>Überschrift H5</target>
+			</trans-unit>
+			<trans-unit id="rte.model.p">
+				<source>Paragraph</source>
+				<target>Absatz</target>
+			</trans-unit>
+			<trans-unit id="rte.model.h2">
+				<source>Header 2</source>
+				<target>Überschrift 2</target>
+			</trans-unit>
+			<trans-unit id="rte.model.h3">
+				<source>Header 3</source>
+				<target>Überschrift 3</target>
+			</trans-unit>
+			<trans-unit id="rte.model.h4">
+				<source>Header 4</source>
+				<target>Überschrift 4</target>
+			</trans-unit>
+			<trans-unit id="rte.model.h5">
+				<source>Header 5</source>
+				<target>Überschrift 5</target>
 			</trans-unit>
 		</body>
 	</file>
