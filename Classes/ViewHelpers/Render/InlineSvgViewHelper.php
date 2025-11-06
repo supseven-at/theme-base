@@ -67,6 +67,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
         $this->registerArgument('move-styles', 'bool', 'move style from styletags to asset collector', false);
         $this->registerArgument('custom-tags', 'array', 'add allowed svg tags to the sanitizer', false);
         $this->registerArgument('custom-attributes', 'array', 'add allowed svg tag attributes to the sanitizer', false);
+        $this->registerArgument('additionalContent', 'string', 'Add additional Text Content to the SVG', false);
     }
 
     /**
@@ -228,9 +229,106 @@ class InlineSvgViewHelper extends AbstractViewHelper
             }
         }
 
+        if (isset($arguments['additionalContent']) && is_array($arguments['additionalContent'])) {
+            $domXl = self::addAdditionalContent($domXml, $arguments['additionalContent']);
+        }
+
         $finalSvgString = $domXml->ownerDocument->saveXML($domXml->ownerDocument->documentElement);
 
         return self::sanitizeContent($finalSvgString, $arguments);
+    }
+
+    private static function addAdditionalContent(\DOMElement $domXml, array $config): \DOMElement
+    {
+        $text = $config['text'] ?? '';
+        $textAreaWidth = (float)($config['width'] ?? 0);
+        $textPadding = (float)($config['padding'] ?? 20);
+        $showDivider = (bool)($config['divider'] ?? true);
+        $centerCalc = (float)($config['centerCalc'] ?? 1.5);
+        $fontSize = (int)($config['fontSize'] ?? 0);
+        $cssClass = $config['cssClass'] ?? 'wx-logo-tagLine';
+
+        if (empty($text)) {
+            return $domXml;
+        }
+
+        $additionalContent = GeneralUtility::trimExplode(PHP_EOL, $text, true);
+
+        $viewBox = $domXml->getAttribute('viewBox');
+
+        if (!$viewBox) {
+            return $domXml;
+        }
+
+        $viewBoxValues = explode(' ', $viewBox);
+        $startX = (float)($viewBoxValues[0] ?? 0);
+        $startY = (float)($viewBoxValues[1] ?? 0);
+        $width = (float)($viewBoxValues[2] ?? 100);
+        $height = (float)($viewBoxValues[3] ?? 100);
+
+        if ($textAreaWidth <= 0 && $fontSize > 0) {
+            $textAreaWidth = self::calculateAdditionalContentWidth($additionalContent, $fontSize, $textPadding);
+        }
+
+        $newViewBox = sprintf('%s %s %s %s', $startX, $startY, $width + $textAreaWidth, $height);
+        $domXml->setAttribute('viewBox', $newViewBox);
+
+        if ($showDivider) {
+            $dividerPadding = $textPadding / 2;
+            $dividerX = $startX + $width + $dividerPadding;
+            $dividerY1 = $startY;
+            $dividerY2 = $startY + ($height);
+
+            $lineElement = $domXml->ownerDocument->createElement('line');
+            $lineElement->setAttribute('x1', (string)$dividerX);
+            $lineElement->setAttribute('y1', (string)$dividerY1);
+            $lineElement->setAttribute('x2', (string)$dividerX);
+            $lineElement->setAttribute('y2', (string)$dividerY2);
+            $lineElement->setAttribute('stroke', 'currentColor');
+            $lineElement->setAttribute('stroke-width', '2');
+            $lineElement->setAttribute('class', 'svg-divider');
+            $domXml->appendChild($lineElement);
+        }
+
+        $textStartX = $startX + $width + $textPadding;
+        $textStartY = $startY + ($height / $centerCalc);
+
+        foreach ($additionalContent as $line) {
+            $textElement = $domXml->ownerDocument->createElement('text', htmlspecialchars($line, ENT_XML1, 'UTF-8'));
+            $textElement->setAttribute('x', (string)$textStartX);
+            $textElement->setAttribute('y', (string)$textStartY);
+            $textElement->setAttribute('fill', 'currentColor');
+            $textElement->setAttribute('dominant-baseline', 'middle');
+            $textElement->setAttribute('text-anchor', 'start');
+            $textElement->setAttribute('class', $cssClass);
+            if ($fontSize > 0) {
+                $textElement->setAttribute('font-size', (string)$fontSize);
+            }
+            $domXml->appendChild($textElement);
+        }
+
+        return $domXml;
+    }
+
+    private static function calculateAdditionalContentWidth(array $lines, int $fontSize, float $padding): float
+    {
+        $longestLine = '';
+        $maxLength = 0;
+
+        foreach ($lines as $line) {
+            $lineLength = mb_strlen($line);
+
+            if ($lineLength > $maxLength) {
+                $maxLength = $lineLength;
+                $longestLine = $line;
+            }
+        }
+
+        $avgCharWidth = $fontSize * 0.6;
+        $estimatedWidth = $maxLength * $avgCharWidth;
+        $totalWidth = $estimatedWidth + ($padding * 2);
+
+        return $totalWidth;
     }
 
     /**
