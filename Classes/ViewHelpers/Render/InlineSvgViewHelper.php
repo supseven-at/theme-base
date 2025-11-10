@@ -210,7 +210,8 @@ class InlineSvgViewHelper extends AbstractViewHelper
         }
 
         if (isset($arguments['class'])) {
-            $domXml->setAttribute('class', $arguments['class']);
+            $className = $domXml->getAttribute('class') . ' ' . $arguments['class'];
+            $domXml->setAttribute('class', trim($className));
         }
 
         if (isset($arguments['width'])) {
@@ -301,6 +302,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
             $textElement->setAttribute('dominant-baseline', 'middle');
             $textElement->setAttribute('text-anchor', 'start');
             $textElement->setAttribute('class', $cssClass);
+
             if ($fontSize > 0) {
                 $textElement->setAttribute('font-size', (string)$fontSize);
             }
@@ -379,7 +381,11 @@ class InlineSvgViewHelper extends AbstractViewHelper
         }
 
         if ($arguments['move-styles']) {
-            self::addStyles($styles, pathinfo($source)['filename']);
+            self::addStyles($styles, pathinfo($source)['filename'], true);
+
+            if ($styles !== '') {
+                $svg->setAttribute('class', 'svg_' . md5(pathinfo($source)['filename']));
+            }
         }
     }
 
@@ -390,13 +396,20 @@ class InlineSvgViewHelper extends AbstractViewHelper
      * @param string $name The name of the stylesheet
      * @throws \BadFunctionCallException
      */
-    private static function addStyles(string $styles, string $name): void
+    private static function addStyles(string $styles, string $name, bool $nesting = false): void
     {
-        /** @var AssetCollector $assetCollector */
-        $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
-        $assetCollector->addInlineStyleSheet($name, $styles, [], [
-            'priority' => true,
-            'useNonce' => true,
-        ]);
+        if ($styles !== '') {
+            if ($nesting) {
+                $className = '.svg_' . md5($name);
+                $styles = sprintf('%s { %s }', $className, $styles);
+            }
+
+            /** @var AssetCollector $assetCollector */
+            $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
+            $assetCollector->addInlineStyleSheet($name, $styles, [], [
+                'priority' => true,
+                'useNonce' => true,
+            ]);
+        }
     }
 }
