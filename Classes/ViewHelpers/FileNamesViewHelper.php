@@ -31,7 +31,7 @@ class FileNamesViewHelper extends AbstractViewHelper
     {
         $arr = []; // Images/Icons/*.svg
         $extPath = $this->packageManager->getPackage($this->arguments['extensionName'])->getPackagePath();
-        $files = $extPath . 'Resources/Public/' . $this->arguments['path'] . $this->arguments['pattern'];
+        $files = $extPath . $this->arguments['path'] . $this->arguments['pattern'];
 
         foreach (glob($files) as $file) {
             $arr[] = pathinfo($file)['filename'];
