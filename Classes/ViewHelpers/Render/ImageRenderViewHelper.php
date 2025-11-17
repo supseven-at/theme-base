@@ -33,6 +33,8 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
 
     /** @var bool $escapeOutput */
     protected $escapeOutput = false;
+    /** @var array $settings */
+    private $settings = [];
 
     /** @var FileInterface|null $image */
     private ?FileInterface $image = null;
@@ -86,6 +88,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
 
         $this->getBreakpoints($this->arguments);
         $this->contentObjectData = $this->renderingContext->getRequest()->getAttribute('currentContentObject')->data;
+        $this->settings = $this->arguments['settings'];
     }
 
     /**
@@ -280,8 +283,13 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         }
 
         if ((int)$this->contentObjectData['image_zoom'] === 1) {
-            $cropVariant = end($this->breakpoints)['cropVariant'] ?? 'default';
-            $cropArea = $this->getCropping($cropVariant);
+            if (!isset($this->settings['breakpoints']['disableLightboxCropping'])) {
+                $cropVariant = end($this->breakpoints)['cropVariant'] ?? 'default';
+                $cropArea = $this->getCropping($cropVariant);
+            } else {
+                $cropArea = Area::createEmpty();
+            }
+
             $processedImage = $this->processImage(1280, $cropArea);
             $imgSrc = $processedImage['src'];
 
