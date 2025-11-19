@@ -64,7 +64,6 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
 
     $services->set(ErrorPageService::class)
         ->share(false)
-        ->autowire(false)
         ->autoconfigure(false)
         ->lazy();
 };
