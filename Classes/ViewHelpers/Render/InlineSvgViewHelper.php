@@ -274,7 +274,11 @@ class InlineSvgViewHelper extends AbstractViewHelper
         }
 
         if ($arguments['move-styles']) {
-            $this->addStyles($styles, pathinfo($source)['filename']);
+            $this->addStyles($styles, pathinfo($source)['filename'], true);
+
+            if ($styles !== '') {
+                $svg->setAttribute('class', 'svg_' . md5(pathinfo($source)['filename']));
+            }
         }
     }
 
@@ -285,11 +289,18 @@ class InlineSvgViewHelper extends AbstractViewHelper
      * @param string $name The name of the stylesheet
      * @throws \BadFunctionCallException
      */
-    private function addStyles(string $styles, string $name): void
+    private function addStyles(string $styles, string $name, bool $nesting = false): void
     {
-        $this->assetCollector->addInlineStyleSheet($name, $styles, [], [
-            'priority' => true,
-            'useNonce' => true,
-        ]);
+        if ($styles !== '') {
+            if ($nesting) {
+                $className = '.svg_' . md5($name);
+                $styles = sprintf('%s { %s }', $className, $styles);
+            }
+
+            $this->assetCollector->addInlineStyleSheet($name, $styles, [], [
+                'priority' => true,
+                'useNonce' => true,
+            ]);
+        }
     }
 }
