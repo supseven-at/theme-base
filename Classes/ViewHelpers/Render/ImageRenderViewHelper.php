@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Service\ImageService;
@@ -369,6 +370,12 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
 
         if (!is_null($imageCopyright) && $imageCopyright !== '') {
             return '© ' . $imageCopyright;
+        }
+
+        // if an image is loaded by a youtube ce, then this is not a filereference and the getOriginalFile() method
+        // is not available
+        if (!$this->image instanceof FileReference) {
+            return null;
         }
 
         if (!$this->image->getOriginalFile()) {
