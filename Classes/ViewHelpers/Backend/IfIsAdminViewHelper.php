@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\ViewHelpers\Backend;
 
+use Supseven\ThemeBase\Service\DependencyValuesService;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
@@ -20,8 +21,13 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  */
 class IfIsAdminViewHelper extends AbstractConditionViewHelper
 {
-    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
+    public function __construct(
+        protected readonly DependencyValuesService $dependencyValuesService,
+    ) {
+    }
+
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
-        return $GLOBALS['BE_USER']->isAdmin();
+
     }
 }

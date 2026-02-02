@@ -30,14 +30,9 @@ class MailIntrotextFinisher extends AbstractFinisher
      */
     protected function executeInternal(): void
     {
-        $headerSender = $this->parseOption('headerSender');
-        $textSender = $this->parseOption('textSender');
-        $headerReceiver = $this->parseOption('headerReceiver');
-        $textReceiver = $this->parseOption('textReceiver');
-
-        $this->finisherContext->getFinisherVariableProvider()->add($this->shortFinisherIdentifier, 'headerReceiver', $headerReceiver);
-        $this->finisherContext->getFinisherVariableProvider()->add($this->shortFinisherIdentifier, 'textReceiver', $textReceiver);
-        $this->finisherContext->getFinisherVariableProvider()->add($this->shortFinisherIdentifier, 'headerSender', $headerSender);
-        $this->finisherContext->getFinisherVariableProvider()->add($this->shortFinisherIdentifier, 'textSender', $textSender);
+        foreach (array_keys($this->defaultOptions) as $option) {
+            $value = $this->parseOption($option);
+            $this->finisherContext->getFinisherVariableProvider()->add($this->shortFinisherIdentifier, $option, $value);
+        }
     }
 }

@@ -149,11 +149,7 @@ class Tca
                 $fields .= 'pi_flexform';
             }
 
-            ExtensionManagementUtility::addPiFlexFormValue(
-                '*',
-                $flexform,
-                $key
-            );
+            $GLOBALS['TCA']['tt_content']['types'][$key]['columnsOverrides']['pi_flexform']['config']['ds'] = $flexform;
         }
 
         if ($fields) {

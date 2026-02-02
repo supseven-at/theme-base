@@ -17,3 +17,6 @@ TCEFORM.pages {
     target.disabled = 1
     media.disabled = 1
 }
+
+TCEFORM.sys_file_metadata.description.disabled = 1
+TCEFORM.sys_file_metadata.ranking.disabled = 1

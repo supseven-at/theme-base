@@ -35,7 +35,7 @@ class ConcatDataProcessorTest extends TestCase
             ],
         ];
 
-        $cObj = $this->createMock(ContentObjectRenderer::class);
+        $cObj = $this->createStub(ContentObjectRenderer::class);
         $cObj->method('stdWrapValue')->willReturnMap([
             ['as', $config, $config['as']],
             ['glue', $config, ' ', $config['glue']],

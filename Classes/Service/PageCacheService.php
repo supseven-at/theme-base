@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Supseven\ThemeBase\Service;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Cache\CacheTag;
@@ -17,10 +18,10 @@ use TYPO3\CMS\Frontend\Event\ModifyCacheLifetimeForPageEvent;
  * @author Georg Großberger <g.grossberger@supseven.at>
  */
 #[AsEventListener(identifier: 'supseven/theme-base-cache-lifetime')]
+#[Autoconfigure(shared: true)]
 class PageCacheService implements SingletonInterface
 {
     public int $cacheLifetime = 0;
-
     public function __construct(
         #[Autowire(service: 'typo3.request')]
         protected readonly ServerRequestInterface $request,

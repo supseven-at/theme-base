@@ -1,0 +1,14 @@
+setup.override {
+  recursiveDelete = 0
+  copyLevels = 99
+  edit_docModuleUpload = 0
+  titleLen = 100
+  showHiddenFilesAndFolders = 0
+}
+
+[backend.user.isAdmin]
+  setup.override {
+    recursiveDelete = 1
+    showHiddenFilesAndFolders = 1
+  }
+[END]

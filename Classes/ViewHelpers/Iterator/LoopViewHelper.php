@@ -30,12 +30,12 @@ class LoopViewHelper extends AbstractLoopViewHelper
 
     public function render()
     {
-        $count = (int)$arguments['count'];
-        $minimum = (int)$arguments['minimum'];
-        $maximum = (int)$arguments['maximum'];
-        $iteration = $arguments['iteration'];
+        $count = (int)$this->arguments['count'];
+        $minimum = (int)$this->arguments['minimum'];
+        $maximum = (int)$this->arguments['maximum'];
+        $iteration = $this->arguments['iteration'];
         $content = '';
-        $variableProvider = $renderingContext->getVariableProvider();
+        $variableProvider = $this->renderingContext->getVariableProvider();
 
         if ($count < $minimum) {
             $count = $minimum;
@@ -49,14 +49,12 @@ class LoopViewHelper extends AbstractLoopViewHelper
         }
 
         for ($i = 0; $i < $count; $i++) {
-            $content .= static::renderIteration(
+            $content .= $this->renderIteration(
                 $i,
                 0,
                 $count,
                 1,
-                $iteration,
-                $renderingContext,
-                $renderChildrenClosure
+                $iteration
             );
         }
 

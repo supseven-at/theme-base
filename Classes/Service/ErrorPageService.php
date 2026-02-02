@@ -6,7 +6,7 @@ namespace Supseven\ThemeBase\Service;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use TYPO3\CMS\Core\Http\ImmediateResponseException;
+use TYPO3\CMS\Core\Http\PropagateResponseException;
 
 /**
  * Service to quit with an error page
@@ -37,14 +37,13 @@ class ErrorPageService
             ->getErrorHandler($code)
             ->handlePageError($this->request, $reason);
 
-        throw new ImmediateResponseException($response, 1713449666);
+        throw new PropagateResponseException($response, 1713449666);
     }
 
     /**
      * Show the not-found error page
      *
      * @param string $reason
-     * @throws ImmediateResponseException
      */
     public function notFound(string $reason = 'Page not found'): void
     {
@@ -55,7 +54,6 @@ class ErrorPageService
      * Show the gone error page
      *
      * @param string $reason
-     * @throws ImmediateResponseException
      */
     public function gone(string $reason = 'Page not available anymore'): void
     {

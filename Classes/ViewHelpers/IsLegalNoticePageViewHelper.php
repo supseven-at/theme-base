@@ -16,7 +16,6 @@ class IsLegalNoticePageViewHelper extends AbstractViewHelper
 
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
         $this->registerArgument('pageUid', 'int', 'The current Page UID', true);
         $this->registerArgument('title', 'string', 'The current Page Title', true);
     }

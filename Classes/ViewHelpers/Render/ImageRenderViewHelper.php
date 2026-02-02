@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\ViewHelpers\Render;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
@@ -72,19 +71,17 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         if (isset($this->arguments['image'])) {
             $this->image = $this->imageService->getImage('', $this->arguments['image'], false);
 
-            if ($this->image !== null) {
-                // Do not access image properties via image->getProperty() one after each other accross the whole
-                // viewhelper, because this overcomplicates unit testing for each method.
-                $imageProperties = $this->image->getProperties();
-                $this->crop = $imageProperties['crop'] ?? '';
-                $this->link = $imageProperties['link'] ?? '';
-                $this->description = $imageProperties['description'] ?? '';
-                $this->title = $imageProperties['title'] ?? '';
-                $this->alternative = $imageProperties['alternative'] ?? '';
-            }
+            // Do not access image properties via image->getProperty() one after each other accross the whole
+            // viewhelper, because this overcomplicates unit testing for each method.
+            $imageProperties = $this->image->getProperties();
+            $this->crop = $imageProperties['crop'] ?? '';
+            $this->link = $imageProperties['link'] ?? '';
+            $this->description = $imageProperties['description'] ?? '';
+            $this->title = $imageProperties['title'] ?? '';
+            $this->alternative = $imageProperties['alternative'] ?? '';
         }
 
-        $this->getBreakpoints($this->arguments);
+        $this->getBreakpoints();
         $this->contentObjectData = $this->getRequest()->getAttribute('currentContentObject')->data;
     }
 
@@ -93,22 +90,20 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      */
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
-
         $this->registerArgument('settings', 'array', 'The Content Element Settings', true);
         $this->registerArgument('image', 'object', 'Image Element', true);
 
         $this->registerArgument('breakpoints', 'string', 'The breakpoints array key in the settings', false, 'default');
-        $this->registerArgument('breakpointsPath', 'string', 'If the Breakpoints are set in a path like youtube.breakpoints.default', false);
+        $this->registerArgument('breakpointsPath', 'string', 'If the Breakpoints are set in a path like youtube.breakpoints.default');
 
-        $this->registerArgument('pictureClass', 'string', 'CSS ClassNames for the Picture Element', false);
+        $this->registerArgument('pictureClass', 'string', 'CSS ClassNames for the Picture Element');
         $this->registerArgument('imgClass', 'string', 'CSS ClassNames for the Image Element', false, 'img-fluid');
 
         $this->registerArgument('lightboxClass', 'string', 'A CSS ClassName for the Lightbox', false, 'lightbox');
         $this->registerArgument('lightboxName', 'string', 'A Gallery for the Lightbox (data-attribute)', false, 'lightbox');
 
         $this->registerArgument('loading', 'string', 'Native lazy-loading for images property. Can be "lazy", "eager" or "auto"', false, 'lazy');
-        $this->registerArgument('fileExtension', 'string', 'Custom file extension to use', false);
+        $this->registerArgument('fileExtension', 'string', 'Custom file extension to use');
 
         $this->registerArgument('a11y', 'bool', 'If a link is set (imgzoom or link), then add a visually hidden element inside the link', false, false);
         $this->registerArgument('a11yClass', 'string', 'a11y class name', false, 'visually-hidden');
@@ -175,7 +170,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      *
      * @param int $width The desired width of the image.
      * @param Area $cropArea The crop area to apply on the image.
-     * @return string The URI of the processed image.
+     * @return array
      */
     public function processImage(int $width, Area $cropArea): array
     {
@@ -211,7 +206,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      */
     public function getCropping(string $cropVariant): Area
     {
-        $cropVariantCollection = CropVariantCollection::create((string)$this->crop);
+        $cropVariantCollection = CropVariantCollection::create($this->crop);
 
         return $cropVariantCollection->getCropArea($cropVariant);
     }
@@ -245,13 +240,10 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     public function getExceptionMessage(string $detailedMessage): string
     {
         $request = $this->getRequest();
+        $currentContentObject = $request->getAttribute('currentContentObject');
 
-        if ($request instanceof RequestInterface) {
-            $currentContentObject = $request->getAttribute('currentContentObject');
-
-            if ($currentContentObject instanceof ContentObjectRenderer) {
-                return sprintf('Unable to render image tag in "%s": %s', $currentContentObject->currentRecord, $detailedMessage);
-            }
+        if ($currentContentObject instanceof ContentObjectRenderer) {
+            return sprintf('Unable to render image tag in "%s": %s', $currentContentObject->currentRecord, $detailedMessage);
         }
 
         return "Unable to render image tag: {$detailedMessage}";

@@ -14,7 +14,7 @@ lint: vendor/autoload.php
 
 .PHONY: test
 test: vendor/autoload.php
-	vendor/bin/phpunit --bootstrap vendor/autoload.php Tests/
+	vendor/bin/phpunit --display-notices --display-phpunit-notices --bootstrap vendor/autoload.php Tests/
 
 vendor/autoload.php: composer.json composer.lock
 	composer install --prefer-dist --no-scripts --no-plugins

@@ -27,7 +27,6 @@ use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
@@ -78,19 +77,17 @@ final class ImageRenderViewHelperTest extends TestCase
      */
     public function setUp(): void
     {
-        $processedFileMock = self::createMock(ProcessedFile::class);
+        $processedFileMock = self::createStub(ProcessedFile::class);
 
-        $this->imageServiceMock = self::createMock(ImageService::class);
-        $this->imageServiceMock->expects(self::any())
+        $this->imageServiceMock = self::createStub(ImageService::class);
+        $this->imageServiceMock
             ->method('applyProcessingInstructions')
             ->willReturn($processedFileMock);
-        $this->imageServiceMock->expects(self::any())
-                               ->method('getImageUri')
+        $this->imageServiceMock->method('getImageUri')
                                ->willReturn($this->filePath);
 
-        $this->contentObjectRendererMock = self::createMock(ContentObjectRenderer::class);
-        $this->contentObjectRendererMock->expects(self::any())
-                                        ->method('typoLink_URL')
+        $this->contentObjectRendererMock = self::createStub(ContentObjectRenderer::class);
+        $this->contentObjectRendererMock->method('typoLink_URL')
                                         ->willReturn('foobar');
 
         $this->subject = new ImageRenderViewHelper(
@@ -98,14 +95,14 @@ final class ImageRenderViewHelperTest extends TestCase
             $this->contentObjectRendererMock
         );
 
-        $contentObjectRendererMock = self::createMock(ContentObjectRenderer::class);
+        $contentObjectRendererMock = self::createStub(ContentObjectRenderer::class);
         $contentObjectRendererMock->data = [
             'image_zoom' => '1',
         ];
         $contentObjectRendererMock->currentRecord = 'tt_content:1';
 
-        $serverRequestMock = self::createMock(ServerRequest::class);
-        $serverRequestMock->expects(self::any())
+        $serverRequestMock = self::createStub(ServerRequest::class);
+        $serverRequestMock
             ->method('getAttribute')
             ->with('currentContentObject')
             ->willReturn($contentObjectRendererMock);
@@ -117,7 +114,7 @@ final class ImageRenderViewHelperTest extends TestCase
         $renderingContextMock->expects(self::atLeastOnce())
             ->method('getViewHelperVariableContainer')
             ->willReturn(self::createStub(ViewHelperVariableContainer::class));
-        $renderingContextMock->expects(self::any())
+        $renderingContextMock
             ->method('getAttribute')
             ->willReturn($serverRequestMock);
 
@@ -129,9 +126,6 @@ final class ImageRenderViewHelperTest extends TestCase
         $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'] = $this->fileExtension . ',jpeg,png,gif,svg';
 
         $this->subject->setRenderingContext($renderingContextMock);
-
-        $viewHelperNode = self::createStub(ViewHelperNode::class);
-        $this->subject->setViewHelperNode($viewHelperNode);
     }
 
     public function tearDown(): void
@@ -158,7 +152,7 @@ final class ImageRenderViewHelperTest extends TestCase
                                     ['alternative' => ''],
                                 );
 
-        $this->imageServiceMock->expects(self::any())
+        $this->imageServiceMock
                                ->method('getImage')
                                ->willReturn($this->fileReferenceMock);
 
@@ -199,6 +193,7 @@ final class ImageRenderViewHelperTest extends TestCase
         ]);
 
         $this->subject->initialize();
+        $this->subject->setRenderChildrenClosure(static fn () => '');
 
         $result = $this->subject->render();
 
@@ -238,8 +233,7 @@ final class ImageRenderViewHelperTest extends TestCase
                                     ['alternative' => ''],
                                 );
 
-        $this->imageServiceMock->expects(self::any())
-                               ->method('getImage')
+        $this->imageServiceMock->method('getImage')
                                ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
@@ -276,11 +270,11 @@ final class ImageRenderViewHelperTest extends TestCase
                 ['alternative' => ''],
             );
 
-        $this->imageServiceMock->expects(self::any())
+        $this->imageServiceMock
             ->method('getImage')
             ->willReturn($this->fileReferenceMock);
 
-        $this->imageServiceMock->expects(self::any())
+        $this->imageServiceMock
                                ->method('getImage')
                                ->willReturn($this->fileReferenceMock);
 
@@ -334,7 +328,7 @@ final class ImageRenderViewHelperTest extends TestCase
                                     ['alternative' => ''],
                                 );
 
-        $this->imageServiceMock->expects(self::any())
+        $this->imageServiceMock
                                ->method('getImage')
                                ->willReturn($this->fileReferenceMock);
 
@@ -391,7 +385,7 @@ final class ImageRenderViewHelperTest extends TestCase
                                     ['alternative' => ''],
                                 );
 
-        $this->imageServiceMock->expects(self::any())
+        $this->imageServiceMock
                                ->method('getImage')
                                ->willReturn($this->fileReferenceMock);
 
@@ -447,7 +441,7 @@ final class ImageRenderViewHelperTest extends TestCase
                 ['alternative' => ''],
             );
 
-        $this->imageServiceMock->expects(self::any())
+        $this->imageServiceMock
             ->method('getImage')
             ->willReturn($this->fileReferenceMock);
 
@@ -469,6 +463,7 @@ final class ImageRenderViewHelperTest extends TestCase
         ]);
 
         $this->subject->initialize();
+        $this->subject->setRenderChildrenClosure(static fn () => '');
 
         $result = $this->subject->getAnchorElement($linkText);
 

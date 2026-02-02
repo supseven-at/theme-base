@@ -17,7 +17,6 @@ use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -113,11 +112,11 @@ final class InlineSvgViewHelperTest extends UnitTestCase
 
         $renderChildrenClosure = fn () => null;
 
-        $renderingContext = $this->getTypoScriptFrontendControllerMock();
+        $renderingContext = $this->getRenderingContextMock();
 
         $packageManager = self::createMock(PackageManager::class);
         $packageManager->expects(self::never())->method('resolvePackagePath');
-        $assetCollector = $this->createMock(AssetCollector::class);
+        $assetCollector = $this->createStub(AssetCollector::class);
 
         $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
         $subject->setArguments($arguments);
@@ -141,8 +140,8 @@ final class InlineSvgViewHelperTest extends UnitTestCase
     #[Test]
     public function getFilePath(): void
     {
-        $packageManager = self::createMock(PackageManager::class);
-        $assetCollector = $this->createMock(AssetCollector::class);
+        $packageManager = self::createStub(PackageManager::class);
+        $assetCollector = $this->createStub(AssetCollector::class);
 
         $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
         $result = $subject->getFilePath($this->fileName);
@@ -164,7 +163,7 @@ final class InlineSvgViewHelperTest extends UnitTestCase
             ->with('EXT:theme/Resources/Public/Images/' . $this->fileName)
             ->willReturn('foobar');
 
-        $assetCollector = $this->createMock(AssetCollector::class);
+        $assetCollector = $this->createStub(AssetCollector::class);
 
         $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
 
@@ -195,9 +194,9 @@ final class InlineSvgViewHelperTest extends UnitTestCase
             ->with('EXT:theme/Resources/Public/Images/' . $this->fileName)
             ->willReturn('foobar');
 
-        $assetCollector = $this->createMock(AssetCollector::class);
+        $assetCollector = $this->createStub(AssetCollector::class);
 
-        $renderingContext = $this->getTypoScriptFrontendControllerMock();
+        $renderingContext = $this->getRenderingContextMock();
 
         $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
         $subject->setArguments($arguments);
@@ -215,8 +214,8 @@ final class InlineSvgViewHelperTest extends UnitTestCase
     #[Test]
     public function sanitizeId(string $svgIdString, string $expected): void
     {
-        $packageManager = self::createMock(PackageManager::class);
-        $assetCollector = $this->createMock(AssetCollector::class);
+        $packageManager = self::createStub(PackageManager::class);
+        $assetCollector = $this->createStub(AssetCollector::class);
 
         $subject = new InlineSvgViewHelper($packageManager, $assetCollector);
         $sut = $subject->sanitizeId($svgIdString);
@@ -346,11 +345,10 @@ final class InlineSvgViewHelperTest extends UnitTestCase
      * @return \TYPO3\CMS\Fluid\Core\Rendering\RenderingContext
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
-    private function getTypoScriptFrontendControllerMock(): RenderingContext
+    private function getRenderingContextMock(): RenderingContext
     {
-        $typoScriptFrontendController = $this->createMock(TypoScriptFrontendController::class);
-        $request = (new ServerRequest())->withAttribute('frontend.controller', $typoScriptFrontendController);
-        $renderingContext = $this->createMock(RenderingContext::class);
+        $request = new ServerRequest();
+        $renderingContext = $this->createStub(RenderingContext::class);
         $renderingContext->method('getAttribute')->willReturn($request);
 
         return $renderingContext;

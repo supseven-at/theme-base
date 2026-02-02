@@ -53,21 +53,20 @@ class InlineSvgViewHelper extends AbstractViewHelper
      */
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
         $this->registerArgument('source', 'string', 'Source of svg resource', true);
-        $this->registerArgument('class', 'string', 'Specifies an alternate class for the svg', false);
-        $this->registerArgument('width', 'string', 'Specifies a width for the svg', false);
-        $this->registerArgument('height', 'string', 'Specifies a height for the svg', false);
-        $this->registerArgument('aria-hidden', 'bool', 'Activate aria-hidden=true attribute', false);
-        $this->registerArgument('insert-style', 'string', 'Add CSS Styles', false);
-        $this->registerArgument('id', 'string', 'Add UNIQUE Id', false);
-        $this->registerArgument('uniqueId', 'int', 'adds a unique id, if a id is set - mostly from a file upload', false);
-        $this->registerArgument('title', 'string', 'Add descriptive title for the SVG', false);
-        $this->registerArgument('fill', 'string', 'add a fill color', false);
-        $this->registerArgument('remove-styles', 'bool', 'remove all style tags', false);
-        $this->registerArgument('move-styles', 'bool', 'move style from styletags to asset collector', false);
-        $this->registerArgument('custom-tags', 'array', 'add allowed svg tags to the sanitizer', false);
-        $this->registerArgument('custom-attributes', 'array', 'add allowed svg tag attributes to the sanitizer', false);
+        $this->registerArgument('class', 'string', 'Specifies an alternate class for the svg');
+        $this->registerArgument('width', 'string', 'Specifies a width for the svg');
+        $this->registerArgument('height', 'string', 'Specifies a height for the svg');
+        $this->registerArgument('aria-hidden', 'bool', 'Activate aria-hidden=true attribute');
+        $this->registerArgument('insert-style', 'string', 'Add CSS Styles');
+        $this->registerArgument('id', 'string', 'Add UNIQUE Id');
+        $this->registerArgument('uniqueId', 'int', 'adds a unique id, if a id is set - mostly from a file upload');
+        $this->registerArgument('title', 'string', 'Add descriptive title for the SVG');
+        $this->registerArgument('fill', 'string', 'add a fill color');
+        $this->registerArgument('remove-styles', 'bool', 'remove all style tags');
+        $this->registerArgument('move-styles', 'bool', 'move style from styletags to asset collector');
+        $this->registerArgument('custom-tags', 'array', 'add allowed svg tags to the sanitizer');
+        $this->registerArgument('custom-attributes', 'array', 'add allowed svg tag attributes to the sanitizer');
     }
 
     /**

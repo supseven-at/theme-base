@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\Service;
 
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 
 class LegalNoticeService
 {
-    /** @var SiteFinder $siteFinder */
-    protected SiteFinder $siteFinder;
-
-    public function __construct(SiteFinder $siteFinder)
-    {
-        $this->siteFinder = $siteFinder;
+    public function __construct(
+        protected readonly SiteFinder $siteFinder,
+        protected readonly DependencyValuesService $dependencyValuesService,
+    ) {
     }
 
     /**
@@ -31,7 +28,7 @@ class LegalNoticeService
         $siteConfig = $this->siteFinder->getSiteByPageId($pageUid)->getSettings()->getAll();
         $legalNoticeUid = $siteConfig['themeBase']['page']['dataProcessing']['legalNotice']['uid'] ?? 0;
 
-        if (Environment::getContext()->isDevelopment()) {
+        if ($this->dependencyValuesService->getApplicationContext()->isDevelopment()) {
             return false;
         }
 

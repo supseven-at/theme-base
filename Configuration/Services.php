@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Supseven\ThemeBase\Service\DataProcessingTemplateView;
 use Supseven\ThemeBase\Service\DependencyValuesService;
 use Supseven\ThemeBase\Service\ErrorPageService;
 use Supseven\ThemeBase\Service\LegalNoticeService;
@@ -21,14 +20,12 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
     // loaded by other packages
     $services->defaults()->public()->autowire()->autoconfigure();
 
-    $services->load('Supseven\\ThemeBase\\DataProcessing\\', __DIR__ . '/../Classes/DataProcessing/*');
-    $services->load('Supseven\\ThemeBase\\ViewHelpers\\', __DIR__ . '/../Classes/ViewHelpers/*');
-    $services->load('Supseven\\ThemeBase\\Hooks\\', __DIR__ . '/../Classes/Hooks/*');
+    $services->load('Supseven\\ThemeBase\\DataProcessing\\', __DIR__ . '/../Classes/DataProcessing/*')->share();
+    $services->load('Supseven\\ThemeBase\\ViewHelpers\\', __DIR__ . '/../Classes/ViewHelpers/*')->share();
+    $services->load('Supseven\\ThemeBase\\Hooks\\', __DIR__ . '/../Classes/Hooks/*')->share();
 
-    $services->set(LegalNoticeService::class);
-
-    $services->set(DependencyValuesService::class)->public()->share();
-    $services->set(DataProcessingTemplateView::class)->public()->share(false);
+    $services->set(LegalNoticeService::class)->share();
+    $services->set(DependencyValuesService::class)->share();
 
     $services->set('typo3.request', ServerRequestInterface::class)
         ->factory([service(DependencyValuesService::class), 'getRequest'])

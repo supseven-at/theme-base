@@ -50,10 +50,10 @@ abstract class AbstractLoopViewHelper extends AbstractViewHelper
             $iteration = [
                 'index'   => $i,
                 'cycle'   => $cycle,
-                'isOdd'   => 0 === $cycle % 2 ? false : true,
-                'isEven'  => 0 === $cycle % 2 ? true : false,
-                'isFirst' => $i === $from ? true : false,
-                'isLast'  => static::isLast($i, $from, $to, $step),
+                'isOdd'   => !(0 === $cycle % 2),
+                'isEven'  => 0 === $cycle % 2,
+                'isFirst' => $i === $from,
+                'isLast'  => $this->isLast($i, $from, $to, $step),
             ];
             $variableProvider->add($iterationArgument, $iteration);
             $content = (string)$this->renderChildren();

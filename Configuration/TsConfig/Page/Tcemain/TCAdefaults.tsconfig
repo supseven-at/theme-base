@@ -1,0 +1,6 @@
+
+[applicationContext matches "/^Development/"]
+  TCAdefaults.pages.hidden = 0
+[END]
+
+TCAdefaults.tt_content.header_layout = 2

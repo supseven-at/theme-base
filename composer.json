@@ -9,16 +9,18 @@
 		}
 	},
 	"require": {
-		"typo3/cms-core": "^13.4"
+		"php": "^8.5",
+		"ext-dom": "*",
+		"ext-mbstring": "*",
+		"ext-libxml": "*",
+		"ext-simplexml": "*",
+		"typo3/cms-core": "^14.1"
 	},
 	"suggest": {
-		"b13/doktypemapper": "For doktype-to-be_layout mapping",
 		"helhum/dotenv-connector": "For easy .env integration",
-		"ichhabrecht/content-defender": "To configure CTypes per be_layout",
 		"josefglatz/hide-sys-template": "To disable sys_template record editing in the BE",
 		"josefglatz/beuser-fastswitch": "For quickly switching to other BE users",
 		"josefglatz/cropvariantsbuilder": "For easy configuration of crops of image fields",
-		"studiomitte/live-search-extended": "For extended BE search capabilties",
 		"supseven/supi": "For integration of user consent of third party elements in the frontend",
 		"christophlehmann/pagetreefilter": "For an extended BE page tree search",
 		"typo3/cms-linkvalidator": "To check the availability of links on TYPO3 pages",
@@ -26,15 +28,15 @@
 		"typo3/cms-form": "For frontend forms"
 	},
 	"require-dev": {
-		"typo3/cms-form": "^13.4",
-		"typo3/cms-fluid": "^13.4",
-		"typo3/cms-frontend": "^13.4",
-		"typo3/cms-extbase": "^13.4",
-		"phpunit/phpunit": "^10",
-		"typo3/testing-framework": "^8.2",
+		"typo3/cms-form": "^14.1",
+		"typo3/cms-fluid": "^14.1",
+		"typo3/cms-frontend": "^14.1",
+		"typo3/cms-extbase": "^14.1",
+		"phpunit/phpunit": "^12",
+		"typo3/testing-framework": "^9.1",
 		"friendsofphp/php-cs-fixer": "^3.62",
 		"mikey179/vfsstream": "^1.6",
-		"typo3fluid/fluid": ">= 4.0"
+		"typo3fluid/fluid": "^4.0 || ^5.0"
 	},
 	"autoload-dev": {
 		"psr-4": {

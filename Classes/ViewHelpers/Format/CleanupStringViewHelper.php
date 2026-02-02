@@ -39,7 +39,7 @@ class CleanupStringViewHelper extends AbstractViewHelper
     /**
      * @return string
      */
-    public function renderStatic(): string
+    public function render(): string
     {
         $content = $this->renderChildren();
 

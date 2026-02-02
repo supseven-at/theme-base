@@ -21,7 +21,6 @@ class StrlenViewHelper extends AbstractViewHelper
 
     public function initializeArguments(): void
     {
-        parent::initializeArguments();
         $this->registerArgument('string', 'string', 'String to count, if not provided as tag content');
         $this->registerArgument(
             'encoding',
@@ -43,7 +42,7 @@ class StrlenViewHelper extends AbstractViewHelper
     public function render(): int
     {
         /** @var string $encoding */
-        $encoding = $this->arguments['encoding'];
+        $encoding = $this->arguments['encoding'] ?: 'UTF-8';
         $content = (string)$this->renderChildren();
 
         return (int)mb_strlen($content, $encoding);
