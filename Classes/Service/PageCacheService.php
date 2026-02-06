@@ -21,7 +21,17 @@ use TYPO3\CMS\Frontend\Event\ModifyCacheLifetimeForPageEvent;
 #[Autoconfigure(shared: true)]
 class PageCacheService implements SingletonInterface
 {
+    /**
+     * TTL for the page cache item
+     *
+     * Only used if it is greater `0` and lower than
+     * the cache lifetime calculated by TYPO3. Thus,
+     * cannot be used to increase the cache TTL.
+     *
+     * @var int
+     */
     public int $cacheLifetime = 0;
+
     public function __construct(
         #[Autowire(service: 'typo3.request')]
         protected readonly ServerRequestInterface $request,
