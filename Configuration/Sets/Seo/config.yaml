@@ -1,0 +1,6 @@
+name: supseven/theme-base-seo
+label: TYPO3 seo settings
+dependencies:
+  - typo3/seo-sitemap
+optionalDependencies:
+  - georgringer/news-sitemap

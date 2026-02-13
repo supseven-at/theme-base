@@ -3,6 +3,4 @@ label: TYPO3 base setup
 dependencies:
   - typo3/fluid-styled-content
 optionalDependencies:
-  - typo3/seo-sitemap
   - georgringer/news
-  - georgringer/news-sitemap
