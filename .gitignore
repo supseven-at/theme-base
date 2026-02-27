@@ -4,6 +4,7 @@
 /.cache
 /.fleet
 /.php-cs-fixer.cache
+/.phpunit.cache
 /.phpunit.result.cache
 /Documentation-GENERATED-temp/
 /clover.xml

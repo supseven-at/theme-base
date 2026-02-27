@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\Tests\Unit\DataProcessing;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Supseven\ThemeBase\DataProcessing\ConcatDataProcessor;
@@ -12,6 +13,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 /**
  * @author Georg Großberger <g.grossberger@supseven.at>
  */
+#[CoversClass(ConcatDataProcessor::class)]
 class ConcatDataProcessorTest extends TestCase
 {
     #[Test]

@@ -14,7 +14,7 @@ lint: vendor/autoload.php
 
 .PHONY: test
 test: vendor/autoload.php
-	vendor/bin/phpunit --display-notices --display-phpunit-notices --bootstrap vendor/autoload.php Tests/
+	php vendor/bin/phpunit --configuration phpunit.xml
 
 vendor/autoload.php: composer.json composer.lock
 	composer install --prefer-dist --no-scripts --no-plugins
@@ -22,4 +22,4 @@ vendor/autoload.php: composer.json composer.lock
 
 .PHONY: clean
 clean:
-	rm -rf vendor
+	rm -rf vendor .phpunit.cache .php-cs-fixer.cache

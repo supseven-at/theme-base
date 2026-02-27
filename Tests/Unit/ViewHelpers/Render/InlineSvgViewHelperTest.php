@@ -7,6 +7,7 @@ namespace Supseven\ThemeBase\Tests\Unit\ViewHelpers\Render;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Supseven\ThemeBase\ViewHelpers\Render\InlineSvgViewHelper;
@@ -22,6 +23,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 /**
  * InlineSvgViewHelperTest
  */
+#[CoversClass(InlineSvgViewHelper::class)]
 final class InlineSvgViewHelperTest extends UnitTestCase
 {
     /**

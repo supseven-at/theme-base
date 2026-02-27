@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\Tests\Unit\ViewHelpers\Render;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Supseven\ThemeBase\ViewHelpers\Render\ImageRenderViewHelper;
@@ -34,6 +35,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 /**
  * Test for Supseven\ThemeBase\ViewHelpers\Render\ImageRenderViewHelper
  */
+#[CoversClass(ImageRenderViewHelper::class)]
 final class ImageRenderViewHelperTest extends TestCase
 {
     /** @var ImageRenderViewHelper SUT */

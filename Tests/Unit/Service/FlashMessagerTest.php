@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\Tests\Unit\Service;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -17,6 +18,7 @@ use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 /**
  * @author Georg Großberger <g.grossberger@supseven.at>
  */
+#[CoversClass(FlashMessager::class)]
 class FlashMessagerTest extends TestCase
 {
     public static function flashMessagesProvider(): iterable
