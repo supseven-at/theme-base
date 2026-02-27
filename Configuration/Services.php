@@ -5,16 +5,60 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Supseven\ThemeBase\Attributes\AsContentObject;
+use Supseven\ThemeBase\Attributes\AsDataProcessor;
 use Supseven\ThemeBase\Service\DependencyValuesService;
 use Supseven\ThemeBase\Service\ErrorPageService;
 use Supseven\ThemeBase\Service\LegalNoticeService;
 use Supseven\ThemeBase\Service\PageCacheService;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\AutoconfigureFailedException;
 use TYPO3\CMS\Core\Core\ApplicationContext;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Frontend\ContentObject\AbstractContentObject;
+use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
 
 return static function (ContainerConfigurator $container, ContainerBuilder $containerBuilder): void {
+    $containerBuilder->registerAttributeForAutoconfiguration(
+        AsContentObject::class,
+        static function (ChildDefinition $definition, AsContentObject $attribute, \ReflectionClass $class): void {
+            $parents = [];
+            $parent = $class;
+
+            while ($parent) {
+                $parents[] = $parent->name;
+                $parent = $parent->getParentClass();
+            }
+
+            if (!in_array(AbstractContentObject::class, $parents)) {
+                throw new AutoconfigureFailedException(sprintf(
+                    'Class "%s" must extend "%s" to be configured as a content object',
+                    $class->name,
+                    AbstractContentObject::class,
+                ));
+            }
+
+            $definition->addTag(AsContentObject::TAG_NAME, ['identifier' => $attribute->name]);
+        }
+    );
+
+    $containerBuilder->registerAttributeForAutoconfiguration(
+        AsDataProcessor::class,
+        static function (ChildDefinition $definition, AsDataProcessor $attribute, \ReflectionClass $class): void {
+            if (!$class->implementsInterface(DataProcessorInterface::class)) {
+                throw new AutoconfigureFailedException(sprintf(
+                    'Class "%s" must implement "%s" to be configured as a data processor',
+                    $class->name,
+                    DataProcessorInterface::class,
+                ));
+            }
+
+            $definition->addTag(AsDataProcessor::TAG_NAME, ['identifier' => $attribute->shortName]);
+        }
+    );
+
     $services = $container->services();
     // Set to public by default because the classes are supposed to be
     // loaded by other packages
