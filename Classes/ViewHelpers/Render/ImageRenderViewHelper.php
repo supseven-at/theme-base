@@ -113,6 +113,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         $this->registerArgument('a11y', 'bool', 'If a link is set (imgzoom or link), then add a visually hidden element inside the link', false, false);
         $this->registerArgument('a11yClass', 'string', 'a11y class name', false, 'visually-hidden');
         $this->registerArgument('a11yText', 'string', 'a11y text', false, 'Link to target');
+        $this->registerArgument('additionalImageAttributes', 'array', 'additional image attributes', false, []);
     }
 
     /**
@@ -335,6 +336,10 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
             'title'   => $this->title ?: null,
             'loading' => $this->arguments['loading'],
         ];
+
+        if ($this->arguments['additionalImageAttributes']) {
+            $attributes = array_merge($attributes, $this->arguments['additionalImageAttributes']);
+        }
 
         // add alt attribute, or, if no alt is available, set image to aria-hidden to prevent
         // a11y issues.
