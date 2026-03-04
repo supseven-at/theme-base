@@ -159,16 +159,17 @@ final class ImageRenderViewHelperTest extends TestCase
                                ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
-            'image'         => $this->fileReferenceMock,
-            'breakpoints'   => 'default',
-            'fileExtension' => $this->fileExtension,
-            'imgClass'      => $this->imgClass,
-            'pictureClass'  => $this->pictureClass,
-            'loading'       => $this->loading,
-            'lightboxName'  => 'lightbox',
-            'lightboxClass' => 'lightbox',
-            'a11y'          => false,
-            'settings'      => [
+            'image'                     => $this->fileReferenceMock,
+            'breakpoints'               => 'default',
+            'fileExtension'             => $this->fileExtension,
+            'imgClass'                  => $this->imgClass,
+            'additionalImageAttributes' => [],
+            'pictureClass'              => $this->pictureClass,
+            'loading'                   => $this->loading,
+            'lightboxName'              => 'lightbox',
+            'lightboxClass'             => 'lightbox',
+            'a11y'                      => false,
+            'settings'                  => [
                 'breakpoints' => [
                     'default' => [
                         0 => [
@@ -335,13 +336,14 @@ final class ImageRenderViewHelperTest extends TestCase
                                ->willReturn($this->fileReferenceMock);
 
         $this->subject->setArguments([
-            'image'         => $this->fileReferenceMock,
-            'breakpoints'   => 'default',
-            'fileExtension' => $this->fileExtension,
-            'imgClass'      => $this->imgClass,
-            'pictureClass'  => $this->pictureClass,
-            'loading'       => $this->loading,
-            'settings'      => [
+            'image'                     => $this->fileReferenceMock,
+            'breakpoints'               => 'default',
+            'fileExtension'             => $this->fileExtension,
+            'imgClass'                  => $this->imgClass,
+            'additionalImageAttributes' => [],
+            'pictureClass'              => $this->pictureClass,
+            'loading'                   => $this->loading,
+            'settings'                  => [
                 'breakpoints' => [
                     'default' => [
                         0 => [

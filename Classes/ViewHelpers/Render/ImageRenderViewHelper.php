@@ -33,6 +33,9 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     /** @var bool $escapeOutput */
     protected $escapeOutput = false;
 
+    /** @var array $settings */
+    private $settings = [];
+
     /** @var FileInterface|null $image */
     private ?FileInterface $image = null;
 
@@ -83,6 +86,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
 
         $this->getBreakpoints();
         $this->contentObjectData = $this->getRequest()->getAttribute('currentContentObject')->data;
+        $this->settings = $this->arguments['settings'];
     }
 
     /**
@@ -108,6 +112,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         $this->registerArgument('a11y', 'bool', 'If a link is set (imgzoom or link), then add a visually hidden element inside the link', false, false);
         $this->registerArgument('a11yClass', 'string', 'a11y class name', false, 'visually-hidden');
         $this->registerArgument('a11yText', 'string', 'a11y text', false, 'Link to target');
+        $this->registerArgument('additionalImageAttributes', 'array', 'additional image attributes', false, []);
     }
 
     /**
@@ -269,8 +274,13 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
         }
 
         if ((int)$this->contentObjectData['image_zoom'] === 1) {
-            $cropVariant = end($this->breakpoints)['cropVariant'] ?? 'default';
-            $cropArea = $this->getCropping($cropVariant);
+            if (!isset($this->settings['breakpoints']['disableLightboxCropping'])) {
+                $cropVariant = end($this->breakpoints)['cropVariant'] ?? 'default';
+                $cropArea = $this->getCropping($cropVariant);
+            } else {
+                $cropArea = Area::createEmpty();
+            }
+
             $processedImage = $this->processImage(1280, $cropArea);
             $imgSrc = $processedImage['src'];
 
@@ -327,6 +337,10 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
             'title'   => $this->title ?: null,
             'loading' => $this->arguments['loading'],
         ];
+
+        if ($this->arguments['additionalImageAttributes']) {
+            $attributes = array_merge($attributes, $this->arguments['additionalImageAttributes']);
+        }
 
         // add alt attribute, or, if no alt is available, set image to aria-hidden to prevent
         // a11y issues.
