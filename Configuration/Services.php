@@ -40,6 +40,8 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
                 ));
             }
 
+            $definition->setPublic(true);
+            $definition->setShared(false);
             $definition->addTag(AsContentObject::TAG_NAME, ['identifier' => $attribute->name]);
         }
     );
@@ -55,6 +57,8 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
                 ));
             }
 
+            $definition->setPublic(true);
+            $definition->setShared($attribute->shared);
             $definition->addTag(AsDataProcessor::TAG_NAME, ['identifier' => $attribute->shortName]);
         }
     );

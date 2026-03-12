@@ -18,6 +18,7 @@ class AsDataProcessor
 
     public function __construct(
         public string $shortName,
+        public bool $shared = false,
     ) {
     }
 }
