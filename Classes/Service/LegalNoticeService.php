@@ -26,7 +26,7 @@ class LegalNoticeService
     public function isLegalNoticePage(int $pageUid, string $title): bool
     {
         $siteConfig = $this->siteFinder->getSiteByPageId($pageUid)->getSettings()->getAll();
-        $legalNoticeUid = $siteConfig['themeBase']['page']['dataProcessing']['legalNotice']['uid'] ?? 0;
+        $legalNoticeUid = $siteConfig['themeBase']['tcemain']['legalNotice']['uid'] ?? 0;
 
         if ($this->dependencyValuesService->getApplicationContext()->isDevelopment()) {
             return false;
