@@ -84,12 +84,8 @@ Fluid ViewHelpers does not need an extension name to work within fluid page:
 This option is removed as the TYPO3 core team has planned to remove it in the
 upcoming major TYPO3 version 13/14.
 
-Beside that, it's better using following approaches (how some may have already
-done  it.):
-
-- A) `{f:translate(key: 'LLL:EXT:my_extension/Resources/Private/Language/yourFile.xlf:yourKey')}`
-- or B) if the extension uses the TYPO3 specific locallang conventions:
-  `{f:translate(key:'yourKey', extensionName='MyOtherExtension')}`
+Beside that, it's better using following approache (how some may have already
+done  it.): `{f:translate(key: 'my_extension.yourFile:yourKey')}`
 
 ---
 

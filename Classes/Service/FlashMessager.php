@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Helper to create flash messages more easily
  *
- * Parameters `$content` and `$title` may be LLL: references
+ * Parameters `$content` and `$title` may be LLL: references or translation domain mappings
  *
  * Methods notify* add the message to the notification snack bar
  *
@@ -77,13 +77,11 @@ class FlashMessager
             default => throw new \InvalidArgumentException('Unknown flash message severity: ' . $type),
         };
 
-        if (str_starts_with($content, 'LLL:')) {
-            $content = $this->languageService->sL($content);
-        }
+        $content = $this->languageService->sL($content);
 
         if (!is_string($title)) {
             $title = '';
-        } elseif (str_starts_with($title, 'LLL:')) {
+        } else {
             $title = $this->languageService->sL($title);
         }
 
