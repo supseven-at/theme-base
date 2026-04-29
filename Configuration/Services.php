@@ -7,8 +7,10 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Psr\Http\Message\ServerRequestInterface;
 use Supseven\ThemeBase\Attributes\AsContentObject;
 use Supseven\ThemeBase\Attributes\AsDataProcessor;
+use Supseven\ThemeBase\Domain\Finishers\MailIntrotextFinisher;
 use Supseven\ThemeBase\Service\DependencyValuesService;
 use Supseven\ThemeBase\Service\ErrorPageService;
+use Supseven\ThemeBase\Service\FlashMessager;
 use Supseven\ThemeBase\Service\LegalNoticeService;
 use Supseven\ThemeBase\Service\PageCacheService;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -68,9 +70,12 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
     // loaded by other packages
     $services->defaults()->public()->autowire()->autoconfigure();
 
+    $services->load('Supseven\\ThemeBase\\CSP\\', __DIR__ . '/../Classes/CSP/*')->share();
     $services->load('Supseven\\ThemeBase\\DataProcessing\\', __DIR__ . '/../Classes/DataProcessing/*')->share();
     $services->load('Supseven\\ThemeBase\\ViewHelpers\\', __DIR__ . '/../Classes/ViewHelpers/*')->share();
     $services->load('Supseven\\ThemeBase\\Hooks\\', __DIR__ . '/../Classes/Hooks/*')->share();
+
+    $services->set(MailIntrotextFinisher::class)->public()->share(false);
 
     $services->set(LegalNoticeService::class)->share();
     $services->set(DependencyValuesService::class)->share();
@@ -111,4 +116,6 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
         ->share(false)
         ->autoconfigure(false)
         ->lazy();
+
+    $services->set(FlashMessager::class)->share()->public();
 };
