@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\CSP;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Directive;
 use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Event\PolicyMutatedEvent;
@@ -31,6 +32,10 @@ class EnsureUnsafeCSPHeaders
 {
     public function __invoke(PolicyMutatedEvent $event): void
     {
+        if (!$event->request instanceof ServerRequestInterface) {
+            return;
+        }
+
         $typoscript = $event->request->getAttribute('frontend.typoscript');
 
         if (!$typoscript instanceof FrontendTypoScript) {

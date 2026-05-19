@@ -26,6 +26,18 @@ use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 class EnsureUnsafeCSPHeadersTest extends TestCase
 {
     #[Test]
+    public function noActionIfNoRequestObject(): void
+    {
+        $policy = $this->createMock(Policy::class);
+        $policy->expects($this->never())->method($this->anything());
+
+        $event = new PolicyMutatedEvent(Scope::frontend(), null, $policy, $policy);
+
+        $subject = new EnsureUnsafeCSPHeaders();
+        $subject($event);
+    }
+
+    #[Test]
     public function noActionIfNoTypoScript(): void
     {
         $request = new ServerRequest('GET', new Uri('https://example.com/'));
