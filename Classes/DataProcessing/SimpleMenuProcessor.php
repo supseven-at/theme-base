@@ -135,15 +135,19 @@ class SimpleMenuProcessor implements DataProcessorInterface
         // Build nested menu
         foreach ($pages as $data) {
             $title = null;
-            // @todo: correctly determine target
-            $target = ($data['target'] ?? '') ?: '';
             $active = in_array($data['uid'], $rootLineUids);
             $current = $data['uid'] === $currentPageUid;
             $hasSubpages = false;
             $spacer = (int)$data['doktype'] === PageRepository::DOKTYPE_SPACER;
 
-            // @todo: properly build for non-standard pages
-            $link = $linkPrefix . trim($data['slug'], '/') . '/';
+            if ((int)$data['doktype'] === PageRepository::DOKTYPE_DEFAULT) {
+                $link = $linkPrefix . trim($data['slug'], '/') . '/';
+                $target = '';
+            } else {
+                $to = $cObj->createLink('', ['parameter' => $data['uid']]);
+                $link = $to->getUrl();
+                $target = $to->getTarget();
+            }
 
             foreach ($titleFields as $titleField) {
                 if (!empty($data[$titleField])) {
@@ -221,22 +225,9 @@ class SimpleMenuProcessor implements DataProcessorInterface
         $outer = $cnx->createQueryBuilder();
 
         $tableFields = [];
-        $filter = static function (FieldTypeInterface $field): bool {
-            if ($field->getName() === 'uid' || $field->getName() === 'pid') {
-                return false;
-            }
-
-            $type = TableColumnType::tryFrom($field->getName());
-
-            if ($type === null || $type === TableColumnType::NONE) {
-                return false;
-            }
-
-            return true;
-        };
 
         // Fetch only TCA fields
-        foreach ($this->tcaSchemaFactory->get('pages')->getFields($filter) as $field) {
+        foreach ($this->tcaSchemaFactory->get('pages')->getFields($this->fieldsFilter()) as $field) {
             $tableFields[] = 't' . $languageUid . '.' . $field->getName();
         }
 
@@ -297,10 +288,9 @@ class SimpleMenuProcessor implements DataProcessorInterface
     {
         $references = [];
         $tableFields = [];
-        $filter = static fn (FieldTypeInterface $field): bool => $field->getName() !== 'uid' && $field->getName() !== 'pid';
         $fieldPrefix = $languageId ? 't1' : 't0';
 
-        foreach ($this->tcaSchemaFactory->get('sys_file_reference')->getFields($filter) as $field) {
+        foreach ($this->tcaSchemaFactory->get('sys_file_reference')->getFields($this->fieldsFilter()) as $field) {
             $tableFields[] = $fieldPrefix . '.' . $field->getName();
         }
 
@@ -342,5 +332,22 @@ class SimpleMenuProcessor implements DataProcessorInterface
         }
 
         return $references;
+    }
+
+    private function fieldsFilter(): \Closure
+    {
+        return static function (FieldTypeInterface $field): bool {
+            if ($field->getName() === 'uid' || $field->getName() === 'pid') {
+                return false;
+            }
+
+            $type = TableColumnType::tryFrom($field->getType());
+
+            if ($type === null || $type === TableColumnType::NONE) {
+                return false;
+            }
+
+            return true;
+        };
     }
 }
