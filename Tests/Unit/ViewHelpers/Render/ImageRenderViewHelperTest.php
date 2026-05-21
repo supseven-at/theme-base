@@ -103,7 +103,7 @@ final class ImageRenderViewHelperTest extends TestCase
         ];
         $contentObjectRendererMock->currentRecord = 'tt_content:1';
 
-        $serverRequestMock = self::createStub(ServerRequest::class);
+        $serverRequestMock = self::createMock(ServerRequest::class);
         $serverRequestMock
             ->method('getAttribute')
             ->with('currentContentObject')
