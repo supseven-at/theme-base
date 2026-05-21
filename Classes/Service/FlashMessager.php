@@ -69,12 +69,12 @@ class FlashMessager
         }
 
         $severity = match ($type) {
-            'error', 'err' => ContextualFeedbackSeverity::ERROR,
+            'error', 'err'    => ContextualFeedbackSeverity::ERROR,
             'warning', 'warn' => ContextualFeedbackSeverity::WARNING,
-            'notice' => ContextualFeedbackSeverity::NOTICE,
-            'info'   => ContextualFeedbackSeverity::INFO,
-            'ok', 'success' => ContextualFeedbackSeverity::OK,
-            default => throw new \InvalidArgumentException('Unknown flash message severity: ' . $type),
+            'notice'          => ContextualFeedbackSeverity::NOTICE,
+            'info'            => ContextualFeedbackSeverity::INFO,
+            'ok', 'success'   => ContextualFeedbackSeverity::OK,
+            default           => throw new \InvalidArgumentException('Unknown flash message severity: ' . $type),
         };
 
         $content = $this->languageService->sL($content);
