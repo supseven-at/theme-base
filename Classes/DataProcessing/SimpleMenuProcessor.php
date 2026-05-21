@@ -7,6 +7,7 @@ namespace Supseven\ThemeBase\DataProcessing;
 use Doctrine\DBAL\ArrayParameterType;
 use Supseven\ThemeBase\Attributes\AsDataProcessor;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\DataHandling\TableColumnType;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Schema\Field\FieldTypeInterface;
@@ -219,7 +220,19 @@ class SimpleMenuProcessor implements DataProcessorInterface
         $outer = $cnx->createQueryBuilder();
 
         $tableFields = [];
-        $filter = static fn (FieldTypeInterface $field): bool => $field->getName() !== 'uid' && $field->getName() !== 'pid';
+        $filter = static function (FieldTypeInterface $field): bool {
+            if ($field->getName() === 'uid' || $field->getName() === 'pid') {
+                return false;
+            }
+
+            $type = TableColumnType::tryFrom($field->getName());
+
+            if ($type === null || $type === TableColumnType::NONE) {
+                return false;
+            }
+
+            return true;
+        };
 
         // Fetch only TCA fields
         foreach ($this->tcaSchemaFactory->get('pages')->getFields($filter) as $field) {
