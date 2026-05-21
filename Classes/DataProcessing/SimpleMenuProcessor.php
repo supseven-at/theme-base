@@ -135,7 +135,8 @@ class SimpleMenuProcessor implements DataProcessorInterface
         // Build nested menu
         foreach ($pages as $data) {
             $title = null;
-            $target = $data['target'] ?: '';
+            // @todo: correctly determine target
+            $target = ($data['target'] ?? '') ?: '';
             $active = in_array($data['uid'], $rootLineUids);
             $current = $data['uid'] === $currentPageUid;
             $hasSubpages = false;
