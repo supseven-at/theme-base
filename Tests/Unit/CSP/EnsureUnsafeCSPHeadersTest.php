@@ -8,14 +8,24 @@ use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Supseven\ThemeBase\CSP\EnsureUnsafeCSPHeaders;
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Page\ResourceHashCollection;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Configuration\Behavior;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Configuration\DispositionConfiguration;
 use TYPO3\CMS\Core\Security\ContentSecurityPolicy\ConsumableNonce;
 use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Directive;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\DirectiveHashCollection;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Disposition;
 use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Event\PolicyMutatedEvent;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Middleware\PolicyBag;
 use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Policy;
 use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Scope;
 use TYPO3\CMS\Core\Security\ContentSecurityPolicy\SourceKeyword;
+use TYPO3\CMS\Core\Type\Map;
 use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 
@@ -92,8 +102,6 @@ class EnsureUnsafeCSPHeadersTest extends TestCase
         $typoscript = new FrontendTypoScript(new RootNode(), [], [], []);
         $typoscript->setConfigArray(['allow_unsafe_csp' => '1']);
 
-        $nonce = new ConsumableNonce('1234');
-
         $request = new ServerRequest('GET', new Uri('https://example.com/'))
             ->withAttribute('frontend.typoscript', $typoscript);
 
@@ -114,7 +122,7 @@ class EnsureUnsafeCSPHeadersTest extends TestCase
         $expected->set(Directive::ScriptSrcElem, SourceKeyword::self, SourceKeyword::unsafeInline);
         $expected->set(Directive::StyleSrcAttr, SourceKeyword::self, SourceKeyword::unsafeInline);
 
-        $this->assertEquals($expected->compile($nonce), $policy->compile($nonce));
+        $this->assertEquals($expected->compile($this->emptyPolicyBag()), $policy->compile($this->emptyPolicyBag()));
     }
 
     #[Test]
@@ -145,6 +153,33 @@ class EnsureUnsafeCSPHeadersTest extends TestCase
         $expected->set(Directive::ScriptSrcElem, SourceKeyword::self, SourceKeyword::unsafeInline);
         $expected->set(Directive::StyleSrcAttr, SourceKeyword::self, SourceKeyword::unsafeInline);
 
-        $this->assertEquals($expected->compile($nonce), $policy->compile($nonce));
+        $this->assertEquals($expected->compile($this->emptyPolicyBag()), $policy->compile($this->emptyPolicyBag()));
+    }
+
+    protected function emptyPolicyBag(): PolicyBag
+    {
+        $scope = Scope::frontend();
+        $disposition = Disposition::enforce;
+        $dispositionMap = new Map();
+        $dispositionMap[$disposition] = new DispositionConfiguration(
+            true,
+            true,
+            'https://www.domain.tld/@report-csp-error',
+        );
+        $behaviour = new Behavior();
+        $nonce = new ConsumableNonce('1234');
+        $collection = new DirectiveHashCollection(new ResourceHashCollection(
+            new NullLogger(),
+            $this->createStub(\TYPO3\CMS\Core\SystemResource\SystemResourceFactory::class),
+            new VariableFrontend('hash', new TransientMemoryBackend()),
+        ));
+
+        return new PolicyBag(
+            $scope,
+            $dispositionMap,
+            $behaviour,
+            $nonce,
+            $collection,
+        );
     }
 }
