@@ -20,7 +20,7 @@ lib.fluidTemplate {
         variables {
             RootUid = TEXT
             RootUid {
-                data = leveluid : 0
+              data = leveluid : {$themeBase.page.rootUid.level}
             }
 
             Level1Title = TEXT
