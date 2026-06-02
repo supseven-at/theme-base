@@ -103,6 +103,12 @@ settings:
     type: bool
     default: false
 
+  themeBase.page.rootUid.level:
+    label: Where to start the RootUid Level
+    category: theme_base.rootUid
+    type: int
+    default: 0
+
   themeBase.tcemain.legalNotice.uid:
     label: Legal notice PID
     category: theme_base.other
