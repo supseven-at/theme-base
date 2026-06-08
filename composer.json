@@ -26,7 +26,7 @@
 		"typo3/cms-linkvalidator": "To check the availability of links on TYPO3 pages",
 		"typo3/cms-adminpanel": "Show a panel of infos and actions in the frontend for editors",
 		"typo3/cms-form": "For frontend forms",
-		"typo3/cms-visual-editor": "Adds visual editor integration for editable images in TYPO3 backend edit mode"
+		"friendsoftypo3/visual-editor": "Adds visual editor integration for editable images in TYPO3 backend edit mode"
 	},
 	"require-dev": {
 		"typo3/cms-form": "^14.1",
