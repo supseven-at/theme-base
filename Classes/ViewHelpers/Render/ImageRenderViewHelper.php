@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Supseven\ThemeBase\ViewHelpers\Render;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Supseven\ThemeBase\Service\VisualEditorIntegrationService;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileInterface;
@@ -60,9 +61,13 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
     /** @var string $alternative */
     private string $alternative = '';
 
+    /** @var array|null */
+    private ?array $visualEditorPayload = null;
+
     public function __construct(
         protected readonly ImageService $imageService,
-        protected readonly ContentObjectRenderer $contentObjectRenderer
+        protected readonly ContentObjectRenderer $contentObjectRenderer,
+        protected readonly VisualEditorIntegrationService $visualEditorIntegrationService,
     ) {
         parent::__construct();
     }
@@ -119,12 +124,19 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      * Render the picture element with all its siblings.
      *
      * @return string The rendered image element.
+     * @throws \JsonException
      */
     public function render(): string
     {
         if (null === $this->image) {
             return '<!-- no image available -->';
         }
+
+        // includes the visual_editor service, if the extension is installed
+        $this->visualEditorPayload = $this->visualEditorIntegrationService->buildImagePayload(
+            $this->getRequest(),
+            $this->image,
+        );
 
         foreach (array_reverse($this->breakpoints) as $breakpoint) {
             $imgSrc = [];
@@ -319,6 +331,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      * Render the image element for the given file reference.
      *
      * @return string The rendered image element.
+     * @throws \JsonException
      */
     public function getImageElement(): string
     {
@@ -337,6 +350,10 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
             'title'   => $this->title ?: null,
             'loading' => $this->arguments['loading'],
         ];
+
+        if ($this->visualEditorPayload !== null) {
+            $attributes['data-veedit'] = json_encode($this->visualEditorPayload, JSON_THROW_ON_ERROR);
+        }
 
         if ($this->arguments['additionalImageAttributes']) {
             $attributes = array_merge($attributes, $this->arguments['additionalImageAttributes']);
