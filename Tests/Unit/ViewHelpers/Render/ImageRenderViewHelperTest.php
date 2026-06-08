@@ -20,9 +20,14 @@ namespace Supseven\ThemeBase\Tests\Unit\ViewHelpers\Render;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Supseven\ThemeBase\Service\VisualEditorIntegrationService;
 use Supseven\ThemeBase\ViewHelpers\Render\ImageRenderViewHelper;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Extbase\Service\ImageService;
@@ -46,6 +51,9 @@ final class ImageRenderViewHelperTest extends TestCase
 
     /** @var ContentObjectRenderer */
     private ?ContentObjectRenderer $contentObjectRendererMock = null;
+
+    /** @var VisualEditorIntegrationService */
+    private ?VisualEditorIntegrationService $visualEditorIntegrationService = null;
 
     /** @var string */
     private string $filePath = 'fileadmin/someFile.jpg';
@@ -92,9 +100,22 @@ final class ImageRenderViewHelperTest extends TestCase
         $this->contentObjectRendererMock->method('typoLink_URL')
                                         ->willReturn('foobar');
 
+        $packageManagerMock = self::createStub(PackageManager::class);
+        $packageManagerMock
+            ->method('isPackageActive')
+            ->willReturn(false);
+
+        $this->visualEditorIntegrationService = new VisualEditorIntegrationService(
+            $packageManagerMock,
+            self::createStub(UriBuilder::class),
+            self::createStub(Typo3Version::class),
+            self::createStub(ContainerInterface::class),
+        );
+
         $this->subject = new ImageRenderViewHelper(
             $this->imageServiceMock,
-            $this->contentObjectRendererMock
+            $this->contentObjectRendererMock,
+            $this->visualEditorIntegrationService,
         );
 
         $contentObjectRendererMock = self::createStub(ContentObjectRenderer::class);
@@ -132,7 +153,10 @@ final class ImageRenderViewHelperTest extends TestCase
 
     public function tearDown(): void
     {
-        unset($this->subject);
+        unset(
+            $this->subject,
+            $this->visualEditorIntegrationService,
+        );
     }
 
     /**

@@ -80,6 +80,16 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
 
     $services->set(LegalNoticeService::class)->share();
     $services->set(DependencyValuesService::class)->share();
+
+    if (class_exists('TYPO3\\CMS\\VisualEditor\\Service\\EditModeService')) {
+        $services
+            ->alias(
+                'theme_base.visual_editor.edit_mode_service',
+                'TYPO3\\CMS\\VisualEditor\\Service\\EditModeService',
+            )
+            ->public();
+    }
+
     $services->set(VisualEditorIntegrationService::class)->share();
 
     $services->set('typo3.request', ServerRequestInterface::class)

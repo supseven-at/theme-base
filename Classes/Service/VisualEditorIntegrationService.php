@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\ThemeBase\Service;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -13,7 +14,6 @@ use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\FileReference;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * A service responsible for integrating the visual editor functionality into TYPO3.
@@ -33,10 +33,13 @@ final readonly class VisualEditorIntegrationService
      */
     private const string EDIT_MODE_SERVICE_CLASS = 'TYPO3\\CMS\\VisualEditor\\Service\\EditModeService';
 
+    private const string EDIT_MODE_SERVICE_ALIAS = 'theme_base.visual_editor.edit_mode_service';
+
     public function __construct(
         private PackageManager $packageManager,
         private UriBuilder $uriBuilder,
         private Typo3Version $typo3Version,
+        private ContainerInterface $container,
     ) {
     }
 
@@ -48,7 +51,8 @@ final readonly class VisualEditorIntegrationService
     public function isAvailable(): bool
     {
         return $this->packageManager->isPackageActive(self::VISUAL_EDITOR_PACKAGE_KEY)
-            && class_exists(self::EDIT_MODE_SERVICE_CLASS);
+            && class_exists(self::EDIT_MODE_SERVICE_CLASS)
+            && $this->container->has(self::EDIT_MODE_SERVICE_ALIAS);
     }
 
     /**
@@ -69,7 +73,14 @@ final readonly class VisualEditorIntegrationService
             return null;
         }
 
-        $editModeService = GeneralUtility::makeInstance(self::EDIT_MODE_SERVICE_CLASS);
+        $editModeService = $this->container->get(self::EDIT_MODE_SERVICE_ALIAS);
+
+        if (
+            !method_exists($editModeService, 'isEditMode')
+            || !method_exists($editModeService, 'getBackendEditUrl')
+        ) {
+            return null;
+        }
 
         if (!$editModeService->isEditMode($request)) {
             return null;
