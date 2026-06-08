@@ -13,6 +13,7 @@ use Supseven\ThemeBase\Service\ErrorPageService;
 use Supseven\ThemeBase\Service\FlashMessager;
 use Supseven\ThemeBase\Service\LegalNoticeService;
 use Supseven\ThemeBase\Service\PageCacheService;
+use Supseven\ThemeBase\Service\VisualEditorIntegrationService;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\AutoconfigureFailedException;
@@ -79,6 +80,7 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
 
     $services->set(LegalNoticeService::class)->share();
     $services->set(DependencyValuesService::class)->share();
+    $services->set(VisualEditorIntegrationService::class)->share();
 
     $services->set('typo3.request', ServerRequestInterface::class)
         ->factory([service(DependencyValuesService::class), 'getRequest'])
