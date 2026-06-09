@@ -6,6 +6,7 @@ namespace Supseven\ThemeBase\ViewHelpers\Render;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Supseven\ThemeBase\Service\VisualEditorIntegrationService;
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileInterface;
@@ -125,6 +126,7 @@ class ImageRenderViewHelper extends AbstractTagBasedViewHelper
      *
      * @return string The rendered image element.
      * @throws \JsonException
+     * @throws RouteNotFoundException
      */
     public function render(): string
     {

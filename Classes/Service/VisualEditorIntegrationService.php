@@ -33,8 +33,19 @@ final readonly class VisualEditorIntegrationService
      */
     private const string EDIT_MODE_SERVICE_CLASS = 'TYPO3\\CMS\\VisualEditor\\Service\\EditModeService';
 
+    /**
+     * Represents the service alias for the edit mode functionality within the visual editor under the theme base package.
+     */
     private const string EDIT_MODE_SERVICE_ALIAS = 'theme_base.visual_editor.edit_mode_service';
 
+    /**
+     * Constructor for initializing the class with necessary dependencies.
+     *
+     * @param PackageManager $packageManager Instance of PackageManager for managing packages.
+     * @param UriBuilder $uriBuilder Instance of UriBuilder for building URIs.
+     * @param Typo3Version $typo3Version Instance of Typo3Version to handle TYPO3 version-related operations.
+     * @param ContainerInterface $container Instance of ContainerInterface for dependency injection.
+     */
     public function __construct(
         private PackageManager $packageManager,
         private UriBuilder $uriBuilder,
@@ -73,6 +84,20 @@ final readonly class VisualEditorIntegrationService
             return null;
         }
 
+        /**
+         * Service responsible for managing and controlling the application's edit mode functionality.
+         *
+         * This variable provides access to features and operations related to enabling, disabling,
+         * and interacting with edit mode. Typically used to facilitate user interactions
+         * that involve editing or modifying content within the system.
+         *
+         * Common responsibilities of the editModeService include:
+         * - Activating and deactivating edit mode.
+         * - Determining the current state of edit mode (active/inactive).
+         * - Providing helper methods for tasks performed during edit operations.
+         *
+         * Ensure this service is properly initialized and integrated before use.
+         */
         $editModeService = $this->container->get(self::EDIT_MODE_SERVICE_ALIAS);
 
         if (
