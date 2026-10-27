@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef2b00d5e2fe37a46082ab716b3eb138",
+    "content-hash": "7dadcb63a03c1f08c5c6853dc3c481f2",
     "packages": [
         {
             "name": "b13/bolt",
@@ -3357,53 +3357,6 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
-        },
-        {
-            "name": "spooner/deployer-information",
-            "version": "1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.spooner.io/spooner/deployer_information/",
-                "reference": "83b0cc096ce24bffa6b750c9e983ca0898987907"
-            },
-            "require": {
-                "php": "^7.2 || ^8.0",
-                "typo3/cms-core": "^8.7 || ^9.5 || ^10.4 || ^11.5 || ^12.0"
-            },
-            "suggest": {
-                "ext-intl": "*"
-            },
-            "type": "typo3-cms-extension",
-            "extra": {
-                "typo3/cms": {
-                    "extension-key": "deployer_information"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "SpoonerWeb\\DeployerInformation\\": "Classes/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Thomas Löffler",
-                    "email": "loeffler@spooner-web.de",
-                    "homepage": "https://spooner-web.de",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Show information about the last deployment in the TYPO3 system information toolbar item",
-            "keywords": [
-                "deployer",
-                "extension",
-                "toolbar",
-                "typo3"
-            ],
-            "time": "2022-12-01T10:12:02+00:00"
         },
         {
             "name": "studiomitte/live-search-extended",
@@ -10648,10 +10601,10 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
